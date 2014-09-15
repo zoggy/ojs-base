@@ -119,11 +119,11 @@ $(LIBFTJS): $(LIBFTJS_CMIFILES) $(LIBFTJS_CMOFILES)
 	$(OCAMLFIND) ocamlc$(PBYTE) -a -o $@ $(LIBFTJS_CMOFILES)
 
 .PHONY: example
-example: example-server example.js
+example: example/example-server example/example.js
 
-example-server: $(LIB) example.cmx
+example/example-server: $(LIB) $(LIBFT) example/example.cmx
 	$(OCAMLFIND) ocamlopt -o $@ $(OF_FLAGS) -linkpkg $^
-example.js: $(LIBJS) example_js.cmo
+example/example.js: $(LIBJS) $(LIBFTJS) example/example_js.cmo
 	$(OCAMLFIND) ocamlc -o t.x $^ -package yojson,js_of_ocaml -linkpkg
 	$(JS_OF_OCAML) t.x -o $@
 
