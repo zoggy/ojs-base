@@ -28,13 +28,24 @@
 
 (** *)
 
-open Ojs_base
+open Ojs_server
 
-let send_msg push id msg =
-  let msg = `Filetree_msg (id, msg) in
-  let json = J.to_string (Ojsft_types.server_msg_to_yojson msg) in
-  let frame = Websocket.Frame.of_string json in
-  Lwt.return (push (Some frame))
+let wsdata_of_msg msg = J.to_string (Ojsft_types.server_msg_to_yojson msg)
+let msg_of_wsdata s =
+  try
+    let json = J.from_string s in
+    match Ojsft_types.client_msg_of_yojson json with
+      `Error s -> raise (Yojson.Json_error s)
+    | `Ok msg -> Some msg
+  with
+    Yojson.Json_error s ->
+      prerr_endline s;
+      None
+  | e ->
+      prerr_endline (Printexc.to_string e);
+      None
+
+let send_msg push_msg id msg = push_msg (`Filetree_msg (id, msg))
 
 let handle_client_msg root id msg =
   match msg with
@@ -44,33 +55,24 @@ let handle_client_msg root id msg =
   | _ ->
       failwith "Unhandled message"
 
-let send_messages push (id, messages) = Lwt_list.iter_s (send_msg push id) messages
+let send_messages push_msg (id, messages) =
+  Lwt_list.iter_s (send_msg push_msg id) messages
 
-let handle_messages root stream push =
- let f frame =
-    let s = Websocket.Frame.content frame in
-    try
-      let json = J.from_string s in
-      match Ojsft_types.client_msg_of_yojson json with
-        `Error s -> raise (Yojson.Json_error s)
-      | `Ok (`Filetree_msg (id, t)) ->
-          Lwt.catch
-            (fun () -> send_messages push (handle_client_msg root id t))
-            (fun e ->
-               let msg =
-                 match e with
-                   Failure s | Sys_error s -> s
-                 | _ -> Printexc.to_string e
-                in
-                send_msg push id (`Error msg)
-            )
-    with
-      Yojson.Json_error s ->
-        Lwt.return (prerr_endline s)
-    | e ->
-        Lwt.return (prerr_endline (Printexc.to_string e))
-  in
-  Lwt.catch
-    (fun _ -> Lwt_stream.iter_s f stream)
-    (fun _ -> Lwt.return_unit)
+let handle_message root push_msg msg =
+  try
+    match msg with
+    | `Filetree_msg (id, t) ->
+        Lwt.catch
+          (fun () -> send_messages push_msg (handle_client_msg root id t))
+          (fun e ->
+             let msg =
+               match e with
+                 Failure s | Sys_error s -> s
+               | _ -> Printexc.to_string e
+             in
+             send_msg push_msg id (`Error msg)
+          )
+  with
+  | e ->
+      Lwt.return (prerr_endline (Printexc.to_string e))
 

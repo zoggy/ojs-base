@@ -31,7 +31,11 @@
 let (>>=) = Lwt.bind
 let rec wait_forever () = Lwt_unix.sleep 1000.0 >>= wait_forever
 
-let handle_con root uri (stream, push) = Ojsft_server.handle_messages root stream push
+let handle_con root uri (stream, push) =
+  let handle_message = (Ojsft_server.handle_message root) in
+  Ojs_server.handle_messages
+    Ojsft_server.msg_of_wsdata Ojsft_server.wsdata_of_msg
+    handle_message stream push
 let server root sockaddr = Websocket.establish_server sockaddr (handle_con root)
 
 let run_server root host port =
