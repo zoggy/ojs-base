@@ -40,33 +40,57 @@ RM=rm -f
 CP=cp -f
 MKDIR=mkdir -p
 
-LIB=ojs-filetree.cmxa
-LIB_A=$(LIB:.cmxa=.a)
+# Base
+
+LIB=ojs-base.cmxa
+LIB_A=$(LIBFT:.cmxa=.a)
 LIB_CMXS=$(LIB:.cmxs)
 LIB_BYTE=$(LIB:.cmxa=.cma)
 
-LIB_CMXFILES=ojsft_types.cmx \
-	ojsft_find.cmx \
-	ojsft_files.cmx \
-	ojsft_server.cmx
+LIB_CMXFILES=ojs_base.cmx
 
 LIB_CMOFILES=$(LIB_CMXFILES:.cmx=.cmo)
 LIB_CMIFILES=$(LIB_CMXFILES:.cmx=.cmi)
 LIB_OFILES=$(LIB_CMXFILES:.cmx=.o)
 
-LIBJS=ojs-filetree-js.cma
+LIBJS=ojs-base-js.cma
 
-LIBJS_CMOFILES=ojsft_types.cmo \
-	ojsft_js.cmo
+LIBJS_CMOFILES=	ojs_js.cmo
 
 LIBJS_CMIFILES=$(LIBJS_CMOFILES:.cmx=.cmi)
 
+# Filetree
+
+LIBFT=ojs-filetree.cmxa
+LIBFT_A=$(LIBFT:.cmxa=.a)
+LIBFT_CMXS=$(LIBFT:.cmxs)
+LIBFT_BYTE=$(LIBFT:.cmxa=.cma)
+
+LIBFT_CMXFILES=ojsft_types.cmx \
+	ojsft_find.cmx \
+	ojsft_files.cmx \
+	ojsft_server.cmx
+
+LIBFT_CMOFILES=$(LIBFT_CMXFILES:.cmx=.cmo)
+LIBFT_CMIFILES=$(LIBFT_CMXFILES:.cmx=.cmi)
+LIBFT_OFILES=$(LIBFT_CMXFILES:.cmx=.o)
+
+LIBFTJS=ojs-filetree-js.cma
+
+LIBFTJS_CMOFILES=ojsft_types.cmo \
+	ojsft_js.cmo
+
+LIBFTJS_CMIFILES=$(LIBFTJS_CMOFILES:.cmx=.cmi)
+
+#
 
 all: opt byte
 
-opt: $(LIB) $(LIB_CMXS)
+opt: $(LIB) $(LIB_CMXS) $(LIBFT) $(LIBFT_CMXS)
 
-byte: $(LIB_BYTE) $(LIBJS)
+byte: $(LIB_BYTE) $(LIBJS) $(LIBFT_BYTE) $(LIBFTJS)
+
+# Base
 
 $(LIB): $(LIB_CMIFILES) $(LIB_CMXFILES)
 	$(OCAMLFIND) ocamlopt$(P) -a -o $@ $(LIB_CMXFILES)
@@ -79,6 +103,20 @@ $(LIB_BYTE): $(LIB_CMIFILES) $(LIB_CMOFILES)
 
 $(LIBJS): $(LIBJS_CMIFILES) $(LIBJS_CMOFILES)
 	$(OCAMLFIND) ocamlc$(PBYTE) -a -o $@ $(LIBJS_CMOFILES)
+
+# Filetree
+
+$(LIBFT): $(LIBFT_CMIFILES) $(LIBFT_CMXFILES)
+	$(OCAMLFIND) ocamlopt$(P) -a -o $@ $(LIBFT_CMXFILES)
+
+$(LIBFT_CMXS): $(LIBFT_CMIFILES) $(LIBFT_CMXFILES)
+	$(OCAMLFIND) ocamlopt$(P) -shared -o $@ $(LIBFT_CMXFILES)
+
+$(LIBFT_BYTE): $(LIBFT_CMIFILES) $(LIBFT_CMOFILES)
+	$(OCAMLFIND) ocamlc$(PBYTE) -a -o $@ $(LIBFT_CMOFILES)
+
+$(LIBFTJS): $(LIBFTJS_CMIFILES) $(LIBFTJS_CMOFILES)
+	$(OCAMLFIND) ocamlc$(PBYTE) -a -o $@ $(LIBFTJS_CMOFILES)
 
 .PHONY: example
 example: example-server example.js
@@ -102,7 +140,11 @@ install-lib:
 	@$(OCAMLFIND) install $(PACKAGE) META \
 		$(LIB_CMIFILES) $(LIB_CMXFILES) $(LIB_OFILES) \
 		$(LIB_BYTE) $(LIB) $(LIB_A) $(LIB_CMXS) \
-		$(LIBJS) $(LIBJS_CMIFILES)
+		$(LIBJS) $(LIBJS_CMIFILES) \
+		$(LIBFT_CMIFILES) $(LIBFT_CMXFILES) $(LIBFT_OFILES) \
+		$(LIBFT_BYTE) $(LIBFT) $(LIBFT_A) $(LIBFT_CMXS) \
+		$(LIBFTJS) $(LIBFTJS_CMIFILES)
+
 
 uninstall: uninstall-lib
 

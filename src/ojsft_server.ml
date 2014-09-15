@@ -28,9 +28,7 @@
 
 (** *)
 
-let (>>=) = Lwt.bind
-
-module J = Yojson.Safe
+open Ojs_base
 
 let send_msg push id msg =
   let msg = `Ojsft_msg (id, msg) in
