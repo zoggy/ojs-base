@@ -31,7 +31,7 @@
 open Ojs_base
 
 let send_msg push id msg =
-  let msg = `Ojsft_msg (id, msg) in
+  let msg = `Filetree_msg (id, msg) in
   let json = J.to_string (Ojsft_types.server_msg_to_yojson msg) in
   let frame = Websocket.Frame.of_string json in
   Lwt.return (push (Some frame))
@@ -39,9 +39,7 @@ let send_msg push id msg =
 let handle_client_msg root id msg =
   match msg with
     `Get_tree ->
-      let files = Ojsft_files.file_trees_of_dir
-        (fun _ -> true) root
-      in
+      let files = Ojsft_files.file_trees_of_dir (fun _ -> true) root in
       (id, [`Tree files])
   | _ ->
       failwith "Unhandled message"
@@ -55,7 +53,7 @@ let handle_messages root stream push =
       let json = J.from_string s in
       match Ojsft_types.client_msg_of_yojson json with
         `Error s -> raise (Yojson.Json_error s)
-      | `Ok (`Ojsft_msg (id, t)) ->
+      | `Ok (`Filetree_msg (id, t)) ->
           Lwt.catch
             (fun () -> send_messages push (handle_client_msg root id t))
             (fun e ->

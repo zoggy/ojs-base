@@ -37,7 +37,7 @@ type file_tree = [
  ] [@@deriving Yojson]
 
 type server_msg = [
-    `Ojsft_msg of string *
+    `Filetree_msg of string *
       [
       | `Error of string
       | `Tree of file_tree list
@@ -51,7 +51,7 @@ type server_msg = [
   [@@deriving Yojson]
 
 type client_msg = [
-    `Ojsft_msg of string *
+    `Filetree_msg of string *
       [
       | `Get_tree
       | `Add_file of string

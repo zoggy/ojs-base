@@ -154,6 +154,7 @@ uninstall-lib:
 #####
 clean:
 	$(RM) *.cm* *.o *.a *.x *.annot
+	(cd example ; $(RM) *.cm* *.o *.a *.x *.annot)
 
 distclean: clean
 
@@ -163,7 +164,7 @@ distclean: clean
 .PHONY: clean depend
 
 .depend depend:
-	$(OCAMLFIND) ocamldep `ls ojs*.ml ojs*.mli | grep -v js.ml`  > .depend
+	$(OCAMLFIND) ocamldep `ls ojs*.ml ojs*.mli example/*.ml | grep -v js.ml`  > .depend
 
 include .depend
 

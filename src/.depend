@@ -1,9 +1,13 @@
+example/example.cmo : ojsft_server.cmo
+example/example.cmx : ojsft_server.cmx
+ojs_base.cmo :
+ojs_base.cmx :
 ojsft_files.cmo : ojsft_find.cmi
 ojsft_files.cmx : ojsft_find.cmx
 ojsft_find.cmo : ojsft_find.cmi
 ojsft_find.cmx : ojsft_find.cmi
 ojsft_find.cmi :
-ojsft_server.cmo : ojsft_types.cmo ojsft_files.cmo
-ojsft_server.cmx : ojsft_types.cmx ojsft_files.cmx
+ojsft_server.cmo : ojsft_types.cmo ojsft_files.cmo ojs_base.cmo
+ojsft_server.cmx : ojsft_types.cmx ojsft_files.cmx ojs_base.cmx
 ojsft_types.cmo :
 ojsft_types.cmx :

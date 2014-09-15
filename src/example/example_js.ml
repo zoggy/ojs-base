@@ -32,4 +32,8 @@ let on_deselect name =
 let on_select name =
   Ojsft_js.log (Printf.sprintf "Node %S selected" name)
 
-let () = ignore(Ojsft_js.start ~on_select ~on_deselect ~id: "ft" "ws://localhost:8080")
+let onopen ws = Ojsft_js.setup_filetree ~on_select ~on_deselect "ft" ws
+let onmessage = Ojsft_js.handle_message
+let _ = Ojs_js.setup_ws "ws://localhost:8080"
+  Ojsft_js.msg_of_wsdata Ojsft_js.wsdata_of_msg
+  ~onopen ~onmessage

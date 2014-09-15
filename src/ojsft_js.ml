@@ -32,7 +32,7 @@ open Ojsft_types
 
 module SMap = Map.Make(String)
 
-let log s = Firebug.console##log (Js.string s);;
+let log = Ojs_js.log
 
 (*c==v=[String.split_string]=1.2====*)
 let split_string ?(keep_empty=false) s chars =
@@ -81,12 +81,22 @@ let trees = ref (SMap.empty : tree_info SMap.t)
 let (+=) map (key, v) = map := SMap.add key v !map
 let (-=) map key = map := SMap.remove key !map
 
+let msg_of_wsdata json =
+  try
+    match Ojsft_types.server_msg_of_yojson (Yojson.Safe.from_string json) with
+      `Error s -> failwith (s ^ "\n" ^ json)
+    | `Ok msg -> Some msg
+  with
+    e ->
+      log (Printexc.to_string e);
+      None
+
+let wsdata_of_msg msg =
+  Yojson.to_string (Ojsft_types.client_msg_to_yojson msg)
 
 let send_msg ws id msg =
-  let msg = Yojson.to_string
-    (Ojsft_types.client_msg_to_yojson (`Ojsft_msg (id, msg)))
-  in
-  ws##send (Js.string msg)
+  let msg = `Filetree_msg (id, msg) in
+  Ojs_js.send_msg ws (wsdata_of_msg msg)
 
 let clear_children node =
   let children = node##childNodes in
@@ -267,53 +277,32 @@ let build_from_tree ~id tree_files =
   List.iter (insert node) tree_files
 
 
-let ws_onmessage ws id _ event =
+let handle_message ws msg =
    try
-    log "message received on ws";
-    let json = Js.to_string event##data in
-    let msg = Ojsft_types.server_msg_of_yojson (Yojson.Safe.from_string json) in
-    (
-     match msg with
-       `Error s -> failwith (s^"\n"^json)
-     | `Ok (`Ojsft_msg (_, t)) ->
+    (match msg with
+     | `Filetree_msg (id, t) ->
          match t with
            `Tree l -> build_from_tree id l
          | _ -> failwith "Unhandled message received from server"
     );
     Js._false
   with
-   e ->
+    e ->
       log (Printexc.to_string e);
       Js._false
 
 
-let setup_ws id url =
-  try
-    log ("connecting with websocket to "^url);
-    let ws = jsnew WebSockets.webSocket(Js.string url) in
-    ws##onopen <- Dom.handler (fun _ -> send_msg ws id (`Get_tree); Js._false);
-    ws##onclose <- Dom.handler (fun _ -> log "WS now CLOSED"; Js._false);
-    ws##onmessage <- Dom.full_handler (ws_onmessage ws id) ;
-    Some ws
-  with e ->
-    log (Printexc.to_string e);
-    None
-;;
-
-
-let start
+let setup_filetree
   ?(show_files=true)
   ?(on_select=fun _ -> ())
-  ?(on_deselect=fun _ -> ()) ~id url =
-  match setup_ws id url with
-    None -> failwith ("Could not connect to "^url)
-  | Some ws ->
-        let cfg = {
-            root_id = id ; ws ;
-            on_select ; on_deselect ; show_files ;
-            selected = None ;
-          }
-        in
-        trees += (id, cfg)
+  ?(on_deselect=fun _ -> ()) id ws =
+  let cfg = {
+      root_id = id ; ws ;
+      on_select ; on_deselect ; show_files ;
+      selected = None ;
+    }
+  in
+  trees += (id, cfg) ;
+  send_msg ws id (`Get_tree)
 
 
