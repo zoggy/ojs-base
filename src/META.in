@@ -1,0 +1,14 @@
+version = "@VERSION@"
+description = "Editing server-side file tree in web pages"
+requires = "@PACKAGES@"
+archive(byte) = "ojs-filetree.cma"
+archive(native) = "ojs-filetree.cmxa"
+archive(plugin,byte) = "ojs-filetree.cma"
+archive(plugin,native) = "ojs-filetree.cmxs"
+
+package "js" (
+  version = "@VERSION@"
+  description = "Client code"
+  archive(byte) = "ojs-filetree-js.cma"
+)
+

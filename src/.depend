@@ -1,0 +1,9 @@
+ojsft_files.cmo : ojsft_find.cmi
+ojsft_files.cmx : ojsft_find.cmx
+ojsft_find.cmo : ojsft_find.cmi
+ojsft_find.cmx : ojsft_find.cmi
+ojsft_find.cmi :
+ojsft_server.cmo : ojsft_types.cmo ojsft_files.cmo
+ojsft_server.cmx : ojsft_types.cmx ojsft_files.cmx
+ojsft_types.cmo :
+ojsft_types.cmx :
