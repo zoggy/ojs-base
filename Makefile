@@ -1,22 +1,26 @@
 #################################################################################
-#                Annots                                                         #
+#                Ojs-base                                                       #
 #                                                                               #
-#    Copyright (C) 2014 Institut National de Recherche en Informatique          #
-#    et en Automatique. All rights reserved.                                    #
+#    Copyright (C) 2014 INRIA. All rights reserved.                             #
 #                                                                               #
 #    This program is free software; you can redistribute it and/or modify       #
-#    it under the terms of the GNU General Public License version               #
-#    3 as published by the Free Software Foundation.                            #
+#    it under the terms of the GNU General Public License as                    #
+#    published by the Free Software Foundation, version 3 of the License.       #
 #                                                                               #
 #    This program is distributed in the hope that it will be useful,            #
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of             #
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              #
-#    GNU General Public License for more details.                               #
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the               #
+#    GNU Library General Public License for more details.                       #
 #                                                                               #
-#    You should have received a copy of the GNU General Public License          #
-#    along with this program; if not, write to the Free Software                #
+#    You should have received a copy of the GNU General Public                  #
+#    License along with this program; if not, write to the Free Software        #
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA                   #
 #    02111-1307  USA                                                            #
+#                                                                               #
+#    As a special exception, you have permission to link this program           #
+#    with the OCaml compiler and distribute executables, as long as you         #
+#    follow the requirements of the GNU GPL in regard to all of the             #
+#    software in the executable aside from the OCaml compiler.                  #
 #                                                                               #
 #    Contact: Maxence.Guesdon@inria.fr                                          #
 #                                                                               #
@@ -41,14 +45,13 @@ doc: dummy
 
 # myself
 
-master.Makefile: master.Makefile.in config.status \
-	src/META.in
+master.Makefile: master.Makefile.in config.status src/META.in
 	./config.status
 
 config.status: configure
 	./config.status --recheck
 
-configure: configure.in
+configure: configure.ac
 	autoconf
 
 # backup, clean and depend :
@@ -71,15 +74,15 @@ dummy:
 ###########
 # Headers
 ###########
-HEADFILES=configure.in configure \
+HEADFILES=configure.ac configure \
 	master.Makefile.in Makefile src/Makefile web/Makefile \
-	checkocaml.ml
+	checkocaml.ml src/*.ml src/*.mli src/example/*.ml
 
 headers: dummy
-	headache -h header -c ~/.headache_config $(HEADFILES)
+	headache -h header -c .headache_config $(HEADFILES)
 
 noheaders: dummy
-	headache -r -c ~/.headache_config $(HEADFILES)
+	headache -r -c .headache_config $(HEADFILES)
 
 
 #################

@@ -1,5 +1,5 @@
 #################################################################################
-#                Ojs-filetree                                                   #
+#                Ojs-base                                                       #
 #                                                                               #
 #    Copyright (C) 2014 INRIA. All rights reserved.                             #
 #                                                                               #

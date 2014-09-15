@@ -1,5 +1,5 @@
 #################################################################################
-#                Ojs-filetree                                                   #
+#                Ojs-base                                                       #
 #                                                                               #
 #    Copyright (C) 2014 INRIA. All rights reserved.                             #
 #                                                                               #
@@ -30,7 +30,7 @@
 AC_INIT(master.Makefile.in)
 
 VERSION=0.1.0
-PACKAGE=ojs-filetree
+PACKAGE=ojs
 
 # The root directory where we will compile
 ROOT=`pwd`
@@ -83,15 +83,15 @@ AC_SUBST(OCAML_CRUNCH)
 AC_SUBST(PACKAGES)
 
 # Finally create the master.Makefile.in
-ACFILES="master.Makefile META"
+ACFILES="master.Makefile src/META"
 AC_OUTPUT($ACFILES)
 chmod a-w master.Makefile
-chmod a-w META
+chmod a-w src/META
 
 
 echo "
 ### Results of configuration ###
 
 Version is $VERSION
-Package to be installed: $PACKAGE.server $PACKAGE.js
+Package to be installed: $PACKAGE $PACKAGE.js
 "
