@@ -27,12 +27,14 @@ div.ojsft-file { font-weight: normal; margin-left: 1em ; }
   position: absolute ;
   top: 0px;
   left: 310px;
-  height:32px;
+  height:80px;
   padding-top: 5px;
 }
+#bar pre { }
+
 #ed {
   position: absolute;
-  top: 32px;
+  top: 80px;
   right: 0;
   bottom: 0;
   left: 310px;

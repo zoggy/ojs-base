@@ -33,59 +33,11 @@ module J = Yojson.Safe
 let (>>=) = Lwt.bind
 let rec wait_forever () = Lwt_unix.sleep 1000.0 >>= wait_forever
 
-(*
-type server_msg =
-  [ Ojsft_types.server_msg | Ojsed_types.server_msg ]
-    [@@deriving Yojson]
-
-type client_msg =
-  [ Ojsft_types.client_msg | Ojsed_types.client_msg ]
-    [@@deriving Yojson]
-*)
-
-type path = string [@@deriving Yojson]
-type server_msg =
-  [
-    `Filetree_msg of string *
-      [
-      | `Error of string
-      | `Tree of Ojsft_types.file_tree list
-      | `Add_file of path
-      | `Add_dir of path
-      | `Del_file of path
-      | `Del_dir of path
-      | `Rename of path * path
-      ]
-  | `Editor_msg of string *
-      [
-      | `Error of string
-      | `Ok of string
-      | `File_contents of path * string
-      ]
-  ] [@@deriving Yojson]
-
-type client_msg = [
-    `Filetree_msg of string *
-      [
-      | `Get_tree
-      | `Add_file of path
-      | `Add_dir of path
-      | `Del_file of path
-      | `Del_dir of path
-      | `Rename of path * path
-      ]
-  | `Editor_msg of string *
-      [
-      | `Get_file_contents of path
-      | `Save_file of path * string
-      ]
-  ] [@@deriving Yojson]
-
-let wsdata_of_msg msg = J.to_string (server_msg_to_yojson msg)
+let wsdata_of_msg msg = J.to_string (Example_types.server_msg_to_yojson msg)
 let msg_of_wsdata s =
   try
     let json = J.from_string s in
-    match client_msg_of_yojson json with
+    match Example_types.client_msg_of_yojson json with
       `Error s -> raise (Yojson.Json_error s)
     | `Ok msg -> Some msg
   with

@@ -27,17 +27,35 @@
 (*********************************************************************************)
 
 let on_deselect name =
-  Ojsft_js.log (Printf.sprintf "Node %S deselected" name)
+  Ojs_js.log (Printf.sprintf "Node %S deselected" name)
 
 let on_select name =
-  Ojsft_js.log (Printf.sprintf "Node %S selected" name)
+  Ojs_js.log (Printf.sprintf "Node %S selected" name)
 
 let onopen ws =
   Ojsft_js.setup_filetree ws ~on_select ~on_deselect "ft" ;
   Ojsed_js.setup_editor ws ~bar: "bar" ~editor: "ed"
 
-let onmessage = Ojsft_js.handle_message
+let onmessage ws msg =
+  match msg with
+    `Filetree_msg msg -> Ojsft_js.handle_message ws (`Filetree_msg msg)
+  | `Editor_msg msg -> Ojsed_js.handle_message ws (`Editor_msg msg)
+  | _ -> failwith "Unhandled message"
+
+let msg_of_wsdata json =
+  try
+    match Example_types.server_msg_of_yojson (Yojson.Safe.from_string json) with
+      `Error s -> failwith (s ^ "\n" ^ json)
+    | `Ok msg -> Some msg
+  with
+    e ->
+      Ojs_js.log (Printexc.to_string e);
+      None
+
+let wsdata_of_msg msg =
+  Yojson.to_string (Example_types.client_msg_to_yojson msg)
+
 let _ = Ojs_js.setup_ws "ws://localhost:8080"
-  Ojsft_js.msg_of_wsdata Ojsft_js.wsdata_of_msg
+  msg_of_wsdata wsdata_of_msg
   ~onopen ~onmessage
 

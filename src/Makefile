@@ -33,7 +33,7 @@ PBYTE=#p -p a
 
 OF_FLAGS=-package $(PACKAGES)
 
-COMPFLAGS=-I +ocamldoc -annot -g -thread -verbose #-w +K
+COMPFLAGS=-I +ocamldoc -I example -annot -g -thread -verbose #-w +K
 OCAMLPP=
 
 RM=rm -f
@@ -160,9 +160,11 @@ $(LIBEDJS): $(LIBEDJS_CMIFILES) $(LIBEDJS_CMOFILES)
 .PHONY: example
 example: example/example-server example/example.js
 
-example/example-server: $(LIB) $(LIBFT) $(LIBED) example/example.cmx
+example/example-server: $(LIB) $(LIBFT) $(LIBED) \
+	example/example_types.cmx example/example.cmx
 	$(OCAMLFIND) ocamlopt -o $@ $(OF_FLAGS) -linkpkg $^
-example/example.js: $(LIBJS) $(LIBFTJS) $(LIBEDJS) example/example_js.cmo
+example/example.js: $(LIBJS) $(LIBFTJS) $(LIBEDJS) \
+	example/example_types.cmo example/example_js.cmo
 	$(OCAMLFIND) ocamlc -o t.x $^ -package yojson,js_of_ocaml -linkpkg
 	$(JS_OF_OCAML) t.x -o $@
 
