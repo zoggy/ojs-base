@@ -35,3 +35,63 @@ let setup_ws url msg_of_data data_of_msg
 ;;
 
 let send_msg ws data = ws##send (Js.string data)
+
+let clear_children node =
+  let children = node##childNodes in
+  for i = 0 to children##length - 1 do
+    Js.Opt.iter (node##firstChild) (fun n -> Dom.removeChild node n)
+  done
+
+let node_by_id id =
+  let node = Dom_html.document##getElementById (Js.string id) in
+  Js.Opt.case node (fun _ -> failwith ("No node with id = "^id)) (fun x -> x)
+
+let gen_id = let n = ref 0 in fun () -> incr n; Printf.sprintf "ojsid%d" !n
+
+let set_onclick node f =
+  ignore(Dom_html.addEventListener node
+   Dom_html.Event.click
+     (Dom.handler (fun e -> f e; Js.bool true))
+     (Js.bool true))
+
+
+(*c==v=[String.split_string]=1.2====*)
+let split_string ?(keep_empty=false) s chars =
+  let len = String.length s in
+  let rec iter acc pos =
+    if pos >= len then
+      match acc with
+        "" -> if keep_empty then [""] else []
+      | _ -> [acc]
+    else
+      if List.mem s.[pos] chars then
+        match acc with
+          "" ->
+            if keep_empty then
+              "" :: iter "" (pos + 1)
+            else
+              iter "" (pos + 1)
+        | _ -> acc :: (iter "" (pos + 1))
+      else
+        iter (Printf.sprintf "%s%c" acc s.[pos]) (pos + 1)
+  in
+  iter "" 0
+(*/c==v=[String.split_string]=1.2====*)
+
+let get_classes node =
+  let s =Js.to_string node##className in
+  split_string s [' ']
+
+let unset_class span_id cl =
+  try
+    let node = node_by_id span_id in
+    node##classList##remove(Js.string cl)
+  with
+    Failure msg -> log msg
+
+let set_class span_id cl =
+  try
+    let node = node_by_id span_id in
+    node##classList##add(Js.string cl)
+  with
+    Failure msg -> log msg

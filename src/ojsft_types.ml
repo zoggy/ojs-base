@@ -29,11 +29,11 @@
 (** *)
 
 (** All paths should relative to root directory. *)
-type path = string
+type path = string [@@deriving Yojson]
 
 type file_tree = [
- | `Dir of string * file_tree list
- | `File of string
+ | `Dir of path * file_tree list
+ | `File of path
  ] [@@deriving Yojson]
 
 type server_msg = [
@@ -41,11 +41,11 @@ type server_msg = [
       [
       | `Error of string
       | `Tree of file_tree list
-      | `Add_file of string
-      | `Add_dir of string
-      | `Del_file of string
-      | `Del_dir of string
-      | `Rename of string * string
+      | `Add_file of path
+      | `Add_dir of path
+      | `Del_file of path
+      | `Del_dir of path
+      | `Rename of path * path
       ]
   ]
   [@@deriving Yojson]
@@ -54,10 +54,10 @@ type client_msg = [
     `Filetree_msg of string *
       [
       | `Get_tree
-      | `Add_file of string
-      | `Add_dir of string
-      | `Del_file of string
-      | `Del_dir of string
-      | `Rename of string * string
+      | `Add_file of path
+      | `Add_dir of path
+      | `Del_file of path
+      | `Del_dir of path
+      | `Rename of path * path
       ]
   ] [@@deriving Yojson]

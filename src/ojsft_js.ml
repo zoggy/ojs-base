@@ -33,30 +33,6 @@ open Ojsft_types
 
 let log = Ojs_js.log
 
-(*c==v=[String.split_string]=1.2====*)
-let split_string ?(keep_empty=false) s chars =
-  let len = String.length s in
-  let rec iter acc pos =
-    if pos >= len then
-      match acc with
-        "" -> if keep_empty then [""] else []
-      | _ -> [acc]
-    else
-      if List.mem s.[pos] chars then
-        match acc with
-          "" ->
-            if keep_empty then
-              "" :: iter "" (pos + 1)
-            else
-              iter "" (pos + 1)
-        | _ -> acc :: (iter "" (pos + 1))
-      else
-        iter (Printf.sprintf "%s%c" acc s.[pos]) (pos + 1)
-  in
-  iter "" 0
-(*/c==v=[String.split_string]=1.2====*)
-
-
 type tree_info = {
     root_id : id ;
     ws : WebSockets.webSocket Js.t ;
@@ -75,7 +51,6 @@ type tree_node =
 let tree_nodes = ref (SMap.empty : tree_node SMap.t)
 let trees = ref (SMap.empty : tree_info SMap.t)
 
-
 let msg_of_wsdata json =
   try
     match Ojsft_types.server_msg_of_yojson (Yojson.Safe.from_string json) with
@@ -93,47 +68,11 @@ let send_msg ws id msg =
   let msg = `Filetree_msg (id, msg) in
   Ojs_js.send_msg ws (wsdata_of_msg msg)
 
-let clear_children node =
-  let children = node##childNodes in
-  for i = 0 to children##length - 1 do
-    Js.Opt.iter (node##firstChild) (fun n -> Dom.removeChild node n)
-  done
-
-let node_by_id id =
-  let node = Dom_html.document##getElementById (Js.string id) in
-  Js.Opt.case node (fun _ -> failwith ("No node with id = "^id)) (fun x -> x)
-
-let gen_id = let n = ref 0 in fun () -> incr n; Printf.sprintf "ojsftid%d" !n
-
-let set_onclick node f =
-  ignore(Dom_html.addEventListener node
-   Dom_html.Event.click
-     (Dom.handler (fun e -> f e; Js.bool true))
-     (Js.bool true))
-
-let get_classes node =
-  let s =Js.to_string node##className in
-  split_string s [' ']
-
-let unset_class span_id cl =
-  try
-    let node = node_by_id span_id in
-    node##classList##remove(Js.string cl)
-  with
-    Failure msg -> log msg
-
-let set_class span_id cl =
-  try
-    let node = node_by_id span_id in
-    node##classList##add(Js.string cl)
-  with
-    Failure msg -> log msg
-
 let set_unselected ti div_id label =
   (
    try
      let span_id = (SMap.find div_id !tree_nodes).tn_span_id in
-     unset_class span_id "selected" ;
+     Ojs_js.unset_class span_id "selected" ;
    with Not_found -> ()
   );
   ti.selected <- None ;
@@ -143,7 +82,7 @@ let set_selected ti div_id label =
   (
    try
      let span_id = (SMap.find div_id !tree_nodes).tn_span_id in
-     set_class span_id "selected" ;
+     Ojs_js.set_class span_id "selected" ;
    with Not_found -> ()
   );
   ti.selected <- Some (div_id, label) ;
@@ -180,25 +119,25 @@ let expand_buttons base_id subs_id =
   let t_col = doc##createTextNode (Js.string " ▼") in
   Dom.appendChild span_exp t_exp;
   Dom.appendChild span_col t_col;
-  set_onclick span_exp
+  Ojs_js.set_onclick span_exp
     (fun e ->
-       set_class id_exp collapsed_class ;
-       unset_class id_col collapsed_class ;
-       unset_class subs_id collapsed_class
+       Ojs_js.set_class id_exp collapsed_class ;
+       Ojs_js.unset_class id_col collapsed_class ;
+       Ojs_js.unset_class subs_id collapsed_class
     );
-  set_onclick span_col
+  Ojs_js.set_onclick span_col
     (fun e ->
-       set_class id_col collapsed_class ;
-       unset_class id_exp collapsed_class ;
-       set_class subs_id collapsed_class
+       Ojs_js.set_class id_col collapsed_class ;
+       Ojs_js.unset_class id_exp collapsed_class ;
+       Ojs_js.set_class subs_id collapsed_class
     );
 
   (span_exp, span_col)
 
 let build_from_tree ~id tree_files =
   let doc = Dom_html.document in
-  let node = node_by_id id in
-  clear_children node ;
+  let node = Ojs_js.node_by_id id in
+  Ojs_js.clear_children node ;
   let cfg =
     try SMap.find id !trees
     with Not_found -> failwith ("No config for file_tree "^id)
@@ -207,7 +146,7 @@ let build_from_tree ~id tree_files =
     `Dir (s, l) ->
       let label = Filename.basename s in
       let div = doc##createElement (Js.string "div") in
-      let div_id = gen_id () in
+      let div_id = Ojs_js.gen_id () in
       div##setAttribute (Js.string "id", Js.string div_id);
       div##setAttribute (Js.string "class", Js.string "ojsft-dir");
 
@@ -246,7 +185,7 @@ let build_from_tree ~id tree_files =
         begin
           let label = Filename.basename s in
           let div = doc##createElement (Js.string "div") in
-          let div_id = gen_id () in
+          let div_id = Ojs_js.gen_id () in
           div##setAttribute (Js.string "id", Js.string div_id);
           div##setAttribute (Js.string "class", Js.string "ojsft-file");
 
@@ -288,9 +227,10 @@ let handle_message ws msg =
 
 
 let setup_filetree
+  ws
   ?(show_files=true)
   ?(on_select=fun _ -> ())
-  ?(on_deselect=fun _ -> ()) id ws =
+  ?(on_deselect=fun _ -> ()) id =
   let cfg = {
       root_id = id ; ws ;
       on_select ; on_deselect ; show_files ;

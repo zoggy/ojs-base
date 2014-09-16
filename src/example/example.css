@@ -23,9 +23,16 @@ div.ojsft-file { font-weight: normal; margin-left: 1em ; }
 .collapsed { display: none ; }
 .expanded { display: normal; }
 
+#bar {
+  position: absolute ;
+  top: 0px;
+  left: 310px;
+  height:32px;
+  padding-top: 5px;
+}
 #ed {
   position: absolute;
-  top: 10px;
+  top: 32px;
   right: 0;
   bottom: 0;
   left: 310px;

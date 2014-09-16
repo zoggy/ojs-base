@@ -28,14 +28,85 @@
 
 (** *)
 
+module J = Yojson.Safe
+
 let (>>=) = Lwt.bind
 let rec wait_forever () = Lwt_unix.sleep 1000.0 >>= wait_forever
 
+(*
+type server_msg =
+  [ Ojsft_types.server_msg | Ojsed_types.server_msg ]
+    [@@deriving Yojson]
+
+type client_msg =
+  [ Ojsft_types.client_msg | Ojsed_types.client_msg ]
+    [@@deriving Yojson]
+*)
+
+type path = string [@@deriving Yojson]
+type server_msg =
+  [
+    `Filetree_msg of string *
+      [
+      | `Error of string
+      | `Tree of Ojsft_types.file_tree list
+      | `Add_file of path
+      | `Add_dir of path
+      | `Del_file of path
+      | `Del_dir of path
+      | `Rename of path * path
+      ]
+  | `Editor_msg of string *
+      [
+      | `Error of string
+      | `Ok of string
+      | `File_contents of path * string
+      ]
+  ] [@@deriving Yojson]
+
+type client_msg = [
+    `Filetree_msg of string *
+      [
+      | `Get_tree
+      | `Add_file of path
+      | `Add_dir of path
+      | `Del_file of path
+      | `Del_dir of path
+      | `Rename of path * path
+      ]
+  | `Editor_msg of string *
+      [
+      | `Get_file_contents of path
+      | `Save_file of path * string
+      ]
+  ] [@@deriving Yojson]
+
+let wsdata_of_msg msg = J.to_string (server_msg_to_yojson msg)
+let msg_of_wsdata s =
+  try
+    let json = J.from_string s in
+    match client_msg_of_yojson json with
+      `Error s -> raise (Yojson.Json_error s)
+    | `Ok msg -> Some msg
+  with
+    Yojson.Json_error s ->
+      prerr_endline s;
+      None
+  | e ->
+      prerr_endline (Printexc.to_string e);
+      None
+
 let handle_con root uri (stream, push) =
-  let handle_message = (Ojsft_server.handle_message root) in
+  let handle_message push_msg msg =
+    match msg with
+      `Filetree_msg t -> Ojsft_server.handle_message root push_msg (`Filetree_msg t)
+    | `Editor_msg t -> Ojsed_server.handle_message root push_msg (`Editor_msg t)
+    | _ -> failwith "Unhandled message"
+  in
   Ojs_server.handle_messages
-    Ojsft_server.msg_of_wsdata Ojsft_server.wsdata_of_msg
+    msg_of_wsdata wsdata_of_msg
     handle_message stream push
+
 let server root sockaddr = Websocket.establish_server sockaddr (handle_con root)
 
 let run_server root host port =

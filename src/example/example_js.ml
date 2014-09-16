@@ -33,8 +33,8 @@ let on_select name =
   Ojsft_js.log (Printf.sprintf "Node %S selected" name)
 
 let onopen ws =
-  Ojsft_js.setup_filetree ~on_select ~on_deselect "ft" ws;
-  Ojsed_js.setup_editor "ed" ws
+  Ojsft_js.setup_filetree ws ~on_select ~on_deselect "ft" ;
+  Ojsed_js.setup_editor ws ~bar: "bar" ~editor: "ed"
 
 let onmessage = Ojsft_js.handle_message
 let _ = Ojs_js.setup_ws "ws://localhost:8080"

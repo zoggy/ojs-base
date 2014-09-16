@@ -1,19 +1,23 @@
 example/example.cmo : ojsft_server.cmo ojs_server.cmo
 example/example.cmx : ojsft_server.cmx ojs_server.cmx
+example/example_js.cmo : ojsft_js.cmo ojsed_js.cmo ojs_js.cmo
+example/example_js.cmx : ojsft_js.cmx ojsed_js.cmx ojs_js.cmx
 ojs_ace.cmo :
 ojs_ace.cmx :
+ojs_js.cmo :
+ojs_js.cmx :
 ojs_server.cmo :
 ojs_server.cmx :
+ojsed_js.cmo : ojsft_types.cmo ojs_js.cmo ojs_ace.cmo
+ojsed_js.cmx : ojsft_types.cmx ojs_js.cmx ojs_ace.cmx
 ojsed_server.cmo :
 ojsed_server.cmx :
-ojsed_types.cmo :
-ojsed_types.cmx :
 ojsft_files.cmo : ojsft_find.cmi
 ojsft_files.cmx : ojsft_find.cmx
 ojsft_find.cmo : ojsft_find.cmi
 ojsft_find.cmx : ojsft_find.cmi
 ojsft_find.cmi :
+ojsft_js.cmo : ojsft_types.cmo ojs_js.cmo
+ojsft_js.cmx : ojsft_types.cmx ojs_js.cmx
 ojsft_server.cmo : ojsft_types.cmo ojsft_files.cmo ojs_server.cmo
 ojsft_server.cmx : ojsft_types.cmx ojsft_files.cmx ojs_server.cmx
-ojsft_types.cmo :
-ojsft_types.cmx :

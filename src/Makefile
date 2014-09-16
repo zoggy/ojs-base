@@ -90,6 +90,7 @@ LIBED_CMXS=$(LIBED:.cmxs)
 LIBED_BYTE=$(LIBED:.cmxa=.cma)
 
 LIBED_CMXFILES=ojsed_types.cmx \
+	ojsed_files.cmx \
 	ojsed_server.cmx
 
 LIBED_CMOFILES=$(LIBED_CMXFILES:.cmx=.cmo)
@@ -205,7 +206,16 @@ distclean: clean
 .PHONY: clean depend
 
 .depend depend:
-	$(OCAMLFIND) ocamldep `ls ojs*.ml ojs*.mli example/*.ml | grep -v js.ml`  > .depend
+	$(OCAMLFIND) ocamldep -package js_of_ocaml.syntax -syntax camlp4o \
+	`ls ojs*.ml ojs*.mli example/*.ml | grep -v types.ml`  > .depend
+
+ojsft_server.cmo: ojsft_types.cmi
+ojsft_server.cmx: ojsft_types.cmi ojsft_types.cmx
+ojsft_js.cmo: ojsft_types.cmi
+
+ojsed_server.cmo: ojsed_types.cmi
+ojsed_server.cmx: ojsed_types.cmi ojsed_types.cmx
+ojsed_js.cmo: ojsed_types.cmi
 
 include .depend
 
