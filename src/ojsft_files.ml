@@ -34,7 +34,7 @@ let is_dir file = (Unix.stat file).Unix.st_kind = Unix.S_DIR
 
 let file_trees_of_dir pred_ign root_dir =
   let len = String.length root_dir in
-  let basename s =
+  let base s =
     let len_s = String.length s in
     if len_s > len then
       String.sub s len (len_s - len)
@@ -58,8 +58,8 @@ let file_trees_of_dir pred_ign root_dir =
     let entries = List.filter pred entries in
     let entries = List.sort String.compare entries in
     let (dirs, files) = List.partition is_dir entries in
-    let dir s = `Dir (basename s, iter s) in
-    let file s = `File (basename s) in
+    let dir s = `Dir (base s, iter s) in
+    let file s = `File (base s) in
     (List.map dir dirs) @ (List.map file files)
   in
   iter root_dir

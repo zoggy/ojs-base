@@ -68,7 +68,7 @@ let send_msg ws id msg =
   let msg = `Filetree_msg (id, msg) in
   Ojs_js.send_msg ws (wsdata_of_msg msg)
 
-let set_unselected ti div_id label =
+let set_unselected ti div_id fname =
   (
    try
      let span_id = (SMap.find div_id !tree_nodes).tn_span_id in
@@ -76,27 +76,27 @@ let set_unselected ti div_id label =
    with Not_found -> ()
   );
   ti.selected <- None ;
-  ti.on_deselect ti label
+  ti.on_deselect ti fname
 
-let set_selected ti div_id label =
+let set_selected ti div_id fname =
   (
    try
      let span_id = (SMap.find div_id !tree_nodes).tn_span_id in
      Ojs_js.set_class span_id "selected" ;
    with Not_found -> ()
   );
-  ti.selected <- Some (div_id, label) ;
-  ti.on_select ti label
+  ti.selected <- Some (div_id, fname) ;
+  ti.on_select ti fname
 
-let set_tree_onclick id node div_id label =
+let set_tree_onclick id node div_id fname =
   let f _ =
     try
       let ti = SMap.find id !trees in
       match ti.selected with
-      | None ->  set_selected ti div_id label
+      | None ->  set_selected ti div_id fname
       | Some (old_id,l) when id <> div_id ->
           set_unselected ti old_id l ;
-          set_selected ti div_id label
+          set_selected ti div_id fname
       | _ -> ()
     with
       Not_found -> ()
@@ -153,7 +153,7 @@ let build_from_tree ~id tree_files =
       let span_id = div_id^"text" in
       let span = doc##createElement (Js.string "span") in
       span##setAttribute (Js.string "id", Js.string span_id);
-      set_tree_onclick id span div_id label ;
+      set_tree_onclick id span div_id s ;
 
       let subs_id = div_id^"subs" in
       let div_subs = doc##createElement (Js.string "div") in
@@ -192,7 +192,7 @@ let build_from_tree ~id tree_files =
           let span_id = div_id^"text" in
           let span = doc##createElement (Js.string span_id) in
           span##setAttribute (Js.string "id", Js.string (div_id^"text"));
-          set_tree_onclick id span div_id label;
+          set_tree_onclick id span div_id s;
 
           let tn = {
               tn_span_id = span_id ;

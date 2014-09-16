@@ -14,7 +14,7 @@ class type editSession =
   end
 
 let newEditSession s mode =
-  (Unsafe.new_obj (Js.Unsafe.variable "ace.EditSession")
+  (Unsafe.new_obj (Unsafe.variable "ace.EditSession")
     [| Unsafe.inject (Js.string s) ; Unsafe.inject (Js.string mode) |] : editSession Js.t)
 
 class type editor =

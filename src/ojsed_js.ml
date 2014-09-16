@@ -14,12 +14,14 @@ type editor_info = {
 
 let editors = ref (SMap.empty : editor_info SMap.t)
 
-let get_session ed filename =
+let get_session ed ?contents filename =
   try  SMap.find filename ed.sessions
   with Not_found ->
-    let sess = Ojs_ace.newEditSession "" "" in
-    ed.sessions <- SMap.add filename sess ed.sessions;
-    sess
+      let sess = Ojs_ace.newEditSession
+        (match contents with None -> "" | Some s -> s) ""
+      in
+      ed.sessions <- SMap.add filename sess ed.sessions;
+      sess
 
 let msg_of_wsdata json =
   try
@@ -58,15 +60,11 @@ let display_filename ed fname =
 let save ws ed_id = send_msg ws ed_id (`Save_file ("foo.ml", "let x = 1"))
 
 let edit_file ws id ?contents fname =
-  log (Printf.sprintf "edit_file %s" fname);
   let ed = get_editor id in
-  let sess = get_session ed fname in
+  let sess = get_session ed ?contents fname in
   ed.editor##setSession(sess);
   ed.current_file <- Some fname ;
-  display_filename ed fname ;
-  match contents with
-    None -> ()
-  | Some s -> sess##setValue (Js.string s)
+  display_filename ed fname
 
 let handle_message ws msg =
    try
@@ -76,6 +74,7 @@ let handle_message ws msg =
            `File_contents (fname, contents) ->
              edit_file ws id ~contents fname
          | `Ok msg -> display_message id msg
+         | `Error msg -> display_message id msg
          | _ -> failwith "Unhandled message received from server"
     );
     Js._false
