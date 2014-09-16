@@ -1,3 +1,6 @@
+#ft { position: absolute; top: 10px; left: 0px; width: 300px ;
+      overflow: hidden ; padding-right: 1em; }
+
 div.ojsft {
   font-family: monospace;
 }
@@ -19,3 +22,11 @@ div.ojsft-file { font-weight: normal; margin-left: 1em ; }
 .selected { background-color: #aaf; }
 .collapsed { display: none ; }
 .expanded { display: normal; }
+
+#ed {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  bottom: 0;
+  left: 310px;
+}

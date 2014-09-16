@@ -28,9 +28,8 @@
 
 (** *)
 
+open Ojs_js
 open Ojsft_types
-
-module SMap = Map.Make(String)
 
 let log = Ojs_js.log
 
@@ -58,8 +57,6 @@ let split_string ?(keep_empty=false) s chars =
 (*/c==v=[String.split_string]=1.2====*)
 
 
-type id = string
-
 type tree_info = {
     root_id : id ;
     ws : WebSockets.webSocket Js.t ;
@@ -78,8 +75,6 @@ type tree_node =
 let tree_nodes = ref (SMap.empty : tree_node SMap.t)
 let trees = ref (SMap.empty : tree_info SMap.t)
 
-let (+=) map (key, v) = map := SMap.add key v !map
-let (-=) map key = map := SMap.remove key !map
 
 let msg_of_wsdata json =
   try

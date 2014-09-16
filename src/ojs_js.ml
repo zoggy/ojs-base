@@ -1,4 +1,9 @@
 
+module SMap = Map.Make(String)
+let (+=) map (key, v) = map := SMap.add key v !map
+let (-=) map key = map := SMap.remove key !map
+type id = string
+
 let log s = Firebug.console##log (Js.string s);;
 
 let setup_ws url msg_of_data data_of_msg

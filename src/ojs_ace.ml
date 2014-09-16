@@ -13,5 +13,4 @@ class type ace =
     method createEditSession : js_string t -> js_string t -> document meth
   end
 
-let ace s = Unsafe.fun_call
-  (Unsafe.variable "ace") [|Unsafe.inject (Js.string s)|]
+let ace = ((Unsafe.variable "ace") : ace Js.t)

@@ -90,7 +90,6 @@ LIBED_CMXS=$(LIBED:.cmxs)
 LIBED_BYTE=$(LIBED:.cmxa=.cma)
 
 LIBED_CMXFILES=ojsed_types.cmx \
-	ojs_ace.cmx \
 	ojsed_server.cmx
 
 LIBED_CMOFILES=$(LIBED_CMXFILES:.cmx=.cmo)
@@ -100,6 +99,7 @@ LIBED_OFILES=$(LIBED_CMXFILES:.cmx=.o)
 LIBEDJS=ojs-editor-js.cma
 
 LIBEDJS_CMOFILES=ojsed_types.cmo \
+	ojs_ace.cmo \
 	ojsed_js.cmo
 
 LIBEDJS_CMIFILES=$(LIBEDJS_CMOFILES:.cmx=.cmi)
