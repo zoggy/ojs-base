@@ -37,8 +37,8 @@ type tree_info = {
     root_id : id ;
     ws : WebSockets.webSocket Js.t ;
     show_files : bool ;
-    on_select : string -> unit ;
-    on_deselect : string -> unit ;
+    on_select : tree_info -> string -> unit ;
+    on_deselect : tree_info -> string -> unit ;
     mutable selected : (id * string) option ;
   }
 
@@ -76,7 +76,7 @@ let set_unselected ti div_id label =
    with Not_found -> ()
   );
   ti.selected <- None ;
-  ti.on_deselect label
+  ti.on_deselect ti label
 
 let set_selected ti div_id label =
   (
@@ -86,7 +86,7 @@ let set_selected ti div_id label =
    with Not_found -> ()
   );
   ti.selected <- Some (div_id, label) ;
-  ti.on_select label
+  ti.on_select ti label
 
 let set_tree_onclick id node div_id label =
   let f _ =
@@ -229,8 +229,8 @@ let handle_message ws msg =
 let setup_filetree
   ws
   ?(show_files=true)
-  ?(on_select=fun _ -> ())
-  ?(on_deselect=fun _ -> ()) id =
+  ?(on_select=fun _ _ -> ())
+  ?(on_deselect=fun _ _-> ()) id =
   let cfg = {
       root_id = id ; ws ;
       on_select ; on_deselect ; show_files ;

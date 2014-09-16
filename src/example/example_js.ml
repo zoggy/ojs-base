@@ -26,11 +26,12 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-let on_deselect name =
+let on_deselect ti name =
   Ojs_js.log (Printf.sprintf "Node %S deselected" name)
 
-let on_select name =
-  Ojs_js.log (Printf.sprintf "Node %S selected" name)
+let on_select ti name =
+  Ojs_js.log (Printf.sprintf "Node %S selected" name);
+  Ojsed_js.send_msg ti.Ojsft_js.ws "ed" (`Get_file_contents name)
 
 let onopen ws =
   Ojsft_js.setup_filetree ws ~on_select ~on_deselect "ft" ;
