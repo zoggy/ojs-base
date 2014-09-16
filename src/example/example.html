@@ -2,10 +2,32 @@
 <header>
   <meta charset='utf-8'>
   <link href="example.css" rel="stylesheet" type="text/css"/>
+<style type="text/css" media="screen">
+    #ed {
+        position: absolute;
+        top: 10px;
+        right: 0;
+        bottom: 0;
+        left: 310px;
+    }
+    #ft { position: absolute; top: 10px; left: 0px; width: 300px ;
+          overflow: hidden ; padding-right: 1em; }
+</style>
 </header>
 <body>
-<div id="ft" class="ojsft"/>
+<div id="ft" class="ojsft"> </div>
 
+<div id="ed" class="ojsed">let rec map f = function
+  [] -> []
+| h :: q -> (f h) :: map f q
+</div>
+
+<script src="ace/ace.js" type="text/javascript">Please enable Javascript</script>
+<script type="text/javascript">
+var editor = ace.edit("ed");
+editor.setTheme("ace/theme/monokai");
+editor.getSession().setMode("ace/mode/ocaml");
+</script>
 <script src="example.js" type="text/javascript">Please enable Javascript</script>
 </body>
 </html>
