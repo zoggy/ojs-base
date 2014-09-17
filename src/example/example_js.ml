@@ -35,7 +35,7 @@ let on_select ti name =
 
 let onopen ws =
   Ojsft_js.setup_filetree ws ~on_select ~on_deselect "ft" ;
-  Ojsed_js.setup_editor ws ~bar: "bar" ~editor: "ed"
+  Ojsed_js.setup_editor ws ~msg_id: "ojs-msg" ~bar_id: "bar" ~editor_id: "ed"
 
 let onmessage ws msg =
   match msg with

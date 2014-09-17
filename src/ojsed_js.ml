@@ -4,7 +4,7 @@ open Ojs_js
 type editor_info = {
     ed_id : id ;
     bar_id : id ;
-    mbox_id : id ;
+    msg_id : id ;
     fname_id : id ;
     ws : WebSockets.webSocket Js.t ;
     editor : Ojs_ace.editor Js.t ;
@@ -44,12 +44,35 @@ let get_editor id =
   try SMap.find id !editors
   with Not_found -> failwith (Printf.sprintf "Invalid editor id %S" id)
 
-let display_message ed_id msg =
+let display_message ?(timeout=3000.0) ?(cl="ojs-msg-info") ed_id msg =
+  let doc = Dom_html.document in
   let ed = get_editor ed_id in
-  let node = Ojs_js.node_by_id ed.mbox_id in
-  Ojs_js.clear_children node ;
-  let t = Dom_html.document##createTextNode (Js.string msg) in
-  Dom.appendChild node t
+  let node = Ojs_js.node_by_id ed.msg_id in
+  (*Ojs_js.clear_children node ;*)
+  let div = doc##createElement (Js.string "div") in
+  Ojs_js.node_set_class div cl ;
+  Ojs_js.node_set_class div "ojs-msg" ;
+  let t = doc##createTextNode (Js.string msg) in
+  if timeout > 0. then
+    ignore(Dom_html.window##setTimeout
+     (Js.wrap_callback (fun () -> Dom.removeChild node div), timeout)
+    )
+  else
+    (
+     let b = doc##createElement (Js.string "span") in
+     Ojs_js.node_set_class b "ojs-msg-close" ;
+     let t = doc##createTextNode (Js.string "✘") in
+     Ojs_js.set_onclick b (fun _ -> Dom.removeChild node div);
+     Dom.appendChild div b ;
+     Dom.appendChild b t
+    );
+
+  Dom.appendChild node div ;
+  Dom.appendChild div t
+
+
+
+let display_error = display_message ~timeout: 0. ~cl: "ojs-msg-error"
 
 let display_filename ed fname =
   let node = Ojs_js.node_by_id ed.fname_id in
@@ -57,7 +80,13 @@ let display_filename ed fname =
   let t = Dom_html.document##createTextNode (Js.string fname) in
   Dom.appendChild node t
 
-let save ws ed_id = send_msg ws ed_id (`Save_file ("foo.ml", "let x = 1"))
+let save ws ed_id =
+  let ed = get_editor ed_id in
+  match ed.current_file with
+    None -> ()
+  | Some file ->
+      let contents = Js.to_string (ed.editor##getValue()) in
+      send_msg ws ed_id (`Save_file (file, contents))
 
 let edit_file ws id ?contents fname =
   let ed = get_editor id in
@@ -74,7 +103,7 @@ let handle_message ws msg =
            `File_contents (fname, contents) ->
              edit_file ws id ~contents fname
          | `Ok msg -> display_message id msg
-         | `Error msg -> display_message id msg
+         | `Error msg -> display_error id msg
          | _ -> failwith "Unhandled message received from server"
     );
     Js._false
@@ -83,7 +112,8 @@ let handle_message ws msg =
       log (Printexc.to_string e);
       Js._false
 
-let build_editor ws bar_id ed_id =
+let build_editor ws ~msg_id ~bar_id ~editor_id =
+  let ed_id = editor_id in
   let editor = Ojs_ace.ace##edit (Js.string ed_id) in
   let bar = Ojs_js.node_by_id bar_id in
   let doc = Dom_html.document in
@@ -95,20 +125,14 @@ let build_editor ws bar_id ed_id =
   fname##setAttribute (Js.string "id", Js.string fname_id);
   fname##setAttribute (Js.string "class", Js.string "filename");
 
-  let mbox_id = ed_id ^ "__msg" in
-  let mbox = doc##createElement(Js.string "pre") in
-  mbox##setAttribute (Js.string "id", Js.string mbox_id);
-  mbox##setAttribute (Js.string "class", Js.string "message-box");
-
   Dom.appendChild bar button ;
   Dom.appendChild button text ;
   Dom.appendChild bar fname ;
-  Dom.appendChild bar mbox ;
 
   Ojs_js.set_onclick button (fun _ -> save ws ed_id);
 
   let ed = {
-      ed_id ; bar_id ; mbox_id ; fname_id ;
+      ed_id ; bar_id ; msg_id ; fname_id ;
       ws ;
       editor ;
       current_file = None ;
@@ -117,7 +141,7 @@ let build_editor ws bar_id ed_id =
   in
   ed
 
-let setup_editor ws ~bar ~editor =
-  let ed = build_editor ws bar editor in
-  editors += (editor, ed)
+let setup_editor ws ~msg_id ~bar_id ~editor_id =
+  let editor = build_editor ws ~msg_id ~bar_id ~editor_id in
+  editors += (editor_id, editor)
 

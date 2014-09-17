@@ -30,7 +30,7 @@ let handle_client_msg root id msg =
   | `Save_file (path, contents) ->
       let file = Filename.concat root path in
       Ojsed_files.file_of_string ~file contents ;
-      (id, [`Ok "File saved"])
+      (id, [`Ok (Printf.sprintf "File %S saved" path)])
   | _ ->
       failwith "Unhandled message"
 

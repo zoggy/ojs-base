@@ -33,7 +33,9 @@ module Find = Ojsft_find
 let is_dir file = (Unix.stat file).Unix.st_kind = Unix.S_DIR
 
 let file_trees_of_dir pred_ign root_dir =
-  let len = String.length root_dir in
+  let len = String.length root_dir + 1
+    (* + 1 for the / added by Find.find_list *)
+  in
   let base s =
     let len_s = String.length s in
     if len_s > len then

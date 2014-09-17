@@ -82,16 +82,22 @@ let get_classes node =
   let s =Js.to_string node##className in
   split_string s [' ']
 
+let node_unset_class node cl =
+  node##classList##remove(Js.string cl)
+
+let node_set_class node cl =
+  node##classList##add(Js.string cl)
+
 let unset_class span_id cl =
   try
     let node = node_by_id span_id in
-    node##classList##remove(Js.string cl)
+    node_unset_class node cl
   with
     Failure msg -> log msg
 
 let set_class span_id cl =
   try
     let node = node_by_id span_id in
-    node##classList##add(Js.string cl)
+    node_set_class node cl
   with
     Failure msg -> log msg

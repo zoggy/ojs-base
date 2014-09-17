@@ -20,6 +20,7 @@ let newEditSession s mode =
 class type editor =
   object
     method setSession : editSession t -> unit meth
+    method getValue : js_string t meth
   end
 
 class type ace =
