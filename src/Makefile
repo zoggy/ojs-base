@@ -55,7 +55,7 @@ LIB_OFILES=$(LIB_CMXFILES:.cmx=.o)
 
 LIBJS=ojs-base-js.cma
 
-LIBJS_CMOFILES=	ojs_js.cmo
+LIBJS_CMOFILES=	ojs_js.cmo ojsmsg_js.cmo
 
 LIBJS_CMIFILES=$(LIBJS_CMOFILES:.cmx=.cmi)
 

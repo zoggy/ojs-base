@@ -22,7 +22,6 @@ let get_session ed ?contents filename =
       in
       ed.sessions <- SMap.add filename sess ed.sessions;
       sess
-
 let msg_of_wsdata json =
   try
     match Ojsed_types.server_msg_of_yojson (Yojson.Safe.from_string json) with
@@ -43,36 +42,6 @@ let send_msg ws id msg =
 let get_editor id =
   try SMap.find id !editors
   with Not_found -> failwith (Printf.sprintf "Invalid editor id %S" id)
-
-let display_message ?(timeout=3000.0) ?(cl="ojs-msg-info") ed_id msg =
-  let doc = Dom_html.document in
-  let ed = get_editor ed_id in
-  let node = Ojs_js.node_by_id ed.msg_id in
-  (*Ojs_js.clear_children node ;*)
-  let div = doc##createElement (Js.string "div") in
-  Ojs_js.node_set_class div cl ;
-  Ojs_js.node_set_class div "ojs-msg" ;
-  let t = doc##createTextNode (Js.string msg) in
-  if timeout > 0. then
-    ignore(Dom_html.window##setTimeout
-     (Js.wrap_callback (fun () -> Dom.removeChild node div), timeout)
-    )
-  else
-    (
-     let b = doc##createElement (Js.string "span") in
-     Ojs_js.node_set_class b "ojs-msg-close" ;
-     let t = doc##createTextNode (Js.string "✘") in
-     Ojs_js.set_onclick b (fun _ -> Dom.removeChild node div);
-     Dom.appendChild div b ;
-     Dom.appendChild b t
-    );
-
-  Dom.appendChild node div ;
-  Dom.appendChild div t
-
-
-
-let display_error = display_message ~timeout: 0. ~cl: "ojs-msg-error"
 
 let display_filename ed fname =
   let node = Ojs_js.node_by_id ed.fname_id in
@@ -102,8 +71,8 @@ let handle_message ws msg =
          match t with
            `File_contents (fname, contents) ->
              edit_file ws id ~contents fname
-         | `Ok msg -> display_message id msg
-         | `Error msg -> display_error id msg
+         | `Ok msg -> Ojsmsg_js.display_message id msg
+         | `Error msg -> Ojsmsg_js.display_error id msg
          | _ -> failwith "Unhandled message received from server"
     );
     Js._false
