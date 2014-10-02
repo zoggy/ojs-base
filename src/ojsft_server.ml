@@ -47,10 +47,10 @@ let msg_of_wsdata s =
 
 let send_msg push_msg id msg = push_msg (`Filetree_msg (id, msg))
 
-let handle_client_msg root id msg =
+let handle_client_msg ?filepred root id msg =
   match msg with
     `Get_tree ->
-      let files = Ojsft_files.file_trees_of_dir (fun _ -> true) root in
+      let files = Ojsft_files.file_trees_of_dir ?filepred root in
       (id, [`Tree files])
   | _ ->
       failwith "Unhandled message"
@@ -58,12 +58,12 @@ let handle_client_msg root id msg =
 let send_messages push_msg (id, messages) =
   Lwt_list.iter_s (send_msg push_msg id) messages
 
-let handle_message root push_msg msg =
+let handle_message ?filepred root push_msg msg =
   try
     match msg with
     | `Filetree_msg (id, t) ->
         Lwt.catch
-          (fun () -> send_messages push_msg (handle_client_msg root id t))
+          (fun () -> send_messages push_msg (handle_client_msg ?filepred root id t))
           (fun e ->
              let msg =
                match e with

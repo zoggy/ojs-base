@@ -54,10 +54,21 @@ let rights filename =
   | "txt" | "html"-> Some `RW
   | _ -> None
 
+let filepred =
+  let re = Str.regexp "^\\(\\(cm.*\\)\\|[oa]\\|\\(\\annot\\)\\)$" in
+  fun filename ->
+    match String.lowercase (Ojs_misc.filename_extension filename) with
+      s when Str.string_match re s 0 -> false
+    | _ -> true
+
 let handle_con root uri (stream, push) =
+  let root = if Filename.is_relative root
+    then Ojs_misc.normalize_filename (Filename.concat (Sys.getcwd()) root)
+    else root
+  in
   let handle_message push_msg msg =
     match msg with
-      `Filetree_msg t -> Ojsft_server.handle_message root push_msg (`Filetree_msg t)
+      `Filetree_msg t -> Ojsft_server.handle_message ~filepred root push_msg (`Filetree_msg t)
     | `Editor_msg t -> Ojsed_server.handle_message ~rights root push_msg (`Editor_msg t)
     | _ -> failwith "Unhandled message"
   in

@@ -25,6 +25,7 @@ let send_msg push_msg id msg = push_msg (`Editor_msg (id, msg))
 let access_rights ?(rights=fun _ -> Some `RW) root path =
   let filename = Filename.concat root path in
   let norm = Ojs_misc.normalize_filename filename in
+  (*prerr_endline ("norm="^norm);*)
   if Ojs_misc.is_prefix root norm then
     (norm, rights norm)
   else

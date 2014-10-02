@@ -32,7 +32,7 @@ module Find = Ojsft_find
 
 let is_dir file = (Unix.stat file).Unix.st_kind = Unix.S_DIR
 
-let file_trees_of_dir pred_ign root_dir =
+let file_trees_of_dir ?(filepred=fun _ -> true) root_dir =
   let len = String.length root_dir + 1
     (* + 1 for the / added by Find.find_list *)
   in
@@ -49,7 +49,7 @@ let file_trees_of_dir pred_ign root_dir =
         Find.Stderr
         [dir]
         [ Find.Maxdepth 1 ;
-          Find.Predicate pred_ign ;
+          Find.Predicate filepred ;
         ]
     in
     let pred s =
