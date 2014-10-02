@@ -34,7 +34,7 @@ let on_select ti name =
   Ojsed_js.send_msg ti.Ojsft_js.ws "ed" (`Get_file_contents name)
 
 let onopen ws =
-  Ojsft_js.setup_filetree ws ~on_select ~on_deselect "ft" ;
+  Ojsft_js.setup_filetree ws ~on_select ~on_deselect ~msg_id: "ojs-msg" "ft" ;
   Ojsed_js.setup_editor ws ~msg_id: "ojs-msg" ~bar_id: "bar" ~editor_id: "ed"
 
 let onmessage ws msg =

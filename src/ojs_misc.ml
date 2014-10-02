@@ -26,34 +26,61 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-(** Displaying messages in web pages. *)
+(** *)
 
-let base_class = "ojs-msg"
+(*c==v=[String.split_string]=1.2====*)
+let split_string ?(keep_empty=false) s chars =
+  let len = String.length s in
+  let rec iter acc pos =
+    if pos >= len then
+      match acc with
+        "" -> if keep_empty then [""] else []
+      | _ -> [acc]
+    else
+      if List.mem s.[pos] chars then
+        match acc with
+          "" ->
+            if keep_empty then
+              "" :: iter "" (pos + 1)
+            else
+              iter "" (pos + 1)
+        | _ -> acc :: (iter "" (pos + 1))
+      else
+        iter (Printf.sprintf "%s%c" acc s.[pos]) (pos + 1)
+  in
+  iter "" 0
+(*/c==v=[String.split_string]=1.2====*)
 
-let display_message ?(timeout=3000.0) ?(cl=base_class^"-info") id msg =
-  let doc = Dom_html.document in
-  let node = Ojs_js.node_by_id id in
-  (*Ojs_js.clear_children node ;*)
-  let div = doc##createElement (Js.string "div") in
-  Ojs_js.node_set_class div cl ;
-  Ojs_js.node_set_class div base_class ;
-  let t = doc##createTextNode (Js.string msg) in
-  if timeout > 0. then
-    ignore(Dom_html.window##setTimeout
-     (Js.wrap_callback (fun () -> Dom.removeChild node div), timeout)
-    )
-  else
-    (
-     let b = doc##createElement (Js.string "span") in
-     Ojs_js.node_set_class b (base_class^"-close") ;
-     let t = doc##createTextNode (Js.string "✘") in
-     Ojs_js.set_onclick b (fun _ -> Dom.removeChild node div);
-     Dom.appendChild div b ;
-     Dom.appendChild b t
-    );
+(*c==v=[String.is_prefix]=1.0====*)
+let is_prefix s1 s2 =
+  let len1 = String.length s1 in
+  let len2 = String.length s2 in
+  (len1 <= len2) &&
+    (String.sub s2 0 len1) = s1
+(*/c==v=[String.is_prefix]=1.0====*)
 
-  Dom.appendChild node div ;
-  Dom.appendChild div t
+let normalize_filename =
+  let dir_sep = String.get Filename.dir_sep 0 in
+  fun filename ->
+    let l = split_string filename [dir_sep] in
+    let rec iter acc = function
+      [] -> List.rev acc
+    | h :: q ->
+        if h = Filename.current_dir_name then
+          iter acc q
+        else
+          if h = Filename.parent_dir_name then
+            match acc with
+              [] -> []
+            | _ :: r -> iter r q
+          else
+            iter (h::acc) q
+    in
+    Filename.dir_sep ^ (String.concat Filename.dir_sep (iter [] l))
 
-let display_error = display_message ~timeout: 0. ~cl: (base_class^"-error")
-
+let filename_extension filename =
+  try
+    let p = String.rindex filename '.' in
+    let len = String.length filename in
+    String.sub filename (p+1) (len - p - 1)
+  with _ -> ""

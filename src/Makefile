@@ -47,7 +47,7 @@ LIB_A=$(LIBFT:.cmxa=.a)
 LIB_CMXS=$(LIB:.cmxs)
 LIB_BYTE=$(LIB:.cmxa=.cma)
 
-LIB_CMXFILES=ojs_server.cmx
+LIB_CMXFILES=ojs_misc.cmx ojs_server.cmx
 
 LIB_CMOFILES=$(LIB_CMXFILES:.cmx=.cmo)
 LIB_CMIFILES=$(LIB_CMXFILES:.cmx=.cmi)

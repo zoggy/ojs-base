@@ -48,11 +48,17 @@ let msg_of_wsdata s =
       prerr_endline (Printexc.to_string e);
       None
 
+let rights filename =
+  match String.lowercase (Ojs_misc.filename_extension filename) with
+    "ml" | "mli" -> Some `RO
+  | "txt" | "html"-> Some `RW
+  | _ -> None
+
 let handle_con root uri (stream, push) =
   let handle_message push_msg msg =
     match msg with
       `Filetree_msg t -> Ojsft_server.handle_message root push_msg (`Filetree_msg t)
-    | `Editor_msg t -> Ojsed_server.handle_message root push_msg (`Editor_msg t)
+    | `Editor_msg t -> Ojsed_server.handle_message ~rights root push_msg (`Editor_msg t)
     | _ -> failwith "Unhandled message"
   in
   Ojs_server.handle_messages

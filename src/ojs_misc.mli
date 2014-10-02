@@ -26,34 +26,33 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-(** Displaying messages in web pages. *)
+(** Utilities. *)
 
-let base_class = "ojs-msg"
+(*i==v=[String.split_string]=1.2====*)
+(** Separate the given string according to the given list of characters.
+@author Maxence Guesdon
+@version 1.2
+@param keep_empty is [false] by default. If set to [true],
+   the empty strings between separators are kept.
+@cgname String.split_string*)
+val split_string : ?keep_empty:bool -> string -> char list -> string list
+(*/i==v=[String.split_string]=1.2====*)
 
-let display_message ?(timeout=3000.0) ?(cl=base_class^"-info") id msg =
-  let doc = Dom_html.document in
-  let node = Ojs_js.node_by_id id in
-  (*Ojs_js.clear_children node ;*)
-  let div = doc##createElement (Js.string "div") in
-  Ojs_js.node_set_class div cl ;
-  Ojs_js.node_set_class div base_class ;
-  let t = doc##createTextNode (Js.string msg) in
-  if timeout > 0. then
-    ignore(Dom_html.window##setTimeout
-     (Js.wrap_callback (fun () -> Dom.removeChild node div), timeout)
-    )
-  else
-    (
-     let b = doc##createElement (Js.string "span") in
-     Ojs_js.node_set_class b (base_class^"-close") ;
-     let t = doc##createTextNode (Js.string "✘") in
-     Ojs_js.set_onclick b (fun _ -> Dom.removeChild node div);
-     Dom.appendChild div b ;
-     Dom.appendChild b t
-    );
+(*i==v=[String.is_prefix]=1.0====*)
+(** [is_prefix pattern s] returns true if string [s] begins with [pattern].
+@author Maxence Guesdon
+@version 1.0
+@cgname String.is_prefix*)
+val is_prefix : string -> string -> bool
+(*/i==v=[String.is_prefix]=1.0====*)
 
-  Dom.appendChild node div ;
-  Dom.appendChild div t
+(** [normalize_filename filename] returns [filename] where [Filename.parent_dir_name]
+  and [Filename.current_dir_name] have been handled so they don't appear anymore.
+  Note that [/..] becomes [/] (i.e. no error in case there are too many separators).
+  The given filename must be absolute.
+*)
+val normalize_filename : string -> string
 
-let display_error = display_message ~timeout: 0. ~cl: (base_class^"-error")
-
+(** [filename_extension fname] returns extension of [fname] (i.e. the string after
+  the last dot), or an empty string if there is no dot. *)
+val filename_extension : string -> string

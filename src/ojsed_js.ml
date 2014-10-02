@@ -64,6 +64,8 @@ let edit_file ws id ?contents fname =
   ed.current_file <- Some fname ;
   display_filename ed fname
 
+let get_msg_id id = (get_editor id).msg_id
+
 let handle_message ws msg =
    try
     (match msg with
@@ -71,8 +73,8 @@ let handle_message ws msg =
          match t with
            `File_contents (fname, contents) ->
              edit_file ws id ~contents fname
-         | `Ok msg -> Ojsmsg_js.display_message id msg
-         | `Error msg -> Ojsmsg_js.display_error id msg
+         | `Ok msg -> Ojsmsg_js.display_message (get_msg_id id) msg
+         | `Error msg -> Ojsmsg_js.display_error (get_msg_id id) msg
          | _ -> failwith "Unhandled message received from server"
     );
     Js._false

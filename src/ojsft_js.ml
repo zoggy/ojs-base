@@ -35,6 +35,7 @@ let log = Ojs_js.log
 
 type tree_info = {
     root_id : id ;
+    msg_id : id ;
     ws : WebSockets.webSocket Js.t ;
     show_files : bool ;
     on_select : tree_info -> string -> unit ;
@@ -230,9 +231,10 @@ let setup_filetree
   ws
   ?(show_files=true)
   ?(on_select=fun _ _ -> ())
-  ?(on_deselect=fun _ _-> ()) id =
+  ?(on_deselect=fun _ _-> ())
+  ~msg_id id =
   let cfg = {
-      root_id = id ; ws ;
+      root_id = id ; msg_id ; ws ;
       on_select ; on_deselect ; show_files ;
       selected = None ;
     }
