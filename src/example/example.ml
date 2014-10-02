@@ -57,9 +57,14 @@ let rights filename =
 let filepred =
   let re = Str.regexp "^\\(\\(cm.*\\)\\|[oa]\\|\\(\\annot\\)\\)$" in
   fun filename ->
-    match String.lowercase (Ojs_misc.filename_extension filename) with
-      s when Str.string_match re s 0 -> false
-    | _ -> true
+    let base = Filename.basename filename in
+    String.length base > 0 &&
+      String.get base 0 <> '.' &&
+      (
+       match String.lowercase (Ojs_misc.filename_extension filename) with
+         s when Str.string_match re s 0 -> false
+       | _ -> true
+      )
 
 let handle_con root uri (stream, push) =
   let root = if Filename.is_relative root
