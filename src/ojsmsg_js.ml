@@ -29,15 +29,15 @@
 (** Displaying messages in web pages. *)
 
 let base_class = "ojs-msg"
+let class_ s = base_class ^ "-" ^ s
 
-let display_message ?(timeout=3000.0) ?(cl=base_class^"-info") id msg =
+let display_message ?(timeout=3000.0) ?(cl=class_"info") id msg_nodes =
   let doc = Dom_html.document in
   let node = Ojs_js.node_by_id id in
-  (*Ojs_js.clear_children node ;*)
   let div = doc##createElement (Js.string "div") in
   Ojs_js.node_set_class div cl ;
   Ojs_js.node_set_class div base_class ;
-  let t = doc##createTextNode (Js.string msg) in
+
   if timeout > 0. then
     ignore(Dom_html.window##setTimeout
      (Js.wrap_callback (fun () -> Dom.removeChild node div), timeout)
@@ -45,7 +45,7 @@ let display_message ?(timeout=3000.0) ?(cl=base_class^"-info") id msg =
   else
     (
      let b = doc##createElement (Js.string "span") in
-     Ojs_js.node_set_class b (base_class^"-close") ;
+     Ojs_js.node_set_class b (class_"close") ;
      let t = doc##createTextNode (Js.string "✘") in
      Ojs_js.set_onclick b (fun _ -> Dom.removeChild node div);
      Dom.appendChild div b ;
@@ -53,7 +53,15 @@ let display_message ?(timeout=3000.0) ?(cl=base_class^"-info") id msg =
     );
 
   Dom.appendChild node div ;
-  Dom.appendChild div t
+  List.iter (Dom.appendChild div) msg_nodes
 
-let display_error = display_message ~timeout: 0. ~cl: (base_class^"-error")
+let display_error = display_message ~timeout: 0. ~cl: (class_"error")
+
+let display_text_message ?timeout ?cl id text =
+  let t = Dom_html.document##createTextNode (Js.string text) in
+  display_message ?timeout ?cl id [t]
+
+let display_text_error id text =
+  let t = Dom_html.document##createTextNode (Js.string text) in
+  display_error id [t]
 

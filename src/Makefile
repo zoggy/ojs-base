@@ -43,7 +43,7 @@ MKDIR=mkdir -p
 # Base
 
 LIB=ojs-base.cmxa
-LIB_A=$(LIBFT:.cmxa=.a)
+LIB_A=$(LIB:.cmxa=.a)
 LIB_CMXS=$(LIB:.cmxs)
 LIB_BYTE=$(LIB:.cmxa=.cma)
 
@@ -57,7 +57,7 @@ LIBJS=ojs-base-js.cma
 
 LIBJS_CMOFILES=	ojs_js.cmo ojsmsg_js.cmo
 
-LIBJS_CMIFILES=$(LIBJS_CMOFILES:.cmx=.cmi)
+LIBJS_CMIFILES=$(LIBJS_CMOFILES:.cmo=.cmi)
 
 # Filetree
 
@@ -184,7 +184,7 @@ install-lib:
 		$(LIBJS) $(LIBJS_CMIFILES) \
 		$(LIBFT_CMIFILES) $(LIBFT_CMXFILES) $(LIBFT_OFILES) \
 		$(LIBFT_BYTE) $(LIBFT) $(LIBFT_A) $(LIBFT_CMXS) \
-		$(LIBFTJS) $(LIBFTJS_CMIFILES)
+		$(LIBFTJS) $(LIBFTJS_CMIFILES) \
 		$(LIBED_CMIFILES) $(LIBED_CMXFILES) $(LIBED_OFILES) \
 		$(LIBED_BYTE) $(LIBED) $(LIBED_A) $(LIBED_CMXS) \
 		$(LIBEDJS) $(LIBEDJS_CMIFILES)

@@ -33,7 +33,7 @@ let msg_of_wsdata json =
       None
 
 let wsdata_of_msg msg =
-  Yojson.to_string (Ojsed_types.client_msg_to_yojson msg)
+  Yojson.Safe.to_string (Ojsed_types.client_msg_to_yojson msg)
 
 let send_msg ws id msg =
   let msg = `Editor_msg (id, msg) in
@@ -73,8 +73,8 @@ let handle_message ws msg =
          match t with
            `File_contents (fname, contents) ->
              edit_file ws id ~contents fname
-         | `Ok msg -> Ojsmsg_js.display_message (get_msg_id id) msg
-         | `Error msg -> Ojsmsg_js.display_error (get_msg_id id) msg
+         | `Ok msg -> Ojsmsg_js.display_text_message (get_msg_id id) msg
+         | `Error msg -> Ojsmsg_js.display_text_error (get_msg_id id) msg
          | _ -> failwith "Unhandled message received from server"
     );
     Js._false

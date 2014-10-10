@@ -54,7 +54,7 @@ let msg_of_wsdata json =
       None
 
 let wsdata_of_msg msg =
-  Yojson.to_string (Example_types.client_msg_to_yojson msg)
+  Yojson.Safe.to_string (Example_types.client_msg_to_yojson msg)
 
 let _ = Ojs_js.setup_ws "ws://localhost:8080"
   msg_of_wsdata wsdata_of_msg

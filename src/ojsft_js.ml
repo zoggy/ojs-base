@@ -63,7 +63,7 @@ let msg_of_wsdata json =
       None
 
 let wsdata_of_msg msg =
-  Yojson.to_string (Ojsft_types.client_msg_to_yojson msg)
+  Yojson.Safe.to_string (Ojsft_types.client_msg_to_yojson msg)
 
 let send_msg ws id msg =
   let msg = `Filetree_msg (id, msg) in

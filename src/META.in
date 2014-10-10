@@ -1,14 +1,48 @@
 version = "@VERSION@"
-description = "Editing server-side file tree in web pages"
+description = "Library to develop web apps using websockets and js_of_ocaml"
 requires = "@PACKAGES@"
-archive(byte) = "ojs-filetree.cma"
-archive(native) = "ojs-filetree.cmxa"
-archive(plugin,byte) = "ojs-filetree.cma"
-archive(plugin,native) = "ojs-filetree.cmxs"
+archive(byte) = "ojs-base.cma"
+archive(native) = "ojs-base.cmxa"
+archive(plugin,byte) = "ojs-base.cma"
+archive(plugin,native) = "ojs-base.cmxs"
 
 package "js" (
   version = "@VERSION@"
   description = "Client code"
-  archive(byte) = "ojs-filetree-js.cma"
+  archive(byte) = "ojs-base-js.cma"
 )
+
+package "filetree" (
+  version = "@VERSION@"
+  description = "Editing server-side file tree in web pages"
+  requires = "ojs-base"
+  archive(byte) = "ojs-filetree.cma"
+  archive(native) = "ojs-filetree.cmxa"
+  archive(plugin,byte) = "ojs-filetree.cma"
+  archive(plugin,native) = "ojs-filetree.cmxs"
+
+  package "js" (
+    version = "@VERSION@"
+    description = "Editing server-side file tree in web page - client code"
+    archive(byte) = "ojs-filetree-js.cma"
+  )
+)
+
+package "editor" (
+  version = "@VERSION@"
+  description = "Editing server-side files in web pages"
+  requires = "ojs-editor"
+  archive(byte) = "ojs-editor.cma"
+  archive(native) = "ojs-editor.cmxa"
+  archive(plugin,byte) = "ojs-editor.cma"
+  archive(plugin,native) = "ojs-editor.cmxs"
+
+  package "js" (
+    version = "@VERSION@"
+    description = "Editing server-side files in web page - client code"
+    archive(byte) = "ojs-editor-js.cma"
+  )
+)
+
+
 
