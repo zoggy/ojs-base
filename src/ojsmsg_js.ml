@@ -55,7 +55,7 @@ let display_message ?(timeout=3000.0) ?(cl=class_"info") id msg_nodes =
   Dom.appendChild node div ;
   List.iter (Dom.appendChild div) msg_nodes
 
-let display_error = display_message ~timeout: 0. ~cl: (class_"error")
+let display_error id nodes = display_message ~timeout: 0. ~cl: (class_"error") id nodes
 
 let display_text_message ?timeout ?cl id text =
   let t = Dom_html.document##createTextNode (Js.string text) in
