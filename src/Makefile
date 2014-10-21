@@ -184,7 +184,7 @@ dump.odoc:
 docstog: dump.odoc
 	$(MKDIR) ../web/refdoc
 	$(OCAMLFIND) ocamldoc -load dump.odoc \
-	-t Xmldiff -d ../web/refdoc -g odoc_stog.cmo
+	-t Ojs-base -d ../web/refdoc -g odoc_stog.cmo
 
 
 ##########
