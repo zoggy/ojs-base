@@ -85,6 +85,14 @@ noheaders: dummy
 	headache -r -c .headache_config $(HEADFILES)
 
 
+############
+
+webdoc:
+	(cd src && $(MAKE) docstog)
+	cd web && $(MAKE)
+
+
+
 #################
 # installation
 #################

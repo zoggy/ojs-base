@@ -174,6 +174,19 @@ example/example.js: $(LIBJS) $(LIBFTJS) $(LIBEDJS) \
 doc:
 	$(OCAMLFIND) ocamldoc -d ocamldoc -html $(OF_FLAGS) -verbose  `ls ojs_*.ml | grep -v _js.ml`
 
+doc: dump.odoc
+	$(MKDIR) doc
+	$(OCAMLFIND) ocamldoc -load dump.odoc -t Ojs-base -d doc -html
+
+dump.odoc:
+	$(OCAMLFIND) ocamldoc $(OF_FLAGS) `ls ojs_*.ml | grep -v _js.ml` -dump dump.odoc
+
+docstog: dump.odoc
+	$(MKDIR) ../web/refdoc
+	$(OCAMLFIND) ocamldoc -load dump.odoc \
+	-t Xmldiff -d ../web/refdoc -g odoc_stog.cmo
+
+
 ##########
 install: install-lib
 

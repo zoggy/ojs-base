@@ -1,0 +1,13 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<ocamldoc with-contents="true">
+<title>Xmldiff : Ojs_server</title><contents><div class="ocamldoc-page">
+<div class="navbar"><a class="pre" href="Ojs_misc.html" title="Ojs_misc">Previous</a>
+&#160;<a class="up" href="index.html" title="Index">Up</a>
+&#160;</div>
+<h1>Module <a href="type_Ojs_server.html">Ojs_server</a></h1>
+
+<pre><span class="keyword">module</span> Ojs_server: <code class="code">sig</code> <a href="Ojs_server.html">..</a> <code class="code">end</code></pre><hr width="100%"/>
+
+<pre><span id="VAL(>>=)"><span class="keyword">val</span> (&gt;&gt;=)</span> : <code class="type">'a Lwt.t -&gt; ('a -&gt; 'b Lwt.t) -&gt; 'b Lwt.t</code></pre>
+<pre><span class="keyword">module</span> <a href="Ojs_server.J.html">J</a>: <code class="type">Yojson.Safe</code></pre>
+<pre><span id="VALhandle_messages"><span class="keyword">val</span> handle_messages</span> : <code class="type">(string -&gt; 'a option) -&gt;<br/>       ('b -&gt; string) -&gt;<br/>       (('b -&gt; 'c Lwt.t) -&gt; 'a -&gt; unit Lwt.t) -&gt;<br/>       Websocket.Frame.t Lwt_stream.t -&gt;<br/>       (Websocket.Frame.t option -&gt; 'c) -&gt; unit Lwt.t</code></pre></div></contents></ocamldoc>
