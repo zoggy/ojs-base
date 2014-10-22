@@ -114,7 +114,7 @@ uninstall: dummy
 # archive
 ###########
 archive:
-	git archive --prefix=ojs-base-$(VERSION)/ HEAD | gzip > ../ojs-base-pages/ojs-base-$(VERSION).tar.gz
+	git archive --prefix=ojs-base-$(VERSION)/ HEAD | gzip > ../ojs-base-gh-pages/ojs-base-$(VERSION).tar.gz
 
 ###########################
 # additional dependencies
