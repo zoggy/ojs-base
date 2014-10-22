@@ -900,9 +900,9 @@ let _ = !print "\n### checking required tools and libraries ###\n"
 
 let _ = check_ocamlfind_package conf ~min_version: [2;4;1] "js_of_ocaml";;
 let _ = check_ocamlfind_package conf ~fail: false ~min_version: [0;9] "websocket"
-let _ = check_ocamlfind_package conf ~fail: false ~min_version: [0;9] "lwt.unix"
-let _ = check_ocamlfind_package conf ~fail: false ~min_version: [0;9] "yojson"
-let _ = check_ocamlfind_package conf ~fail: false ~min_version: [0;9] "ppx_deriving_yojson"
+let _ = check_ocamlfind_package conf ~fail: false ~min_version: [2;4;6] "lwt.unix"
+let _ = check_ocamlfind_package conf ~fail: false ~min_version: [1;1;8] "yojson"
+let _ = check_ocamlfind_package conf ~fail: false ~min_version: [1;1] "ppx_deriving_yojson"
 let _ = add_subst "JS_OF_OCAML" (ocaml_prog "js_of_ocaml")
 
 let _ = !print "\n###\n"
