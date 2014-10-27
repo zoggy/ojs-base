@@ -27,7 +27,7 @@
 (*********************************************************************************)
 
 (** All paths should relative to root directory. *)
-type path = string [@@deriving Yojson]
+type path = string [@@deriving yojson]
 
 type server_msg = [
     `Editor_msg of string *
@@ -37,7 +37,7 @@ type server_msg = [
       | `File_contents of path * string
       ]
   ]
-  [@@deriving Yojson]
+  [@@deriving yojson]
 
 type client_msg = [
     `Editor_msg of string *
@@ -46,4 +46,4 @@ type client_msg = [
       | `Save_file of path * string
       ]
   ]
-  [@@deriving Yojson]
+  [@@deriving yojson]
