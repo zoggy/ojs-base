@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>Ojs-base : Ojs-base : Ojsed_types</title>
+<link href="https://zoggy.github.io/ojs-base/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="page">
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container">
+
+
+  <div class="nav-collapse">
+    <ul class="nav">
+    <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
+    <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
+
+  </ul>
+  <div class="nav pull-right">  </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<div id="header">
+  
+  
+  
+</div>
+
+
+
+<div class="ocamldoc-page">
+<div class="navbar"><a class="pre" href="Ojsed_server.html" title="Ojsed_server">Previous</a>
+ <a class="up" href="index.html" title="Index">Up</a>
+ <a class="post" href="Ojsft_files.html" title="Ojsft_files">Next</a>
+</div>
+<h1>Module <a href="type_Ojsed_types.html">Ojsed_types</a></h1>
+
+<pre><span class="keyword">module</span> Ojsed_types: <code class="code">sig</code> <a href="Ojsed_types.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Type for editor.<br/>
+</div>
+<hr width="100%"/>
+
+<pre><span id="TYPEpath"><span class="keyword">type</span> path</span> = <code class="type">string</code> </pre>
+<div class="info">
+All paths should relative to root directory.<br/>
+</div>
+
+
+<pre><span id="VALpath_to_yojson"><span class="keyword">val</span> path_to_yojson</span> : <code class="type">string -&gt; Yojson.Safe.json</code></pre>
+<pre><span id="VALpath_of_yojson"><span class="keyword">val</span> path_of_yojson</span> : <code class="type">Yojson.Safe.json -&gt; [&gt; `Error of string | `Ok of string ]</code></pre>
+<pre><span id="TYPEserver_msg"><span class="keyword">type</span> server_msg</span> = <code class="type">[ `Editor_msg of<br/>           string *<br/>           [ `Error of string<br/>           | `File_contents of <a href="Ojsed_types.html#TYPEpath">path</a> * string<br/>           | `Ok of string ] ]</code> </pre>
+
+
+<pre><span id="VALserver_msg_to_yojson"><span class="keyword">val</span> server_msg_to_yojson</span> : <code class="type">[&lt; `Editor_msg of<br/>            string *<br/>            [&lt; `Error of string | `File_contents of string * string | `Ok of string ] ] -&gt;<br/>       Yojson.Safe.json</code></pre>
+<pre><span id="VALserver_msg_of_yojson"><span class="keyword">val</span> server_msg_of_yojson</span> : <code class="type">Yojson.Safe.json -&gt;<br/>       [&gt; `Error of string<br/>        | `Ok of<br/>            [&gt; `Editor_msg of<br/>                 string *<br/>                 [&gt; `Error of string<br/>                  | `File_contents of string * string<br/>                  | `Ok of string ] ] ]</code></pre>
+<pre><span id="TYPEclient_msg"><span class="keyword">type</span> client_msg</span> = <code class="type">[ `Editor_msg of<br/>           string *<br/>           [ `Get_file_contents of <a href="Ojsed_types.html#TYPEpath">path</a><br/>           | `Save_file of <a href="Ojsed_types.html#TYPEpath">path</a> * string ] ]</code> </pre>
+
+
+<pre><span id="VALclient_msg_to_yojson"><span class="keyword">val</span> client_msg_to_yojson</span> : <code class="type">[&lt; `Editor_msg of<br/>            string *<br/>            [&lt; `Get_file_contents of string | `Save_file of string * string ] ] -&gt;<br/>       Yojson.Safe.json</code></pre>
+<pre><span id="VALclient_msg_of_yojson"><span class="keyword">val</span> client_msg_of_yojson</span> : <code class="type">Yojson.Safe.json -&gt;<br/>       [&gt; `Error of string<br/>        | `Ok of<br/>            [&gt; `Editor_msg of<br/>                 string *<br/>                 [&gt; `Get_file_contents of string | `Save_file of string * string ] ] ]</code></pre></div>
+
+
+
+
+
+
+
+
+</div> 
+</body>
+</html>
