@@ -15,17 +15,21 @@ subsection-counter="false"
 <site-description/>.
 </p>
 <p>This is work in progress, interfaces will change. It is currently used
-by the <a href="https://zoggy.github.io/stog/server.html">preview
-server</a> of Stog (&gt;0.14.0), so a 0.1.0 release was mandatory.
+by the <ext-a href="https://zoggy.github.io/stog/server.html">preview
+server</ext-a> of Stog (&gt;= 0.14.0), so a release was mandatory.
 </p>
 <section id="download" title="Download">
 <p>
-Ojs-base is <a href="https://github.com/zoggy/ojs-base">hosted on Github</a>.
+Ojs-base is <ext-a href="https://github.com/zoggy/ojs-base">hosted on Github</ext-a>.
 </p>
 
 <subsection id="releases" title="Releases">
 <ul>
+<li><a href="ojs-base-0.2.0.tar.gz">0.2.0</a> [2014/10/27]:
+use <ext-a href="https://github.com/whitequark/ppx_deriving_yojson/">ppx-deriving-yojson</ext-a> 2.0.</li>
+
 <li><a href="ojs-base-0.1.0.tar.gz">0.1.0</a> [2014/10/21]: initial release.</li>
+
 </ul>
 </subsection>
 </section>
@@ -36,9 +40,11 @@ To be installed, Ojs-base requires:
 </p>
 <ul>
 <li>OCaml &gt;= 4.02.0,</li>
-<li><a href="http://ocsigen.org/js_of_ocaml">Js_of_ocaml &gt;= 2.4.0</a>,</li>
-<li><a href="http://ocsigen.org/lwt/">Lwt &gt;= 2.4.6</a>,</li>
-<li><a href="https://github.com/mirage/ocaml-cohttp">Cohttp &gt; 0.11.2</a>.</li>
+<li><ext-a href="http://ocsigen.org/js_of_ocaml">Js_of_ocaml &gt;= 2.4.0</ext-a>,</li>
+<li><ext-a href="http://ocsigen.org/lwt/">Lwt &gt;= 2.4.6</ext-a>,</li>
+<li><ext-a href="https://github.com/mirage/ocaml-cohttp">Cohttp &gt; 0.11.2</ext-a>,</li>
+<li><ext-a href="http://mjambon.com/yojson.html">Yojson &gt; 1.1.8</ext-a>,</li>
+<li><ext-a href="https://github.com/whitequark/ppx_deriving_yojson/">Ppx-deriving-yojson &gt;= 2.0</ext-a>.</li>
 </ul>
 <p>To compile and install:
 </p>
@@ -50,7 +56,7 @@ To be installed, Ojs-base requires:
 <p>
 This will install the <icode>ojs*</icode> packages with findlib.
 </p>
-<p>You can also install with <a href="http://opam.ocaml.org/">Opam</a>:</p>
+<p>You can also install with <ext-a href="http://opam.ocaml.org/">Opam</ext-a>:</p>
 <command-line>opam install ojs-base</command-line>
 </section>
 
@@ -62,7 +68,7 @@ Reference documentation is <a href="refdoc/index.html">here</a>.
 
 <section id="license" title="License">
 <p>
-Ojs-base is released under the <a href="http://www.gnu.org/licenses/gpl.html">GPL v3</a>.
+Ojs-base is released under the <ext-a href="http://www.gnu.org/licenses/gpl.html">GPL v3</ext-a>.
 </p>
 </section>
 
