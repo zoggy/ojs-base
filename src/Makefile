@@ -171,19 +171,22 @@ example/example.js: $(LIBJS) $(LIBFTJS) $(LIBEDJS) \
 ##########
 .PHONY: doc webdoc ocamldoc
 
-doc:
-	$(OCAMLFIND) ocamldoc -d ocamldoc -html $(OF_FLAGS) -verbose  `ls ojs_*.ml | grep -v _js.ml`
+doc: dump.odoc dump_js.odoc
+	$(OCAMLFIND) ocamldoc -d ocamldoc -html $(OF_FLAGS) -verbose \
+	-load dump.odoc -load dump_js.odoc
 
-doc: dump.odoc
+doc: dump.odoc dump_js.odoc
 	$(MKDIR) doc
-	$(OCAMLFIND) ocamldoc -load dump.odoc -t Ojs-base -d doc -html
+	$(OCAMLFIND) ocamldoc -load dump.odoc-load dump_js.odoc -t Ojs-base -d doc -html
 
 dump.odoc:
-	$(OCAMLFIND) ocamldoc $(OF_FLAGS) `ls ojs_*.ml | grep -v _js.ml` -dump dump.odoc
+	$(OCAMLFIND) ocamldoc $(OF_FLAGS) `ls ojs*.ml | grep -v _js.ml` -dump $@
+dump_js.odoc:
+	$(OCAMLFIND) ocamldoc $(OF_FLAGS) $(JSOC_SYNTAX) `ls *_js.ml` -dump $@
 
-docstog: dump.odoc
+docstog: dump.odoc dump_js.odoc
 	$(MKDIR) ../web/refdoc
-	$(OCAMLFIND) ocamldoc -load dump.odoc \
+	$(OCAMLFIND) ocamldoc 	-load dump.odoc -load dump_js.odoc \
 	-t Ojs-base -d ../web/refdoc -g odoc_stog.cmo
 
 
@@ -210,7 +213,7 @@ uninstall-lib:
 
 #####
 clean:
-	$(RM) *.cm* *.o *.a *.x *.annot
+	$(RM) *.cm* *.o *.a *.x *.annot dump.odoc
 	(cd example ; $(RM) *.cm* *.o *.a *.x *.annot)
 
 distclean: clean

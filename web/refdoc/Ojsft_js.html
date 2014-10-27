@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<ocamldoc with-contents="true">
+<title>Ojs-base : Ojsft_js</title><contents><div class="ocamldoc-page">
+<div class="navbar"><a class="pre" href="Ojsed_js.html" title="Ojsed_js">Previous</a>
+&#160;<a class="up" href="index.html" title="Index">Up</a>
+&#160;<a class="post" href="Ojsmsg_js.html" title="Ojsmsg_js">Next</a>
+</div>
+<h1>Module <a href="type_Ojsft_js.html">Ojsft_js</a></h1>
+
+<pre><span class="keyword">module</span> Ojsft_js: <code class="code">sig</code> <a href="Ojsft_js.html">..</a> <code class="code">end</code></pre><div class="info module top">
+</div>
+<hr width="100%"/>
+
+<pre><span id="VALlog"><span class="keyword">val</span> log</span> : <code class="type">string -&gt; unit</code></pre>
+<pre><code><span id="TYPEtree_info"><span class="keyword">type</span> tree_info</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&#160;&#160;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtree_info.root_id">root_id</span>&#160;: <code class="type"><a href="Ojs_js.html#TYPEid">Ojs_js.id</a></code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&#160;&#160;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtree_info.msg_id">msg_id</span>&#160;: <code class="type"><a href="Ojs_js.html#TYPEid">Ojs_js.id</a></code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&#160;&#160;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtree_info.ws">ws</span>&#160;: <code class="type">WebSockets.webSocket Js.t</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&#160;&#160;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtree_info.show_files">show_files</span>&#160;: <code class="type">bool</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&#160;&#160;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtree_info.on_select">on_select</span>&#160;: <code class="type"><a href="Ojsft_js.html#TYPEtree_info">tree_info</a> -&gt; string -&gt; unit</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&#160;&#160;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtree_info.on_deselect">on_deselect</span>&#160;: <code class="type"><a href="Ojsft_js.html#TYPEtree_info">tree_info</a> -&gt; string -&gt; unit</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&#160;&#160;</code></td>
+<td align="left" valign="top" >
+<code><span class="keyword">mutable&#160;</span><span id="TYPEELTtree_info.selected">selected</span>&#160;: <code class="type">(<a href="Ojs_js.html#TYPEid">Ojs_js.id</a> * string) option</code>;</code></td>
+
+</tr></table>
+}
+
+
+
+<pre><span id="TYPEnode_type"><span class="keyword">type</span> node_type</span> = <code class="type">[ `Dir of <a href="Ojs_js.html#TYPEid">Ojs_js.id</a> | `File ]</code> </pre>
+
+
+<pre><code><span id="TYPEtree_node"><span class="keyword">type</span> tree_node</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&#160;&#160;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtree_node.tn_content">tn_content</span>&#160;: <code class="type">string</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&#160;&#160;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtree_node.tn_span_id">tn_span_id</span>&#160;: <code class="type"><a href="Ojs_js.html#TYPEid">Ojs_js.id</a></code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&#160;&#160;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTtree_node.tn_type">tn_type</span>&#160;: <code class="type"><a href="Ojsft_js.html#TYPEnode_type">node_type</a></code>;</code></td>
+
+</tr></table>
+}
+
+
+
+<pre><span id="VALtree_nodes"><span class="keyword">val</span> tree_nodes</span> : <code class="type"><a href="Ojsft_js.html#TYPEtree_node">tree_node</a> Ojs_js.SMap.t Pervasives.ref</code></pre>
+<pre><span id="VALtrees"><span class="keyword">val</span> trees</span> : <code class="type"><a href="Ojsft_js.html#TYPEtree_info">tree_info</a> Ojs_js.SMap.t Pervasives.ref</code></pre>
+<pre><span id="VALmsg_of_wsdata"><span class="keyword">val</span> msg_of_wsdata</span> : <code class="type">string -&gt;<br/>       [> `Filetree_msg of<br/>            string *<br/>            [> `Add_dir of string<br/>             | `Add_file of string<br/>             | `Del_dir of string<br/>             | `Del_file of string<br/>             | `Error of string<br/>             | `Rename of string * string<br/>             | `Tree of ([> `Dir of string * 'a list | `File of string ] as 'a) list ] ]<br/>       option</code></pre>
+<pre><span id="VALwsdata_of_msg"><span class="keyword">val</span> wsdata_of_msg</span> : <code class="type">[&lt; `Filetree_msg of<br/>            string *<br/>            [&lt; `Add_dir of string<br/>             | `Add_file of string * string<br/>             | `Del_dir of string<br/>             | `Del_file of string<br/>             | `Get_tree<br/>             | `Rename of string * string ] ] -&gt;<br/>       string</code></pre>
+<pre><span id="VALsend_msg"><span class="keyword">val</span> send_msg</span> : <code class="type">&lt; send : Js.js_string Js.t -&gt; 'a Js.meth; .. > Js.t -&gt;<br/>       string -&gt;<br/>       [&lt; `Add_dir of string<br/>        | `Add_file of string * string<br/>        | `Del_dir of string<br/>        | `Del_file of string<br/>        | `Get_tree<br/>        | `Rename of string * string ] -&gt;<br/>       'a</code></pre>
+<pre><span id="VALset_unselected"><span class="keyword">val</span> set_unselected</span> : <code class="type"><a href="Ojsft_js.html#TYPEtree_info">tree_info</a> -&gt; Ojs_js.SMap.key -&gt; string -&gt; unit</code></pre>
+<pre><span id="VALset_selected"><span class="keyword">val</span> set_selected</span> : <code class="type"><a href="Ojsft_js.html#TYPEtree_info">tree_info</a> -&gt; Ojs_js.SMap.key -&gt; string -&gt; unit</code></pre>
+<pre><span id="VALset_tree_onclick"><span class="keyword">val</span> set_tree_onclick</span> : <code class="type">Ojs_js.SMap.key -&gt;<br/>       #Dom_html.eventTarget Js.t -&gt; Ojs_js.SMap.key -&gt; string -&gt; unit</code></pre>
+<pre><span id="VALcollapsed_class"><span class="keyword">val</span> collapsed_class</span> : <code class="type">string</code></pre>
+<pre><span id="VALexpand_buttons"><span class="keyword">val</span> expand_buttons</span> : <code class="type">string -&gt; string -&gt; Dom_html.element Js.t * Dom_html.element Js.t</code></pre>
+<pre><span id="VALbuild_from_tree"><span class="keyword">val</span> build_from_tree</span> : <code class="type">id:Ojs_js.SMap.key -&gt;<br/>       ([&lt; `Dir of string * 'a list | `File of string ] as 'a) list -&gt; unit</code></pre>
+<pre><span id="VALhandle_message"><span class="keyword">val</span> handle_message</span> : <code class="type">'a -&gt;<br/>       [&lt; `Filetree_msg of<br/>            Ojs_js.SMap.key *<br/>            [> `Tree of ([&lt; `Dir of string * 'b list | `File of string ] as 'b) list ] ] -&gt;<br/>       bool Js.t</code></pre>
+<pre><span id="VALsetup_filetree"><span class="keyword">val</span> setup_filetree</span> : <code class="type">WebSockets.webSocket Js.t -&gt;<br/>       ?show_files:bool -&gt;<br/>       ?on_select:(<a href="Ojsft_js.html#TYPEtree_info">tree_info</a> -&gt; string -&gt; unit) -&gt;<br/>       ?on_deselect:(<a href="Ojsft_js.html#TYPEtree_info">tree_info</a> -&gt; string -&gt; unit) -&gt;<br/>       msg_id:<a href="Ojs_js.html#TYPEid">Ojs_js.id</a> -&gt; <a href="Ojs_js.html#TYPEid">Ojs_js.id</a> -&gt; unit</code></pre></div></contents></ocamldoc>

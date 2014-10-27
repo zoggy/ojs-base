@@ -15,4 +15,6 @@ META
 master.Makefile
 ocaml_config.sh
 src/dump.odoc
+src/dump_js.odoc
 web/.stog/cache
+src/example/ace

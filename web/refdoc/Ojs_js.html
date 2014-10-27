@@ -1,0 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<ocamldoc with-contents="true">
+<title>Ojs-base : Ojs_js</title><contents><div class="ocamldoc-page">
+<div class="navbar"><a class="pre" href="Ojsft_types.html" title="Ojsft_types">Previous</a>
+&#160;<a class="up" href="index.html" title="Index">Up</a>
+&#160;<a class="post" href="Ojsed_js.html" title="Ojsed_js">Next</a>
+</div>
+<h1>Module <a href="type_Ojs_js.html">Ojs_js</a></h1>
+
+<pre><span class="keyword">module</span> Ojs_js: <code class="code">sig</code> <a href="Ojs_js.html">..</a> <code class="code">end</code></pre><hr width="100%"/>
+
+<pre><span class="keyword">module</span> <a href="Ojs_js.SMap.html">SMap</a>: <code class="type">Map.Make</code><code class="code">(</code><code class="type">String</code><code class="code">)</code></pre>
+<pre><span id="VAL(+=)"><span class="keyword">val</span> (+=)</span> : <code class="type">'a SMap.t Pervasives.ref -&gt; SMap.key * 'a -&gt; unit</code></pre>
+<pre><span id="VAL(-=)"><span class="keyword">val</span> (-=)</span> : <code class="type">'a SMap.t Pervasives.ref -&gt; SMap.key -&gt; unit</code></pre>
+<pre><span id="TYPEid"><span class="keyword">type</span> id</span> = <code class="type">string</code> </pre>
+
+
+<pre><span id="VALlog"><span class="keyword">val</span> log</span> : <code class="type">string -&gt; unit</code></pre>
+<pre><span id="VALsetup_ws"><span class="keyword">val</span> setup_ws</span> : <code class="type">string -&gt;<br/>       (string -&gt; 'a option) -&gt;<br/>       'b -&gt;<br/>       onopen:(WebSockets.webSocket Js.t -&gt; 'c) -&gt;<br/>       onmessage:(WebSockets.webSocket Js.t -&gt; 'a -&gt; 'd) -&gt;<br/>       WebSockets.webSocket Js.t option</code></pre>
+<pre><span id="VALsend_msg"><span class="keyword">val</span> send_msg</span> : <code class="type">&lt; send : Js.js_string Js.t -&gt; 'a Js.meth; .. > Js.t -&gt; string -&gt; 'a</code></pre>
+<pre><span id="VALclear_children"><span class="keyword">val</span> clear_children</span> : <code class="type">#Dom.node Js.t -&gt; unit</code></pre>
+<pre><span id="VALnode_by_id"><span class="keyword">val</span> node_by_id</span> : <code class="type">string -&gt; Dom_html.element Js.t</code></pre>
+<pre><span id="VALgen_id"><span class="keyword">val</span> gen_id</span> : <code class="type">unit -&gt; string</code></pre>
+<pre><span id="VALset_onclick"><span class="keyword">val</span> set_onclick</span> : <code class="type">#Dom_html.eventTarget Js.t -&gt; (Dom_html.mouseEvent Js.t -&gt; 'a) -&gt; unit</code></pre>
+<pre><span id="VALsplit_string"><span class="keyword">val</span> split_string</span> : <code class="type">?keep_empty:bool -&gt; string -&gt; char list -&gt; string list</code></pre>
+<pre><span id="VALget_classes"><span class="keyword">val</span> get_classes</span> : <code class="type">&lt; className : &lt; get : Js.js_string Js.t; .. > Js.gen_prop; .. > Js.t -&gt;<br/>       string list</code></pre>
+<pre><span id="VALnode_unset_class"><span class="keyword">val</span> node_unset_class</span> : <code class="type">&lt; classList : &lt; get : &lt; remove : Js.js_string Js.t -&gt; 'a Js.meth; .. > Js.t;<br/>                       .. ><br/>                     Js.gen_prop;<br/>         .. ><br/>       Js.t -&gt; string -&gt; 'a</code></pre>
+<pre><span id="VALnode_set_class"><span class="keyword">val</span> node_set_class</span> : <code class="type">&lt; classList : &lt; get : &lt; add : Js.js_string Js.t -&gt; 'a Js.meth; .. > Js.t;<br/>                       .. ><br/>                     Js.gen_prop;<br/>         .. ><br/>       Js.t -&gt; string -&gt; 'a</code></pre>
+<pre><span id="VALunset_class"><span class="keyword">val</span> unset_class</span> : <code class="type">string -&gt; string -&gt; unit</code></pre>
+<pre><span id="VALset_class"><span class="keyword">val</span> set_class</span> : <code class="type">string -&gt; string -&gt; unit</code></pre></div></contents></ocamldoc>

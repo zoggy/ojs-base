@@ -26,6 +26,8 @@
 (*                                                                               *)
 (*********************************************************************************)
 
+(** Type for editor. *)
+
 (** All paths should relative to root directory. *)
 type path = string [@@deriving yojson]
 

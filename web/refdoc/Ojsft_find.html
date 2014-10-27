@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<ocamldoc with-contents="true">
+<title>Ojs-base : Ojsft_find</title><contents><div class="ocamldoc-page">
+<div class="navbar"><a class="pre" href="Ojsft_files.html" title="Ojsft_files">Previous</a>
+&#160;<a class="up" href="index.html" title="Index">Up</a>
+&#160;<a class="post" href="Ojsft_server.html" title="Ojsft_server">Next</a>
+</div>
+<h1>Module <a href="type_Ojsft_find.html">Ojsft_find</a></h1>
+
+<pre><span class="keyword">module</span> Ojsft_find: <code class="code">sig</code> <a href="Ojsft_find.html">..</a> <code class="code">end</code></pre><hr width="100%"/>
+
+<pre><code><span id="TYPEfilter"><span class="keyword">type</span> filter</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfilter.Maxdepth"><span class="constructor">Maxdepth</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfilter.Type"><span class="constructor">Type</span></span> <span class="keyword">of</span> <code class="type">Unix.file_kind</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfilter.Follow"><span class="constructor">Follow</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfilter.Regexp"><span class="constructor">Regexp</span></span> <span class="keyword">of</span> <code class="type">Str.regexp</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfilter.Atime"><span class="constructor">Atime</span></span> <span class="keyword">of</span> <code class="type"><a href="Ojsft_find.html#TYPEinterval">interval</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfilter.Predicate"><span class="constructor">Predicate</span></span> <span class="keyword">of</span> <code class="type">(string -&gt; bool)</code></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEinterval"><span class="keyword">type</span> interval</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTinterval.Le"><span class="constructor">Le</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTinterval.Eq"><span class="constructor">Eq</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTinterval.Ge"><span class="constructor">Ge</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEmode"><span class="keyword">type</span> mode</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTmode.Ignore"><span class="constructor">Ignore</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTmode.Stderr"><span class="constructor">Stderr</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTmode.Failure"><span class="constructor">Failure</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTmode.Custom"><span class="constructor">Custom</span></span> <span class="keyword">of</span> <code class="type">(Unix.error * string * string -&gt; unit)</code></code></td>
+
+</tr></table>
+
+
+
+<pre><span id="TYPEinode"><span class="keyword">type</span> inode</span> = <code class="type">int * int</code> </pre>
+
+
+<pre><span id="VALinode"><span class="keyword">val</span> inode</span> : <code class="type">Unix.stats -&gt; int * int</code></pre>
+<pre><code><span id="TYPEstatus"><span class="keyword">type</span> status</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&#160;&#160;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstatus.maxdepth">maxdepth</span>&#160;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&#160;&#160;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstatus.follow">follow</span>&#160;: <code class="type">bool</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&#160;&#160;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstatus.filters">filters</span>&#160;: <code class="type">(string -&gt; Unix.stats -&gt; bool) list</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&#160;&#160;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstatus.stat_function">stat_function</span>&#160;: <code class="type">string -&gt; Unix.stats</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&#160;&#160;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstatus.action">action</span>&#160;: <code class="type">string -&gt; unit</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&#160;&#160;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstatus.handler">handler</span>&#160;: <code class="type">Unix.error * string * string -&gt; unit</code>;</code></td>
+
+</tr></table>
+}
+
+
+
+<pre><span id="EXCEPTIONHide"><span class="keyword">exception</span> Hide</span> <span class="keyword">of</span> <code class="type">exn</code></pre>
+
+<pre><span id="VALhide_exn"><span class="keyword">val</span> hide_exn</span> : <code class="type">('a -&gt; 'b) -&gt; 'a -&gt; 'b</code></pre>
+<pre><span id="VALreveal_exn"><span class="keyword">val</span> reveal_exn</span> : <code class="type">('a -&gt; 'b) -&gt; 'a -&gt; 'b</code></pre>
+<pre><span id="VALstderr_handler"><span class="keyword">val</span> stderr_handler</span> : <code class="type">Unix.error * 'a * string -&gt; unit</code></pre>
+<pre><span id="VALignore_handler"><span class="keyword">val</span> ignore_handler</span> : <code class="type">'a -&gt; unit</code></pre>
+<pre><span id="VALfailure_handler"><span class="keyword">val</span> failure_handler</span> : <code class="type">Unix.error * string * string -&gt; 'a</code></pre>
+<pre><span id="VALhandler"><span class="keyword">val</span> handler</span> : <code class="type"><a href="Ojsft_find.html#TYPEmode">mode</a> -&gt; Unix.error * string * string -&gt; unit</code></pre>
+<pre><span id="VALtreat_unix_error"><span class="keyword">val</span> treat_unix_error</span> : <code class="type">(Unix.error * string * string -&gt; 'a) -&gt; ('b -&gt; 'a) -&gt; 'b -&gt; 'a</code></pre>
+<pre><span id="VALdefault_status"><span class="keyword">val</span> default_status</span> : <code class="type"><a href="Ojsft_find.html#TYPEstatus">status</a></code></pre>
+<pre><span id="VALadd_filter"><span class="keyword">val</span> add_filter</span> : <code class="type"><a href="Ojsft_find.html#TYPEstatus">status</a> -&gt; (string -&gt; Unix.stats -&gt; bool) -&gt; <a href="Ojsft_find.html#TYPEstatus">status</a></code></pre>
+<pre><span id="VALseconds_in_a_day"><span class="keyword">val</span> seconds_in_a_day</span> : <code class="type">float</code></pre>
+<pre><span id="EXCEPTIONFind"><span class="keyword">exception</span> Find</span> <span class="keyword">of</span> <code class="type">string</code></pre>
+
+<pre><span id="VALparse_option"><span class="keyword">val</span> parse_option</span> : <code class="type"><a href="Ojsft_find.html#TYPEstatus">status</a> -&gt; <a href="Ojsft_find.html#TYPEfilter">filter</a> -&gt; <a href="Ojsft_find.html#TYPEstatus">status</a></code></pre>
+<pre><span id="VALparse_options"><span class="keyword">val</span> parse_options</span> : <code class="type"><a href="Ojsft_find.html#TYPEfilter">filter</a> list -&gt; <a href="Ojsft_find.html#TYPEstatus">status</a></code></pre>
+<pre><span id="VALfilter_all"><span class="keyword">val</span> filter_all</span> : <code class="type">'a -&gt; 'b -&gt; ('a -&gt; 'b -&gt; bool) list -&gt; bool</code></pre>
+<pre><span id="VALiter_dir"><span class="keyword">val</span> iter_dir</span> : <code class="type">(string -&gt; 'a) -&gt; string -&gt; unit</code></pre>
+<pre><span id="VALfind_rec"><span class="keyword">val</span> find_rec</span> : <code class="type"><a href="Ojsft_find.html#TYPEstatus">status</a> -&gt; (int * int) list -&gt; int -&gt; string -&gt; unit</code></pre>
+<pre><span id="VALfind_entry"><span class="keyword">val</span> find_entry</span> : <code class="type"><a href="Ojsft_find.html#TYPEstatus">status</a> -&gt; string -&gt; unit</code></pre>
+<pre><span id="VALfind"><span class="keyword">val</span> find</span> : <code class="type"><a href="Ojsft_find.html#TYPEmode">mode</a> -&gt;<br/>       string list -&gt; <a href="Ojsft_find.html#TYPEfilter">filter</a> list -&gt; (string -&gt; unit) -&gt; unit</code></pre>
+<pre><span id="VALfind_list"><span class="keyword">val</span> find_list</span> : <code class="type"><a href="Ojsft_find.html#TYPEmode">mode</a> -&gt; string list -&gt; <a href="Ojsft_find.html#TYPEfilter">filter</a> list -&gt; string list</code></pre></div></contents></ocamldoc>
