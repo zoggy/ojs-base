@@ -165,7 +165,7 @@ example/example-server: $(LIB) $(LIBFT) $(LIBED) \
 	$(OCAMLFIND) ocamlopt -o $@ $(OF_FLAGS) -linkpkg $^
 example/example.js: $(LIBJS) $(LIBFTJS) $(LIBEDJS) \
 	example/example_types.cmo example/example_js.cmo
-	$(OCAMLFIND) ocamlc -o t.x $^ -package yojson,js_of_ocaml -linkpkg
+	$(OCAMLFIND) ocamlc -o t.x $^ -package yojson,ppx_deriving_yojson,js_of_ocaml -linkpkg
 	$(JS_OF_OCAML) t.x -o $@
 
 ##########
