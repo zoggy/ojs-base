@@ -7,6 +7,36 @@
   z-index: 1000 ;
 }
 
+.ojsft-dir-head > .ojs-button-bar {
+  display: none ;
+  }
+.ojsft-dir-head:hover > .ojs-button-bar {
+  display: inline ;
+}
+
+.ojs-drag {
+  background-color: #aaaaff ;
+}
+
+.ojs-button-bar > .ojs-button {
+  font-size: 0.9em;
+  padding: 0.1em 0.1em 0.1em 0.1em;
+  border-style: solid ;
+  border-width: 1px;
+  -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+          border-radius: 2px;
+}
+/*
+.ojs-button-add-file {
+  background-image: url('document.jpg');
+  background-repeat: none ;
+  background-position: right ;
+  background-size: auto 100% ;
+
+}
+*/
+
 .ojs-msg {
   padding: 0.5em 1em 0.5em 1em;
   border-style: solid ;

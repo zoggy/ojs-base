@@ -28,7 +28,7 @@
 
 (** Displaying messages in web pages. *)
 
-let base_class = "ojs-msg"
+let base_class = Ojs_js.class_"msg"
 let class_ s = base_class ^ "-" ^ s
 
 let display_message ?(timeout=3000.0) ?(cl=class_"info") id msg_nodes =

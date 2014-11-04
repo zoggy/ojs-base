@@ -33,6 +33,8 @@ type id = string
 
 let log s = Firebug.console##log (Js.string s);;
 
+let class_ s = "ojs-"^s
+
 let setup_ws url msg_of_data data_of_msg
   ~onopen ~onmessage =
     let on_message ws _ event =

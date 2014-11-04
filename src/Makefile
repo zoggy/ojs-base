@@ -33,7 +33,7 @@ PBYTE=#p -p a
 
 OF_FLAGS=-package $(PACKAGES)
 
-COMPFLAGS=-I +ocamldoc -I example -annot -g -thread -verbose #-w +K
+COMPFLAGS=-I +ocamldoc -I example -annot -g -thread -verbose -annot #-w +K
 OCAMLPP=
 
 RM=rm -f

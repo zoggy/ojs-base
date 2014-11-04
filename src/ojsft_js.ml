@@ -31,6 +31,8 @@
 open Ojs_js
 open Ojsft_types
 
+let (>>=) = Lwt.(>>=)
+
 let log = Ojs_js.log
 
 type tree_info = {
@@ -135,6 +137,103 @@ let expand_buttons base_id subs_id =
 
   (span_exp, span_col)
 
+
+let button_bar_class = Ojs_js.class_"button-bar"
+let button_class = Ojs_js.class_"button"
+
+let button_bar base_id =
+  let doc = Dom_html.document in
+  let id = base_id^"-button-bar" in
+  let div = doc##createElement (Js.string "div") in
+  div##setAttribute (Js.string "id", Js.string id);
+  div##className <- Js.string button_bar_class ;
+  div
+
+let add_button id ?cls text bar =
+  let doc = Dom_html.document in
+  let span = doc##createElement (Js.string "span") in
+  span##setAttribute (Js.string "id", Js.string id);
+  span##className <- Js.string button_class ;
+  (match cls with
+    None -> ()
+  | Some c -> Ojs_js.node_set_class span c
+  );
+
+  let t = doc##createTextNode (Js.string text) in
+  Dom.appendChild span t ;
+  Dom.appendChild bar span ;
+  span
+
+let add_button_add_dir base_id bar =
+  let id = base_id^"-add-dir" in
+  let cls = button_class^"-add-dir" in
+  let span = add_button id ~cls "+dir" bar in
+  span
+
+let drag_class = Ojs_js.class_"drag"
+
+let preventDefault evt = ignore(Js.Unsafe.meth_call evt "preventDefault" [| |])
+let stopPropagation evt = ignore(Js.Unsafe.meth_call evt "stopPropagation" [| |])
+
+let add_file tree_id kind fname (file : File.file Js.t) =
+  let dir =
+    match kind with
+      `Dir -> fname
+    | `File -> Filename.dirname fname
+  in
+  let path = Filename.concat dir (Js.to_string file##name) in
+  let cfg =
+    try SMap.find tree_id !trees
+    with Not_found -> failwith ("No config for file_tree "^tree_id)
+  in
+  let (size : int) = file##size in
+  let (blob : File.blob Js.t) = Js.Unsafe.meth_call file "slice" [| Js.Unsafe.inject 0 ; Js.Unsafe.inject size |] in(*##slice(0, size) in*)
+  let on_success contents =
+    send_msg cfg.ws tree_id (`Add_file (path, Js.to_string contents))
+  in
+  let on_error _ = () in
+  Lwt.on_any (File.readAsBinaryString blob) on_success on_error
+
+let handle_drag_drop tree_id kind fname node =
+  let on_dragover evt =
+    stopPropagation evt;
+    preventDefault evt;
+    evt##dataTransfer##dropEffect <- Js.string "copy" ;
+    Ojs_js.node_set_class node drag_class ;
+    Js.bool true
+  in
+  let on_dragleave evt =
+    Ojs_js.node_unset_class node drag_class ;
+    Js.bool true
+  in
+  let on_drop evt =
+    stopPropagation evt;
+    preventDefault evt;
+    let files = evt##dataTransfer##files in
+    let len = files##length in
+    for i = 0 to len - 1 do
+      Js.Opt.case (files##item(i))
+        (fun () -> ())
+        (fun file -> add_file tree_id kind fname file)
+    done;
+    Js.bool true
+  in
+  ignore(Dom_html.addEventListener node
+   Dom_html.Event.dragover
+     (Dom.handler on_dragover)
+     (Js.bool true)
+  ) ;
+  ignore(Dom_html.addEventListener node
+   Dom_html.Event.dragleave
+     (Dom.handler on_dragleave)
+     (Js.bool true)
+  );
+  ignore(Dom_html.addEventListener node
+   Dom_html.Event.drop
+     (Dom.handler on_drop)
+     (Js.bool true)
+  )
+
 let build_from_tree ~id tree_files =
   let doc = Dom_html.document in
   let node = Ojs_js.node_by_id id in
@@ -150,6 +249,11 @@ let build_from_tree ~id tree_files =
       let div_id = Ojs_js.gen_id () in
       div##setAttribute (Js.string "id", Js.string div_id);
       div##setAttribute (Js.string "class", Js.string "ojsft-dir");
+
+      let head = doc##createElement (Js.string "div") in
+      let head_id = div_id^"-head" in
+      head##setAttribute (Js.string "id", Js.string head_id);
+      head##setAttribute (Js.string "class", Js.string "ojsft-dir-head");
 
       let span_id = div_id^"text" in
       let span = doc##createElement (Js.string "span") in
@@ -172,13 +276,18 @@ let build_from_tree ~id tree_files =
       tree_nodes += (div_id, tn) ;
 
       let (span_exp, span_col) = expand_buttons div_id subs_id in
+      let bbar = button_bar div_id in
+      let _ = add_button_add_dir div_id bbar in
 
       Dom.appendChild t div ;
-      Dom.appendChild div span ;
+      Dom.appendChild div head ;
+      Dom.appendChild head span ;
       Dom.appendChild span text ;
-      Dom.appendChild div span_exp ;
-      Dom.appendChild div span_col ;
+      Dom.appendChild head span_exp ;
+      Dom.appendChild head span_col ;
+      Dom.appendChild head bbar ;
       Dom.appendChild div div_subs ;
+      handle_drag_drop id `Dir s head ;
       List.iter (insert div_subs) l
 
   | `File s ->
@@ -206,7 +315,8 @@ let build_from_tree ~id tree_files =
           let text = doc##createTextNode (Js.string label) in
           Dom.appendChild t div ;
           Dom.appendChild div span ;
-          Dom.appendChild span text
+          Dom.appendChild span text ;
+          handle_drag_drop id `File s div ;
         end
   in
   List.iter (insert node) tree_files

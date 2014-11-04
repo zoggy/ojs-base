@@ -52,6 +52,9 @@ let handle_client_msg ?filepred root id msg =
     `Get_tree ->
       let files = Ojsft_files.file_trees_of_dir ?filepred root in
       (id, [`Tree files])
+  | `Add_file (path, contents) ->
+      prerr_endline ("Add_file "^path^"\n"^contents);
+      (id, [`Add_file path])
   | _ ->
       failwith "Unhandled message"
 
