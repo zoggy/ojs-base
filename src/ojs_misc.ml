@@ -59,25 +59,6 @@ let is_prefix s1 s2 =
     (String.sub s2 0 len1) = s1
 (*/c==v=[String.is_prefix]=1.0====*)
 
-let normalize_filename =
-  let dir_sep = String.get Filename.dir_sep 0 in
-  fun filename ->
-    let l = split_string filename [dir_sep] in
-    let rec iter acc = function
-      [] -> List.rev acc
-    | h :: q ->
-        if h = Filename.current_dir_name then
-          iter acc q
-        else
-          if h = Filename.parent_dir_name then
-            match acc with
-              [] -> []
-            | _ :: r -> iter r q
-          else
-            iter (h::acc) q
-    in
-    Filename.dir_sep ^ (String.concat Filename.dir_sep (iter [] l))
-
 let filename_extension filename =
   try
     let p = String.rindex filename '.' in

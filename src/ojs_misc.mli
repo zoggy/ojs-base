@@ -46,13 +46,6 @@ val split_string : ?keep_empty:bool -> string -> char list -> string list
 val is_prefix : string -> string -> bool
 (*/i==v=[String.is_prefix]=1.0====*)
 
-(** [normalize_filename filename] returns [filename] where [Filename.parent_dir_name]
-  and [Filename.current_dir_name] have been handled so they don't appear anymore.
-  Note that [/..] becomes [/] (i.e. no error in case there are too many separators).
-  The given filename must be absolute.
-*)
-val normalize_filename : string -> string
-
 (** [filename_extension fname] returns extension of [fname] (i.e. the string after
   the last dot), or an empty string if there is no dot. *)
 val filename_extension : string -> string

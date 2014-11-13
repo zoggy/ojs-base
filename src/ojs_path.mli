@@ -26,40 +26,29 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-(** *)
+(** Handling file paths. *)
 
-module Find = Ojsft_find
+type t [@@deriving yojson]
 
-let is_dir file = (Unix.stat file).Unix.st_kind = Unix.S_DIR
+val dir_sep : char
+val empty : t
+val root : t
 
-let file_trees_of_dir ?(filepred=fun _ -> true) root_dir =
-  let root_dir = Ojs_path.to_string root_dir in
-  let len = String.length root_dir + 1
-    (* + 1 for the / added by Find.find_list *)
-  in
-  let base s = Filename.basename s in
-  let filepred s = filepred (Ojs_path.of_string s) in
-  let rec iter dir =
-    let entries =
-      Find.find_list
-        Find.Stderr
-        [dir]
-        [ Find.Maxdepth 1 ;
-          Find.Predicate filepred ;
-        ]
-    in
-    let pred s =
-      s <> dir
-        && (Filename.basename s <> Filename.current_dir_name)
-        && (Filename.basename s <> Filename.parent_dir_name)
-    in
-    let entries = List.filter pred entries in
-    let entries = List.sort String.compare entries in
-    let (dirs, files) = List.partition is_dir entries in
-    let dir s = `Dir (base s, iter s) in
-    let file s = `File (base s) in
-    (List.map dir dirs) @ (List.map file files)
-  in
-  iter root_dir
+val is_absolute : t -> bool
 
+val of_string : string -> t
+val to_string : t -> string
 
+(** @raise Invalid_argument is the path is empty. *)
+val basename : t -> string
+
+val parent : t -> t
+val append : t -> string list -> t
+val append_path : t -> t -> t
+val is_prefix : t -> t -> bool
+
+(** [normalize path] returns [path] where [Filename.parent_dir_name]
+  and [Filename.current_dir_name] have been handled so they don't appear anymore.
+  Note that [/..] becomes [/] (i.e. no error in case there are too many separators).
+*)
+val normalize : t -> t

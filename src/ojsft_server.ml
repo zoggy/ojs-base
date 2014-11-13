@@ -30,6 +30,12 @@
 
 open Ojs_server
 
+(*
+type conts = {
+  get_tree
+
+}
+*)
 let wsdata_of_msg msg = J.to_string (Ojsft_types.server_msg_to_yojson msg)
 let msg_of_wsdata s =
   try

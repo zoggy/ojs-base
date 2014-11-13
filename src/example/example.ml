@@ -68,9 +68,11 @@ let filepred =
       )
 
 let handle_con root uri (stream, push) =
-  let root = if Filename.is_relative root
-    then Ojs_misc.normalize_filename (Filename.concat (Sys.getcwd()) root)
-    else root
+  let root = Ojs_path.of_string root in
+  let root =
+    if Ojs_path.is_absolute root
+    then root
+    else Ojs_path.normalize (Ojs_path.append_path (Ojs_path.of_string (Sys.getcwd())) root)
   in
   let handle_message push_msg msg =
     match msg with

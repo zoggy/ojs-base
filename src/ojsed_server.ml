@@ -50,7 +50,6 @@ let msg_of_wsdata s =
 let send_msg push_msg id msg = push_msg (`Editor_msg (id, msg))
 
 let access_rights ?(rights=fun _ -> Some `RW) root path =
-  let root = Ojs_path.of_string root in
   let path = Ojs_path.append_path root path in
   let norm = Ojs_path.normalize path in
   (*prerr_endline ("norm="^norm);*)

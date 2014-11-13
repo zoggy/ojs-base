@@ -26,7 +26,7 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-(** Handling file paths. *)
+(**  *)
 
 type t = {
   abs : bool ;
@@ -37,6 +37,8 @@ let dir_sep = String.get Filename.dir_sep 0
 
 let empty = { abs = false ; path = [] }
 let root = { abs = true ; path = [] }
+
+let is_absolute p = p.abs
 
 let of_string s =
   let path = Ojs_misc.split_string s [dir_sep] in
