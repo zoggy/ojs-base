@@ -47,7 +47,7 @@ LIB_A=$(LIB:.cmxa=.a)
 LIB_CMXS=$(LIB:.cmxs)
 LIB_BYTE=$(LIB:.cmxa=.cma)
 
-LIB_CMXFILES=ojs_misc.cmx ojs_server.cmx
+LIB_CMXFILES=ojs_misc.cmx ojs_path.cmx ojs_server.cmx
 
 LIB_CMOFILES=$(LIB_CMXFILES:.cmx=.cmo)
 LIB_CMIFILES=$(LIB_CMXFILES:.cmx=.cmi)
@@ -55,7 +55,11 @@ LIB_OFILES=$(LIB_CMXFILES:.cmx=.o)
 
 LIBJS=ojs-base-js.cma
 
-LIBJS_CMOFILES=	ojs_js.cmo ojsmsg_js.cmo
+LIBJS_CMOFILES=	\
+	ojs_misc.cmo \
+	ojs_path.cmo \
+	ojs_js.cmo \
+	ojsmsg_js.cmo
 
 LIBJS_CMIFILES=$(LIBJS_CMOFILES:.cmo=.cmi)
 
@@ -225,15 +229,15 @@ distclean: clean
 
 .depend depend:
 	$(OCAMLFIND) ocamldep -package js_of_ocaml.syntax -syntax camlp4o \
-	`ls ojs*.ml ojs*.mli example/*.ml | grep -v types.ml`  > .depend
+	`ls ojs*.ml ojs*.mli example/*.ml | grep -v types.ml | grep -v ojs_path`  > .depend
 
-ojsft_server.cmo: ojsft_types.cmi
-ojsft_server.cmx: ojsft_types.cmi ojsft_types.cmx
-ojsft_js.cmo: ojsft_types.cmi
+ojsft_server.cmo: ojs_path.cmi ojsft_types.cmi
+ojsft_server.cmx: ojs_path.cmi ojs_path.cmx ojsft_types.cmi ojsft_types.cmx
+ojsft_js.cmo: ojs_path.cmi ojsft_types.cmi
 
-ojsed_server.cmo: ojsed_types.cmi
-ojsed_server.cmx: ojsed_types.cmi ojsed_types.cmx
-ojsed_js.cmo: ojsed_types.cmi
+ojsed_server.cmo: ojs_path.cmi ojsed_types.cmi
+ojsed_server.cmx: ojs_path.cmi ojs_path.cmx ojsed_types.cmi ojsed_types.cmx
+ojsed_js.cmo: ojs_path.cmi ojsed_types.cmi
 
 include .depend
 

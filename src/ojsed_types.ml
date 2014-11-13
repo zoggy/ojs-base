@@ -29,7 +29,7 @@
 (** Type for editor. *)
 
 (** All paths should relative to root directory. *)
-type path = string [@@deriving yojson]
+type path = Ojs_path.t [@@deriving yojson]
 
 type server_msg = [
     `Editor_msg of string *

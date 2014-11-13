@@ -26,56 +26,61 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-(** *)
+(** Handling file paths. *)
 
-open Ojs_server
+type t = {
+  abs : bool ;
+  path : string list ;
+  } [@@deriving yojson]
 
-let wsdata_of_msg msg = J.to_string (Ojsft_types.server_msg_to_yojson msg)
-let msg_of_wsdata s =
-  try
-    let json = J.from_string s in
-    match Ojsft_types.client_msg_of_yojson json with
-      `Error s -> raise (Yojson.Json_error s)
-    | `Ok msg -> Some msg
-  with
-    Yojson.Json_error s ->
-      prerr_endline s;
-      None
-  | e ->
-      prerr_endline (Printexc.to_string e);
-      None
+let dir_sep = String.get Filename.dir_sep 0
 
-let send_msg push_msg id msg = push_msg (`Filetree_msg (id, msg))
+let empty = { abs = false ; path = [] }
+let root = { abs = true ; path = [] }
 
-let handle_client_msg ?filepred root id msg =
-  match msg with
-    `Get_tree ->
-      let files = Ojsft_files.file_trees_of_dir ?filepred root in
-      (id, [`Tree files])
-  | `Add_file (path, contents) ->
-      prerr_endline ("Add_file "^(Ojs_path.to_string path)^"\n"^contents);
-      (id, [`Add_file path])
-  | _ ->
-      failwith "Unhandled message"
+let of_string s =
+  let path = Ojs_misc.split_string s [dir_sep] in
+  let abs = String.length s > 0 && String.get s 0 = dir_sep in
+  { abs ; path }
 
-let send_messages push_msg (id, messages) =
-  Lwt_list.iter_s (send_msg push_msg id) messages
+let to_string p =
+  Printf.sprintf "%s%s"
+    (if p.abs then Filename.dir_sep else "")
+    (String.concat Filename.dir_sep p.path)
 
-let handle_message ?filepred root push_msg msg =
-  try
-    match msg with
-    | `Filetree_msg (id, t) ->
-        Lwt.catch
-          (fun () -> send_messages push_msg (handle_client_msg ?filepred root id t))
-          (fun e ->
-             let msg =
-               match e with
-                 Failure s | Sys_error s -> s
-               | _ -> Printexc.to_string e
-             in
-             send_msg push_msg id (`Error msg)
-          )
-  with
-  | e ->
-      Lwt.return (prerr_endline (Printexc.to_string e))
+let basename p =
+  match List.rev p.path with
+    [] -> failwith "Ojs_path.basename: Invalid argument"
+  | f :: _ -> f
 
+let parent p =
+  match List.rev p.path with
+  | [] -> { abs = false ; path = [] }
+  | _ :: q -> { p with path = List.rev q }
+
+let append p1 l = { p1 with path = p1.path @ l }
+let append_path p1 p2 = { p1 with path = p1.path @ p2.path }
+
+let is_prefix =
+  let rec iter = function
+    h1 :: q1, h2 :: q2 -> h1 = h2 && iter (q1, q2)
+  | [], _ -> true
+  | _ :: _, [] -> false
+  in
+  fun p1 p2 -> iter (p1.path, p2.path)
+
+let normalize path =
+    let rec iter acc = function
+      [] -> List.rev acc
+    | h :: q ->
+        if h = Filename.current_dir_name then
+          iter acc q
+        else
+          if h = Filename.parent_dir_name then
+            match acc with
+              [] -> []
+            | _ :: r -> iter r q
+          else
+            iter (h::acc) q
+    in
+    { path with path = iter [] path.path}

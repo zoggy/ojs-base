@@ -48,7 +48,8 @@ let msg_of_wsdata s =
       prerr_endline (Printexc.to_string e);
       None
 
-let rights filename =
+let rights path =
+  let filename = Ojs_path.to_string path in
   match String.lowercase (Ojs_misc.filename_extension filename) with
     "ml" | "mli" -> Some `RO
   | "txt" | "html"-> Some `RW
@@ -56,12 +57,12 @@ let rights filename =
 
 let filepred =
   let re = Str.regexp "^\\(\\(cm.*\\)\\|[oa]\\|\\(\\annot\\)\\)$" in
-  fun filename ->
-    let base = Filename.basename filename in
+  fun path ->
+    let base = Ojs_path.basename path in
     String.length base > 0 &&
       String.get base 0 <> '.' &&
       (
-       match String.lowercase (Ojs_misc.filename_extension filename) with
+       match String.lowercase (Ojs_misc.filename_extension base) with
          s when Str.string_match re s 0 -> false
        | _ -> true
       )

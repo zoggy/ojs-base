@@ -50,14 +50,16 @@ let msg_of_wsdata s =
 let send_msg push_msg id msg = push_msg (`Editor_msg (id, msg))
 
 let access_rights ?(rights=fun _ -> Some `RW) root path =
-  let filename = Filename.concat root path in
-  let norm = Ojs_misc.normalize_filename filename in
+  let root = Ojs_path.of_string root in
+  let path = Ojs_path.append_path root path in
+  let norm = Ojs_path.normalize path in
   (*prerr_endline ("norm="^norm);*)
-  if Ojs_misc.is_prefix root norm then
+  if Ojs_path.is_prefix root norm then
     (norm, rights norm)
   else
     (norm, None)
-let access_forbidden path = `Error ("Forbidden access to "^path)
+
+let access_forbidden path = `Error ("Forbidden access to "^(Ojs_path.to_string path))
 
 let handle_client_msg ?rights root id msg =
   match msg with
@@ -67,7 +69,7 @@ let handle_client_msg ?rights root id msg =
         | (_, None) -> (id, [access_forbidden path])
         | (file, Some `RW)
         | (file, Some `RO) ->
-            let contents = Ojsed_files.string_of_file file in
+            let contents = Ojsed_files.string_of_file (Ojs_path.to_string file) in
             (id, [`File_contents (path, contents)])
       end
   | `Save_file (path, contents) ->
@@ -76,8 +78,9 @@ let handle_client_msg ?rights root id msg =
         | (_, None)
         | (_, Some `RO) -> (id, [access_forbidden path])
         | (file, Some `RW) ->
+            let file = Ojs_path.to_string file in
             Ojsed_files.file_of_string ~file contents ;
-            (id, [`Ok (Printf.sprintf "File %S saved" path)])
+            (id, [`Ok (Printf.sprintf "File %S saved" (Ojs_path.to_string path))])
       end
   | _ ->
       failwith "Unhandled message"

@@ -42,6 +42,7 @@ type editor_info = {
 let editors = ref (SMap.empty : editor_info SMap.t)
 
 let get_session ed ?contents filename =
+  let filename = Ojs_path.to_string filename in
   try  SMap.find filename ed.sessions
   with Not_found ->
       let sess = Ojs_ace.newEditSession
@@ -73,7 +74,7 @@ let get_editor id =
 let display_filename ed fname =
   let node = Ojs_js.node_by_id ed.fname_id in
   Ojs_js.clear_children node ;
-  let t = Dom_html.document##createTextNode (Js.string fname) in
+  let t = Dom_html.document##createTextNode (Js.string (Ojs_path.to_string fname)) in
   Dom.appendChild node t
 
 let save ws ed_id =
@@ -84,12 +85,12 @@ let save ws ed_id =
       let contents = Js.to_string (ed.editor##getValue()) in
       send_msg ws ed_id (`Save_file (file, contents))
 
-let edit_file ws id ?contents fname =
+let edit_file ws id ?contents path =
   let ed = get_editor id in
-  let sess = get_session ed ?contents fname in
+  let sess = get_session ed ?contents path in
   ed.editor##setSession(sess);
-  ed.current_file <- Some fname ;
-  display_filename ed fname
+  ed.current_file <- Some path ;
+  display_filename ed path
 
 let get_msg_id id = (get_editor id).msg_id
 
@@ -98,8 +99,8 @@ let handle_message ws msg =
     (match msg with
      | `Editor_msg (id, t) ->
          match t with
-           `File_contents (fname, contents) ->
-             edit_file ws id ~contents fname
+           `File_contents (path, contents) ->
+             edit_file ws id ~contents path
          | `Ok msg -> Ojsmsg_js.display_text_message (get_msg_id id) msg
          | `Error msg -> Ojsmsg_js.display_text_error (get_msg_id id) msg
          | _ -> failwith "Unhandled message received from server"

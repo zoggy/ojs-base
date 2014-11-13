@@ -40,9 +40,9 @@ type tree_info = {
     msg_id : id ;
     ws : WebSockets.webSocket Js.t ;
     show_files : bool ;
-    on_select : tree_info -> string -> unit ;
-    on_deselect : tree_info -> string -> unit ;
-    mutable selected : (id * string) option ;
+    on_select : tree_info -> Ojs_path.t -> unit ;
+    on_deselect : tree_info -> Ojs_path.t -> unit ;
+    mutable selected : (id * Ojs_path.t) option ;
   }
 
 type node_type = [`File | `Dir of id ] (* `Dir of (div id) *)
@@ -71,7 +71,7 @@ let send_msg ws id msg =
   let msg = `Filetree_msg (id, msg) in
   Ojs_js.send_msg ws (wsdata_of_msg msg)
 
-let set_unselected ti div_id fname =
+let set_unselected ti div_id path =
   (
    try
      let span_id = (SMap.find div_id !tree_nodes).tn_span_id in
@@ -79,17 +79,17 @@ let set_unselected ti div_id fname =
    with Not_found -> ()
   );
   ti.selected <- None ;
-  ti.on_deselect ti fname
+  ti.on_deselect ti path
 
-let set_selected ti div_id fname =
+let set_selected ti div_id path =
   (
    try
      let span_id = (SMap.find div_id !tree_nodes).tn_span_id in
      Ojs_js.set_class span_id "selected" ;
    with Not_found -> ()
   );
-  ti.selected <- Some (div_id, fname) ;
-  ti.on_select ti fname
+  ti.selected <- Some (div_id, path) ;
+  ti.on_select ti path
 
 let set_tree_onclick id node div_id fname =
   let f _ =
@@ -175,19 +175,21 @@ let drag_class = Ojs_js.class_"drag"
 let preventDefault evt = ignore(Js.Unsafe.meth_call evt "preventDefault" [| |])
 let stopPropagation evt = ignore(Js.Unsafe.meth_call evt "stopPropagation" [| |])
 
-let add_file tree_id kind fname (file : File.file Js.t) =
+let add_file tree_id kind path (file : File.file Js.t) =
   let dir =
     match kind with
-      `Dir -> fname
-    | `File -> Filename.dirname fname
+      `Dir -> path
+    | `File -> Ojs_path.parent path
   in
-  let path = Filename.concat dir (Js.to_string file##name) in
+  let path = Ojs_path.append dir [Js.to_string file##name] in
   let cfg =
     try SMap.find tree_id !trees
     with Not_found -> failwith ("No config for file_tree "^tree_id)
   in
   let (size : int) = file##size in
-  let (blob : File.blob Js.t) = Js.Unsafe.meth_call file "slice" [| Js.Unsafe.inject 0 ; Js.Unsafe.inject size |] in(*##slice(0, size) in*)
+  let (blob : File.blob Js.t) =
+    Js.Unsafe.meth_call file "slice" [| Js.Unsafe.inject 0 ; Js.Unsafe.inject size |]
+  in
   let on_success contents =
     send_msg cfg.ws tree_id (`Add_file (path, Js.to_string contents))
   in
@@ -242,8 +244,9 @@ let build_from_tree ~id tree_files =
     try SMap.find id !trees
     with Not_found -> failwith ("No config for file_tree "^id)
   in
-  let rec insert t = function
+  let rec insert path t = function
     `Dir (s, l) ->
+      let path = Ojs_path.append path [s] in
       let label = Filename.basename s in
       let div = doc##createElement (Js.string "div") in
       let div_id = Ojs_js.gen_id () in
@@ -258,7 +261,7 @@ let build_from_tree ~id tree_files =
       let span_id = div_id^"text" in
       let span = doc##createElement (Js.string "span") in
       span##setAttribute (Js.string "id", Js.string span_id);
-      set_tree_onclick id span div_id s ;
+      set_tree_onclick id span div_id path ;
 
       let subs_id = div_id^"subs" in
       let div_subs = doc##createElement (Js.string "div") in
@@ -287,12 +290,14 @@ let build_from_tree ~id tree_files =
       Dom.appendChild head span_col ;
       Dom.appendChild head bbar ;
       Dom.appendChild div div_subs ;
-      handle_drag_drop id `Dir s head ;
-      List.iter (insert div_subs) l
+
+      handle_drag_drop id `Dir path head ;
+      List.iter (insert path div_subs) l
 
   | `File s ->
       if cfg.show_files then
         begin
+          let path = Ojs_path.append path [s] in
           let label = Filename.basename s in
           let div = doc##createElement (Js.string "div") in
           let div_id = Ojs_js.gen_id () in
@@ -302,7 +307,7 @@ let build_from_tree ~id tree_files =
           let span_id = div_id^"text" in
           let span = doc##createElement (Js.string span_id) in
           span##setAttribute (Js.string "id", Js.string (div_id^"text"));
-          set_tree_onclick id span div_id s;
+          set_tree_onclick id span div_id path;
 
           let tn = {
               tn_span_id = span_id ;
@@ -316,10 +321,11 @@ let build_from_tree ~id tree_files =
           Dom.appendChild t div ;
           Dom.appendChild div span ;
           Dom.appendChild span text ;
-          handle_drag_drop id `File s div ;
+
+          handle_drag_drop id `File path div ;
         end
   in
-  List.iter (insert node) tree_files
+  List.iter (insert Ojs_path.empty node) tree_files
 
 
 let handle_message ws msg =

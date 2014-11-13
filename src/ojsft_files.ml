@@ -36,13 +36,8 @@ let file_trees_of_dir ?(filepred=fun _ -> true) root_dir =
   let len = String.length root_dir + 1
     (* + 1 for the / added by Find.find_list *)
   in
-  let base s =
-    let len_s = String.length s in
-    if len_s > len then
-      String.sub s len (len_s - len)
-    else
-      failwith ("Invalid file entry: "^s)
-  in
+  let base s = Filename.basename s in
+  let filepred s = filepred (Ojs_path.of_string s) in
   let rec iter dir =
     let entries =
       Find.find_list

@@ -29,11 +29,11 @@
 (** Types of filetree edition. *)
 
 (** All paths should relative to root directory. *)
-type path = string [@@deriving yojson]
+type path = Ojs_path.t [@@deriving yojson]
 
 type file_tree = [
- | `Dir of path * file_tree list
- | `File of path
+ | `Dir of string * file_tree list
+ | `File of string
  ] [@@deriving yojson]
 
 type server_msg = [
