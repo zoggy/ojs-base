@@ -81,11 +81,15 @@ let handle_add_file behav root path contents =
   | (_, None)
   | (_, Some `RO) -> [ access_forbidden path ]
   | (norm, Some `RW) ->
+      let contents =
+        try Base64.decode contents
+        with e -> failwith (Printexc.to_string e)
+      in
       let file = Ojs_path.to_string norm in
       if not (Sys.file_exists file) &&
         snd (access_rights behav root (Ojs_path.parent path)) <> Some `RW
       then
-       [ creation_forbidden path ]
+        [ creation_forbidden path ]
       else
         begin
           behav.before_add_file norm ;
@@ -94,6 +98,26 @@ let handle_add_file behav root path contents =
           [`Add_file path]
         end
 
+let handle_add_dir behav root path =
+  let parent = Ojs_path.parent path in
+  match access_rights behav root parent with
+  | (_, None)
+  | (_, Some `RO) -> [ creation_forbidden path ]
+  | (_, Some `RW) ->
+      match access_rights behav root path with
+      | (_, None)
+      | (_, Some `RO) -> [ creation_forbidden path ]
+      | (norm, Some `RW) ->
+          let dir = Ojs_path.to_string norm in
+          try
+            Unix.mkdir dir 0o755 ;
+            [ `Add_dir path ]
+          with Unix.Unix_error (e, s1, s2) ->
+             let msg = Printf.sprintf "Could not create %s: %s"
+                (Ojs_path.to_string path) (Unix.error_message e)
+              in
+              failwith msg
+
 let handle_client_msg ?filepred behav root id msg =
   match msg with
     `Get_tree ->
@@ -101,13 +125,9 @@ let handle_client_msg ?filepred behav root id msg =
       let files = behav.after_get_tree files in
       (id, [`Tree files])
   | `Add_file (path, contents) ->
-      let contents =
-        try Base64.decode contents
-        with e -> failwith (Printexc.to_string e)
-      in
-      prerr_endline ("Add_file "^(Ojs_path.to_string path)^"\n"^contents);
-      let res = handle_add_file behav root path contents in
-      (id, res)
+      (id, handle_add_file behav root path contents)
+  | `Add_dir path ->
+      (id, handle_add_dir behav root path)
   | _ ->
       failwith "Unhandled message"
 

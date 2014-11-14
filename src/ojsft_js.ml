@@ -61,6 +61,13 @@ type tree_info = {
 let tree_nodes = ref (SMap.empty : tree_node SMap.t)
 let trees = ref (SMap.empty : tree_info SMap.t)
 
+
+let get_tree_info id =
+  try SMap.find id !trees
+  with Not_found -> failwith ("No config for file_tree "^id)
+
+let get_msg_id id = (get_tree_info id).msg_id
+
 let msg_of_wsdata json =
   try
     match Ojsft_types.server_msg_of_yojson (Yojson.Safe.from_string json) with
@@ -190,10 +197,7 @@ let add_file tree_id kind path (file : File.file Js.t) =
     | `File -> Ojs_path.parent path
   in
   let path = Ojs_path.append dir [Js.to_string file##name] in
-  let cfg =
-    try SMap.find tree_id !trees
-    with Not_found -> failwith ("No config for file_tree "^tree_id)
-  in
+  let cfg = get_tree_info tree_id in
   let (size : int) = file##size in
   let (blob : File.blob Js.t) =
     Js.Unsafe.meth_call file "slice" [| Js.Unsafe.inject 0 ; Js.Unsafe.inject size |]
@@ -212,6 +216,17 @@ let add_file tree_id kind path (file : File.file Js.t) =
   in
   (* read in base 64 *)
   Lwt.on_any (File.readAsDataURL blob) on_success on_error
+
+let add_dir tree_id path name =
+  let path = Ojs_path.append path [name] in
+  let cfg = get_tree_info tree_id in
+  send_msg cfg.ws tree_id (`Add_dir path)
+
+let prompt_add_dir tree_id path =
+  let answer = Dom_html.window##prompt(Js.string "Create directory", Js.string "") in
+  Js.Opt.case answer
+    (fun () -> ())
+    (fun name -> add_dir tree_id path (Js.to_string name))
 
 let handle_drag_drop tree_id kind fname node =
   let on_dragover evt =
@@ -414,7 +429,8 @@ let insert_dir ~id cfg path =
 
       let (span_exp, span_col) = expand_buttons div_id subs_id in
       let bbar = button_bar div_id in
-      let _ = add_button_add_dir div_id bbar in
+      let btn_add_dir = add_button_add_dir div_id bbar in
+      Ojs_js.set_onclick btn_add_dir (fun _ -> prompt_add_dir id path);
 
       Dom.appendChild div head ;
       Dom.appendChild head span ;
@@ -425,12 +441,6 @@ let insert_dir ~id cfg path =
       Dom.appendChild div div_subs ;
 
       handle_drag_drop id `Dir path head
-
-let get_tree_info id =
-  try SMap.find id !trees
-  with Not_found -> failwith ("No config for file_tree "^id)
-
-let get_msg_id id = (get_tree_info id).msg_id
 
 let build_from_tree ~id tree_files =
   let node = Ojs_js.node_by_id id in
@@ -452,6 +462,10 @@ let handle_add_file id path =
   let cfg = get_tree_info id in
   insert_file ~id cfg path
 
+let handle_add_dir id path =
+  let cfg = get_tree_info id in
+  insert_dir ~id cfg path
+
 let handle_message ws msg =
    try
     (match msg with
@@ -459,6 +473,7 @@ let handle_message ws msg =
          match t with
            `Tree l -> build_from_tree id l
          | `Add_file path -> handle_add_file id path
+         | `Add_dir path -> handle_add_dir id path
          | `Error msg ->
              Ojsmsg_js.display_text_error (get_msg_id id) msg
          | _ -> failwith "Unhandled message received from server"
