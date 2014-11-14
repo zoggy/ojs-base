@@ -54,7 +54,7 @@ type client_msg = [
     `Filetree_msg of string *
       [
       | `Get_tree
-      | `Add_file of path * string
+      | `Add_file of path * string (* path * (contents in base 64) *)
       | `Add_dir of path
       | `Del_file of path
       | `Del_dir of path

@@ -101,6 +101,10 @@ let handle_client_msg ?filepred behav root id msg =
       let files = behav.after_get_tree files in
       (id, [`Tree files])
   | `Add_file (path, contents) ->
+      let contents =
+        try Base64.decode contents
+        with e -> failwith (Printexc.to_string e)
+      in
       prerr_endline ("Add_file "^(Ojs_path.to_string path)^"\n"^contents);
       let res = handle_add_file behav root path contents in
       (id, res)

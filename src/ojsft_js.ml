@@ -183,6 +183,7 @@ let preventDefault evt = ignore(Js.Unsafe.meth_call evt "preventDefault" [| |])
 let stopPropagation evt = ignore(Js.Unsafe.meth_call evt "stopPropagation" [| |])
 
 let add_file tree_id kind path (file : File.file Js.t) =
+  log (Printf.sprintf "max_string_length = %d" Sys.max_string_length);
   let dir =
     match kind with
       `Dir -> path
@@ -198,10 +199,19 @@ let add_file tree_id kind path (file : File.file Js.t) =
     Js.Unsafe.meth_call file "slice" [| Js.Unsafe.inject 0 ; Js.Unsafe.inject size |]
   in
   let on_success contents =
-    send_msg cfg.ws tree_id (`Add_file (path, Js.to_string contents))
+    let contents = Js.to_string contents in
+    let len = String.length contents in
+    (* the base64 data is after the first comma, see
+       http://css-tricks.com/data-uris/
+    *)
+    let p = try String.index contents ',' with _ -> failwith "No Base64" in
+    send_msg cfg.ws tree_id (`Add_file (path, String.sub contents (p+1) (len - p - 1)))
   in
-  let on_error _ = () in
-  Lwt.on_any (File.readAsBinaryString blob) on_success on_error
+  let on_error exn =
+    log (Printf.sprintf "Reading file: %s" (Printexc.to_string exn))
+  in
+  (* read in base 64 *)
+  Lwt.on_any (File.readAsDataURL blob) on_success on_error
 
 let handle_drag_drop tree_id kind fname node =
   let on_dragover evt =
@@ -419,6 +429,8 @@ let get_tree_info id =
   try SMap.find id !trees
   with Not_found -> failwith ("No config for file_tree "^id)
 
+let get_msg_id id = (get_tree_info id).msg_id
+
 let build_from_tree ~id tree_files =
   let node = Ojs_js.node_by_id id in
   Ojs_js.clear_children node ;
@@ -446,6 +458,8 @@ let handle_message ws msg =
          match t with
            `Tree l -> build_from_tree id l
          | `Add_file path -> handle_add_file id path
+         | `Error msg ->
+             Ojsmsg_js.display_text_error (get_msg_id id) msg
          | _ -> failwith "Unhandled message received from server"
     );
     Js._false
