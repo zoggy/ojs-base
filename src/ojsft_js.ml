@@ -228,6 +228,7 @@ let handle_drag_drop tree_id kind fname node =
   let on_drop evt =
     stopPropagation evt;
     preventDefault evt;
+    Ojs_js.node_unset_class node drag_class ;
     let files = evt##dataTransfer##files in
     let len = files##length in
     for i = 0 to len - 1 do
