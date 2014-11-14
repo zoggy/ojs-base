@@ -59,6 +59,13 @@ let is_prefix s1 s2 =
     (String.sub s2 0 len1) = s1
 (*/c==v=[String.is_prefix]=1.0====*)
 
+(*c==v=[File.file_of_string]=1.1====*)
+let file_of_string ~file s =
+  let oc = open_out file in
+  output_string oc s;
+  close_out oc
+(*/c==v=[File.file_of_string]=1.1====*)
+
 let filename_extension filename =
   try
     let p = String.rindex filename '.' in

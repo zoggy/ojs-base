@@ -31,8 +31,8 @@ ojsft_find.cmi :
 ojsft_js.cmo : ojsft_types.cmo ojs_path.cmi ojs_js.cmo
 ojsft_js.cmx : ojsft_types.cmx ojs_path.cmx ojs_js.cmx
 ojsft_server.cmo : ojsft_types.cmo ojsft_files.cmo ojs_server.cmo \
-    ojs_path.cmi
+    ojs_path.cmi ojs_misc.cmi
 ojsft_server.cmx : ojsft_types.cmx ojsft_files.cmx ojs_server.cmx \
-    ojs_path.cmx
+    ojs_path.cmx ojs_misc.cmx
 ojsmsg_js.cmo : ojs_js.cmo
 ojsmsg_js.cmx : ojs_js.cmx

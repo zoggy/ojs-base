@@ -46,6 +46,16 @@ val split_string : ?keep_empty:bool -> string -> char list -> string list
 val is_prefix : string -> string -> bool
 (*/i==v=[String.is_prefix]=1.0====*)
 
+(*i==v=[File.file_of_string]=1.1====*)
+(** [file_of_string ~file str] creates a file named
+   [filename] whose content is [str].
+@author Fabrice Lefessant
+@version 1.1
+@raise Sys_error if the file could not be opened.
+@cgname File.file_of_string*)
+val file_of_string : file:string -> string -> unit
+(*/i==v=[File.file_of_string]=1.1====*)
+
 (** [filename_extension fname] returns extension of [fname] (i.e. the string after
   the last dot), or an empty string if there is no dot. *)
 val filename_extension : string -> string

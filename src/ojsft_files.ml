@@ -34,9 +34,6 @@ let is_dir file = (Unix.stat file).Unix.st_kind = Unix.S_DIR
 
 let file_trees_of_dir ?(filepred=fun _ -> true) root_dir =
   let root_dir = Ojs_path.to_string root_dir in
-  let len = String.length root_dir + 1
-    (* + 1 for the / added by Find.find_list *)
-  in
   let base s = Filename.basename s in
   let filepred s = filepred (Ojs_path.of_string s) in
   let rec iter dir =

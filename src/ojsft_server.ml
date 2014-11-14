@@ -30,12 +30,35 @@
 
 open Ojs_server
 
-(*
-type conts = {
-  get_tree
+type access_right = [`RW | `RO ]
 
-}
-*)
+
+type behaviour = {
+    rights : Ojs_path.t -> access_right option ;
+    after_get_tree : Ojsft_types.file_tree list -> Ojsft_types.file_tree list ;
+    before_add_file : Ojs_path.t -> unit ;
+    after_add_file : Ojs_path.t -> unit ;
+  }
+
+let default_behaviour = {
+    rights = (fun _ -> Some `RW);
+    after_get_tree = (fun x -> x) ;
+    before_add_file = (fun _ -> ()) ;
+    after_add_file = (fun _ -> ()) ;
+  }
+
+let access_rights behav root path =
+  let path = Ojs_path.append_path root path in
+  let norm = Ojs_path.normalize path in
+  (*prerr_endline ("norm="^norm);*)
+  if Ojs_path.is_prefix root norm then
+    (norm, behav.rights norm)
+  else
+    (norm, None)
+
+let access_forbidden path = `Error ("Forbidden access to "^(Ojs_path.to_string path))
+let creation_forbidden path = `Error ("Forbidden creation of "^(Ojs_path.to_string path))
+
 let wsdata_of_msg msg = J.to_string (Ojsft_types.server_msg_to_yojson msg)
 let msg_of_wsdata s =
   try
@@ -53,26 +76,48 @@ let msg_of_wsdata s =
 
 let send_msg push_msg id msg = push_msg (`Filetree_msg (id, msg))
 
-let handle_client_msg ?filepred root id msg =
+let handle_add_file behav root path contents =
+  match access_rights behav root path with
+  | (_, None)
+  | (_, Some `RO) -> [ access_forbidden path ]
+  | (norm, Some `RW) ->
+      let file = Ojs_path.to_string norm in
+      if not (Sys.file_exists file) &&
+        snd (access_rights behav root (Ojs_path.parent path)) <> Some `RW
+      then
+       [ creation_forbidden path ]
+      else
+        begin
+          behav.before_add_file norm ;
+          Ojs_misc.file_of_string ~file contents ;
+          behav.after_add_file norm ;
+          [`Add_file path]
+        end
+
+let handle_client_msg ?filepred behav root id msg =
   match msg with
     `Get_tree ->
       let files = Ojsft_files.file_trees_of_dir ?filepred root in
+      let files = behav.after_get_tree files in
       (id, [`Tree files])
   | `Add_file (path, contents) ->
       prerr_endline ("Add_file "^(Ojs_path.to_string path)^"\n"^contents);
-      (id, [`Add_file path])
+      let res = handle_add_file behav root path contents in
+      (id, res)
   | _ ->
       failwith "Unhandled message"
 
 let send_messages push_msg (id, messages) =
   Lwt_list.iter_s (send_msg push_msg id) messages
 
-let handle_message ?filepred root push_msg msg =
+let handle_message ?filepred ?(behav=default_behaviour) root push_msg msg =
   try
     match msg with
     | `Filetree_msg (id, t) ->
         Lwt.catch
-          (fun () -> send_messages push_msg (handle_client_msg ?filepred root id t))
+          (fun () -> send_messages push_msg
+             (handle_client_msg ?filepred behav root id t)
+          )
           (fun e ->
              let msg =
                match e with

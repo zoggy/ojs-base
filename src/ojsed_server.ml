@@ -30,7 +30,7 @@
 
 open Ojs_server
 
-type access = [`RW | `RO]
+type access_right = [`RW | `RO]
 
 let wsdata_of_msg msg = J.to_string (Ojsed_types.server_msg_to_yojson msg)
 let msg_of_wsdata s =

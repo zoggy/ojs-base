@@ -35,6 +35,7 @@ val empty : t
 val root : t
 
 val is_absolute : t -> bool
+val path: t -> string list
 
 val of_string : string -> t
 val to_string : t -> string
