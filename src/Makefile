@@ -47,7 +47,11 @@ LIB_A=$(LIB:.cmxa=.a)
 LIB_CMXS=$(LIB:.cmxs)
 LIB_BYTE=$(LIB:.cmxa=.cma)
 
-LIB_CMXFILES=ojs_misc.cmx ojs_path.cmx ojs_server.cmx
+LIB_CMXFILES= \
+	ojs_misc.cmx \
+	ojs_call.cmx \
+	ojs_path.cmx \
+	ojs_server.cmx
 
 LIB_CMOFILES=$(LIB_CMXFILES:.cmx=.cmo)
 LIB_CMIFILES=$(LIB_CMXFILES:.cmx=.cmi)
@@ -70,7 +74,8 @@ LIBFT_A=$(LIBFT:.cmxa=.a)
 LIBFT_CMXS=$(LIBFT:.cmxs)
 LIBFT_BYTE=$(LIBFT:.cmxa=.cma)
 
-LIBFT_CMXFILES=ojsft_types.cmx \
+LIBFT_CMXFILES=\
+	ojsft_types.cmx \
 	ojsft_find.cmx \
 	ojsft_files.cmx \
 	ojsft_server.cmx
@@ -81,7 +86,9 @@ LIBFT_OFILES=$(LIBFT_CMXFILES:.cmx=.o)
 
 LIBFTJS=ojs-filetree-js.cma
 
-LIBFTJS_CMOFILES=ojsft_types.cmo \
+LIBFTJS_CMOFILES= \
+	ojs_call.cmo \
+	ojsft_types.cmo \
 	ojsft_js.cmo
 
 LIBFTJS_CMIFILES=$(LIBFTJS_CMOFILES:.cmx=.cmi)

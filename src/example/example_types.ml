@@ -29,19 +29,18 @@
 (** *)
 
 
-(*
-type server_msg =
-  [ Ojsft_types.server_msg | Ojsed_types.server_msg ]
-    [@@deriving Yojson]
-
-type client_msg =
-  [ Ojsft_types.client_msg | Ojsed_types.client_msg ]
-    [@@deriving Yojson]
-*)
-
 type path = string [@@deriving yojson]
-type server_msg = [ Ojsft_types.server_msg | Ojsed_types.server_msg ]
+
+type server_msg0 = [ Ojsft_types.server_msg | Ojsed_types.server_msg ]
+  [@@deriving yojson]
+type server_call_msg = server_msg0 Ojs_call.msg
+  [@@deriving yojson]
+type server_msg = [ server_msg0 | server_call_msg ]
   [@@deriving yojson]
 
-type client_msg = [ Ojsft_types.client_msg | Ojsed_types.client_msg ]
+type client_msg0 = [ Ojsft_types.client_msg | Ojsed_types.client_msg ]
+  [@@deriving yojson]
+type client_call_msg = client_msg0 Ojs_call.msg
+  [@@deriving yojson]
+type client_msg = [ client_msg0 | client_call_msg ]
   [@@deriving yojson]
