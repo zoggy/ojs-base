@@ -49,7 +49,7 @@ LIB_BYTE=$(LIB:.cmxa=.cma)
 
 LIB_CMXFILES= \
 	ojs_misc.cmx \
-	ojs_call.cmx \
+	ojs_rpc.cmx \
 	ojs_path.cmx \
 	ojs_server.cmx
 
@@ -87,7 +87,7 @@ LIBFT_OFILES=$(LIBFT_CMXFILES:.cmx=.o)
 LIBFTJS=ojs-filetree-js.cma
 
 LIBFTJS_CMOFILES= \
-	ojs_call.cmo \
+	ojs_rpc.cmo \
 	ojsft_types.cmo \
 	ojsft_js.cmo
 

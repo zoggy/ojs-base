@@ -26,7 +26,7 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-let (rpc_handler : Example_types.server_msg Ojs_call.t) = Ojs_call.rpc_handler ()
+let (rpc_handler : Example_types.server_msg Ojs_rpc.t) = Ojs_rpc.rpc_handler ()
 
 let msg_of_wsdata json =
   try
@@ -44,7 +44,7 @@ let wsdata_of_msg msg =
 let ref_send = ref ((fun _ -> ()) : Example_types.client_msg -> unit)
 let send msg = !ref_send msg
 let call msg callback =
-  Ojs_call.call (fun msg -> send msg; Lwt.return_unit) rpc_handler msg callback
+  Ojs_rpc.call (fun msg -> send msg; Lwt.return_unit) rpc_handler msg callback
 
 let trees = new Ojsft_js.trees call send;;
 let editors = new Ojsed_js.editors call send;;
@@ -71,7 +71,7 @@ let onmessage ws msg =
   match msg with
     `Filetree_msg _ as msg -> trees#handle_message msg
   | `Editor_msg _  as msg -> editors#handle_message msg
-  | `Return (call_id, msg) -> Ojs_call.on_return rpc_handler call_id msg; Js._false
+  | `Return (call_id, msg) -> Ojs_rpc.on_return rpc_handler call_id msg; Js._false
   | _ -> failwith "Unhandled message"
 
 

@@ -108,7 +108,7 @@ let handle_message ?rights root push_msg msg =
       Lwt.return (prerr_endline (Printexc.to_string e))
 
 let return_error push_msg call_id s =
-  Ojs_call.return push_msg call_id (`Editor_msg ("", `Error s))
+  Ojs_rpc.return push_msg call_id (`Editor_msg ("", `Error s))
 
 let handle_call ?rights root push_msg rpc_handler call_id msg =
   try
@@ -118,7 +118,7 @@ let handle_call ?rights root push_msg rpc_handler call_id msg =
           (fun () ->
              let (_, messages) = handle_client_msg ?rights root id t in
              Lwt_list.iter_s
-                 (fun msg -> Ojs_call.return push_msg call_id (`Editor_msg ("", msg)))
+                 (fun msg -> Ojs_rpc.return push_msg call_id (`Editor_msg ("", msg)))
                  messages
           )
           (fun e ->

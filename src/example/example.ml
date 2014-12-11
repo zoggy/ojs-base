@@ -74,7 +74,7 @@ let handle_con root uri (stream, push) =
     then root
     else Ojs_path.normalize (Ojs_path.append_path (Ojs_path.of_string (Sys.getcwd())) root)
   in
-  let rpc_handler = Ojs_call.rpc_handler () in
+  let rpc_handler = Ojs_rpc.rpc_handler () in
   let handle_message push_msg msg =
     match msg with
       `Filetree_msg t -> Ojsft_server.handle_message ~filepred root push_msg (`Filetree_msg t)
