@@ -56,8 +56,8 @@ let on_select ti path =
   Ojs_js.log (Printf.sprintf "Node %S selected" (Ojs_path.to_string path));
   ignore(call (`Editor_msg ("ed", `Get_file_contents path))
    (function
-    | `Editor_msg (_, msg) ->
-        ignore(editors#handle_message (`Editor_msg ("ed", msg)));
+    | `Editor_msg (id, msg) ->
+        ignore(editors#handle_message (`Editor_msg (id, msg)));
         Lwt.return_unit
     | _ -> Lwt.return_unit))
 

@@ -116,9 +116,9 @@ let handle_call ?rights root push_msg rpc_handler call_id msg =
     | `Editor_msg (id, t) ->
         Lwt.catch
           (fun () ->
-             let (_, messages) = handle_client_msg ?rights root id t in
+             let (id, messages) = handle_client_msg ?rights root id t in
              Lwt_list.iter_s
-                 (fun msg -> Ojs_rpc.return push_msg call_id (`Editor_msg ("", msg)))
+                 (fun msg -> Ojs_rpc.return push_msg call_id (`Editor_msg (id, msg)))
                  messages
           )
           (fun e ->
