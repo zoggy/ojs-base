@@ -26,22 +26,7 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-let on_deselect ti path =
-  Ojs_js.log (Printf.sprintf "Node %S deselected" (Ojs_path.to_string path))
-
-let on_select ti path =
-  Ojs_js.log (Printf.sprintf "Node %S selected" (Ojs_path.to_string path));
-  Ojsed_js.send_msg ti.Ojsft_js.ws "ed" (`Get_file_contents path)
-
-let onopen ws =
-  Ojsft_js.setup_filetree ws ~on_select ~on_deselect ~msg_id: "ojs-msg" "ft" ;
-  Ojsed_js.setup_editor ws ~msg_id: "ojs-msg" ~bar_id: "bar" ~editor_id: "ed"
-
-let onmessage ws msg =
-  match msg with
-    `Filetree_msg msg -> Ojsft_js.handle_message ws (`Filetree_msg msg)
-  | `Editor_msg msg -> Ojsed_js.handle_message ws (`Editor_msg msg)
-  | _ -> failwith "Unhandled message"
+let (rpc_handler : Example_types.server_msg Ojs_call.t) = Ojs_call.rpc_handler ()
 
 let msg_of_wsdata json =
   try
@@ -55,6 +40,40 @@ let msg_of_wsdata json =
 
 let wsdata_of_msg msg =
   Yojson.Safe.to_string (Example_types.client_msg_to_yojson msg)
+
+let ref_send = ref ((fun _ -> ()) : Example_types.client_msg -> unit)
+let send msg = !ref_send msg
+let call msg callback =
+  Ojs_call.call (fun msg -> send msg; Lwt.return_unit) rpc_handler msg callback
+
+let trees = new Ojsft_js.trees call send;;
+let editors = new Ojsed_js.editors call send;;
+
+let on_deselect ti path =
+  Ojs_js.log (Printf.sprintf "Node %S deselected" (Ojs_path.to_string path))
+
+let on_select ti path =
+  Ojs_js.log (Printf.sprintf "Node %S selected" (Ojs_path.to_string path));
+  ignore(call (`Editor_msg ("ed", `Get_file_contents path))
+   (function
+    | `Editor_msg (_, msg) ->
+        ignore(editors#handle_message (`Editor_msg ("ed", msg)));
+        Lwt.return_unit
+    | _ -> Lwt.return_unit))
+
+
+let onopen ws =
+  ref_send := (fun msg -> Ojs_js.send_msg ws (wsdata_of_msg msg));
+  trees#setup_filetree ~on_select ~on_deselect ~msg_id: "ojs-msg" "ft" ;
+  editors#setup_editor ~msg_id: "ojs-msg" ~bar_id: "bar" "ed"
+
+let onmessage ws msg =
+  match msg with
+    `Filetree_msg _ as msg -> trees#handle_message msg
+  | `Editor_msg _  as msg -> editors#handle_message msg
+  | `Return (call_id, msg) -> Ojs_call.on_return rpc_handler call_id msg; Js._false
+  | _ -> failwith "Unhandled message"
+
 
 let _ = Ojs_js.setup_ws "ws://localhost:8080"
   msg_of_wsdata wsdata_of_msg

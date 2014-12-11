@@ -107,3 +107,28 @@ let handle_message ?rights root push_msg msg =
   | e ->
       Lwt.return (prerr_endline (Printexc.to_string e))
 
+let return_error push_msg call_id s =
+  Ojs_call.return push_msg call_id (`Editor_msg ("", `Error s))
+
+let handle_call ?rights root push_msg rpc_handler call_id msg =
+  try
+    match msg with
+    | `Editor_msg (id, t) ->
+        Lwt.catch
+          (fun () ->
+             let (_, messages) = handle_client_msg ?rights root id t in
+             Lwt_list.iter_s
+                 (fun msg -> Ojs_call.return push_msg call_id (`Editor_msg ("", msg)))
+                 messages
+          )
+          (fun e ->
+             let msg =
+               match e with
+                 Failure s | Sys_error s -> s
+               | _ -> Printexc.to_string e
+             in
+             return_error push_msg call_id msg
+          )
+  with
+  | e ->
+      return_error push_msg call_id (Printexc.to_string e)

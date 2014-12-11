@@ -31,21 +31,22 @@
 (** All paths should relative to root directory. *)
 type path = Ojs_path.t [@@deriving yojson]
 
-type server_msg = [
-    `Editor_msg of string *
-      [
-      | `Error of string
-      | `Ok of string
-      | `File_contents of path * string
-      ]
+type server_msg =
+  [
+  | `Error of string
+  | `Ok of string
+  | `File_contents of path * string
+  ]  [@@deriving yojson]
+
+
+type client_msg =
+  [
+  | `Get_file_contents of path
+  | `Save_file of path * string
   ]
   [@@deriving yojson]
 
-type client_msg = [
-    `Editor_msg of string *
-      [
-      | `Get_file_contents of path
-      | `Save_file of path * string
-      ]
+type 'a msg = [
+    `Editor_msg of string * 'a
   ]
   [@@deriving yojson]

@@ -36,28 +36,28 @@ type file_tree = [
  | `File of string
  ] [@@deriving yojson]
 
-type server_msg = [
-    `Filetree_msg of string *
-      [
-      | `Error of string
-      | `Tree of file_tree list
-      | `Add_file of path
-      | `Add_dir of path
-      | `Del_file of path
-      | `Del_dir of path
-      | `Rename of path * path
-      ]
-  ]
-  [@@deriving yojson]
+type server_msg =
+  [
+  | `Error of string
+  | `Tree of file_tree list
+  | `Add_file of path
+  | `Add_dir of path
+  | `Del_file of path
+  | `Del_dir of path
+  | `Rename of path * path
+  ]  [@@deriving yojson]
+
 
 type client_msg = [
-    `Filetree_msg of string *
-      [
-      | `Get_tree
-      | `Add_file of path * string (* path * (contents in base 64) *)
-      | `Add_dir of path
-      | `Del_file of path
-      | `Del_dir of path
-      | `Rename of path * path
-      ]
+  | `Get_tree
+  | `Add_file of path * string (* path * (contents in base 64) *)
+  | `Add_dir of path
+  | `Del_file of path
+  | `Del_dir of path
+  | `Rename of path * path
   ] [@@deriving yojson]
+
+type 'a msg = [
+    `Filetree_msg of string * 'a
+  ]
+  [@@deriving yojson]
