@@ -183,12 +183,10 @@ example/example.js: $(LIBJS) $(LIBFTJS) $(LIBEDJS) \
 .PHONY: doc webdoc ocamldoc
 
 doc: dump.odoc dump_js.odoc
+	$(MKDIR) ocamldoc
 	$(OCAMLFIND) ocamldoc -d ocamldoc -html $(OF_FLAGS) -verbose \
-	-load dump.odoc -load dump_js.odoc
+	-load dump.odoc -load dump_js.odoc -t Ojs-base
 
-doc: dump.odoc dump_js.odoc
-	$(MKDIR) doc
-	$(OCAMLFIND) ocamldoc -load dump.odoc-load dump_js.odoc -t Ojs-base -d doc -html
 
 dump.odoc:
 	$(OCAMLFIND) ocamldoc $(OF_FLAGS) `ls ojs*.ml | grep -v _js.ml` -dump $@
