@@ -58,21 +58,16 @@ let access_rights behav root path =
 
 let access_forbidden path = `Error ("Forbidden access to "^(Ojs_path.to_string path))
 let creation_forbidden path = `Error ("Forbidden creation of "^(Ojs_path.to_string path))
+let deletion_forbidden path = `Error ("Forbidden deletion of "^(Ojs_path.to_string path))
 
 let wsdata_of_msg msg = J.to_string (Ojsft_types.server_msg_to_yojson msg)
-let msg_of_wsdata s =
-  try
-    let json = J.from_string s in
-    match Ojsft_types.client_msg_of_yojson json with
-      `Error s -> raise (Yojson.Json_error s)
-    | `Ok msg -> Some msg
-  with
-    Yojson.Json_error s ->
-      prerr_endline s;
-      None
-  | e ->
-      prerr_endline (Printexc.to_string e);
-      None
+let msg_of_wsdata s = Ojs_server.mk_msg_of_wsdata Ojsft_types.client_msg_of_yojson
+
+class ['clt, 'srv] filetree (broad : 'src -> unit) ~id root =
+  object(self)
+
+
+  end
 
 let send_msg push_msg id msg = push_msg (`Filetree_msg (id, msg))
 
@@ -118,6 +113,30 @@ let handle_add_dir behav root path =
               in
               failwith msg
 
+let handle_delete behav root path =
+  let parent = Ojs_path.parent path in
+  match access_rights behav root parent with
+  | (_, None)
+  | (_, Some `RO) -> [ deletion_forbidden path ]
+  | (_, Some `RW) ->
+      match access_rights behav root path with
+      | (_, None)
+      | (_, Some `RO) -> [ deletion_forbidden path ]
+      | (norm, Some `RW) ->
+          let file = Ojs_path.to_string norm in
+          if Sys.is_directory file then
+            try Sys.remove file; [ `Ok ]
+            with Sys_error msg -> failwith msg
+          else
+            match Sys.command (Printf.sprintf "rm -fr %s" (Filename.quote file)) with
+              0 -> [ `Ok ]
+            | n ->
+                let msg = Printf.sprintf "Could not delete %s" (Ojs_path.to_string path) in
+                failwith msg
+
+let handle_rename behav root path1 path2 =
+  failwith "Rename: Not implemented"
+
 let handle_client_msg ?filepred behav root id msg =
   match msg with
     `Get_tree ->
@@ -128,6 +147,10 @@ let handle_client_msg ?filepred behav root id msg =
       (id, handle_add_file behav root path contents)
   | `Add_dir path ->
       (id, handle_add_dir behav root path)
+  | `Delete path ->
+      (id, handle_delete behav root path)
+  | `Rename (path1, path2) ->
+      (id, handle_rename behav root path1 path2)
   | _ ->
       failwith "Unhandled message"
 

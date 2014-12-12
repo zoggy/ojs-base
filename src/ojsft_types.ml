@@ -38,12 +38,12 @@ type file_tree = [
 
 type server_msg =
   [
+  | `Ok
   | `Error of string
   | `Tree of file_tree list
   | `Add_file of path
   | `Add_dir of path
-  | `Del_file of path
-  | `Del_dir of path
+  | `Delete of path
   | `Rename of path * path
   ]  [@@deriving yojson]
 
@@ -52,8 +52,7 @@ type client_msg = [
   | `Get_tree
   | `Add_file of path * string (* path * (contents in base 64) *)
   | `Add_dir of path
-  | `Del_file of path
-  | `Del_dir of path
+  | `Delete of path
   | `Rename of path * path
   ] [@@deriving yojson]
 

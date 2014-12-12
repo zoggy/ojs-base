@@ -45,24 +45,65 @@ let mk_msg_of_wsdata client_msg_of_yojson =
         prerr_endline (Printexc.to_string e);
         None
 
-let handle_messages msg_of_wsdata wsdata_of_msg
-  handle_message stream push =
-  let push_msg msg =
+let mk_send_msg wsdata_of_msg push =
+  fun msg ->
     let wsdata = wsdata_of_msg msg in
     let frame = Websocket.Frame.of_string wsdata in
     Lwt.return (push (Some frame))
-  in
+
+let mk_msg_stream msg_of_wsdata =
   let f frame =
-    let s = Websocket.Frame.content frame in
-    try
-      match msg_of_wsdata s with
-        None -> Lwt.return_unit
-      | Some msg -> handle_message push_msg msg
-    with
-    | e ->
+    msg_of_wsdata (Websocket.Frame.content frame)
+  in
+  Lwt_stream.filter_map f
+
+let handle_messages msg_of_wsdata wsdata_of_msg handle_message stream push =
+  let push_msg = mk_send_msg wsdata_of_msg push in
+  let f msg =
+    try handle_message push_msg
+    with e ->
         Lwt.return (prerr_endline (Printexc.to_string e))
   in
   Lwt.catch
-    (fun _ -> Lwt_stream.iter_s f stream)
+    (fun _ -> Lwt_stream.iter_s f (mk_msg_stream msg_of_wsdata stream))
     (fun _ -> Lwt.return_unit)
 
+
+class ['clt, 'srv] connection_group
+  msg_of_wsdata wsdata_of_msg handle_message =
+    object(self)
+      val mutable connections =
+        ([] : (('srv -> unit Lwt.t) * ('clt, 'srv) Ojs_rpc.t) list)
+
+      method remove_connection send =
+        let pred (send2, _) = send <> send2 in
+        connections <- List.filter pred connections
+
+      method add_connection stream push =
+        let send_msg = mk_send_msg wsdata_of_msg push in
+        let rpc = Ojs_rpc.rpc_handler send_msg in
+        connections <- (send_msg, rpc) :: connections;
+        let stream = mk_msg_stream msg_of_wsdata stream in
+        Lwt.catch
+          (fun _ -> Lwt_stream.iter_s (self#handle_message send_msg rpc) stream)
+          (fun _ -> Lwt.return_unit)
+
+      method broadcast msg =
+        let f (send, _) =
+          Lwt.catch
+            (fun _ -> send msg)
+            (fun _ -> self#remove_connection send; Lwt.return_unit)
+        in
+        Lwt_list.iter_s f connections
+
+      method broadcall msg cb =
+        let f (send, rpc) =
+          Lwt.catch
+            (fun _ -> Ojs_rpc.call rpc msg cb)
+            (fun _ -> self#remove_connection send; Lwt.return_unit)
+        in
+        Lwt_list.iter_s f connections
+
+      method handle_message : ('srv -> unit Lwt.t) -> ('clt, 'srv) Ojs_rpc.t -> 'clt -> unit Lwt.t = handle_message
+
+  end
