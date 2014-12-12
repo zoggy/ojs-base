@@ -8,6 +8,7 @@ archive(plugin,native) = "ojs-base.cmxs"
 
 package "js" (
   version = "@VERSION@"
+  requires = "@PACKAGES@"
   description = "Client code"
   archive(byte) = "ojs-base-js.cma"
 )

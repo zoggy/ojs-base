@@ -61,6 +61,7 @@ LIBJS=ojs-base-js.cma
 
 LIBJS_CMOFILES=	\
 	ojs_misc.cmo \
+	ojs_rpc.cmo \
 	ojs_path.cmo \
 	ojs_js.cmo \
 	ojsmsg_js.cmo
@@ -87,7 +88,6 @@ LIBFT_OFILES=$(LIBFT_CMXFILES:.cmx=.o)
 LIBFTJS=ojs-filetree-js.cma
 
 LIBFTJS_CMOFILES= \
-	ojs_rpc.cmo \
 	ojsft_types.cmo \
 	ojsft_js.cmo
 
