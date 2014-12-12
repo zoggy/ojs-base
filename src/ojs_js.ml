@@ -33,6 +33,17 @@ type id = string
 
 let log s = Firebug.console##log (Js.string s);;
 
+let mk_msg_of_wsdata server_msg_of_yojson =
+  fun s ->
+    try
+      match server_msg_of_yojson (Yojson.Safe.from_string s) with
+        `Error s -> failwith (s ^ "\n" ^ s)
+      | `Ok msg -> Some msg
+    with
+      e ->
+        log (Printexc.to_string e);
+        None
+
 let class_ s = "ojs-"^s
 
 let setup_ws url msg_of_data data_of_msg

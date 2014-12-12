@@ -28,15 +28,7 @@
 
 
 
-let msg_of_wsdata json =
-  try
-    match Example_types.server_msg_of_yojson (Yojson.Safe.from_string json) with
-      `Error s -> failwith (s ^ "\n" ^ json)
-    | `Ok msg -> Some msg
-  with
-    e ->
-      Ojs_js.log (Printexc.to_string e);
-      None
+let msg_of_wsdata = Ojs_js.mk_msg_of_wsdata Example_types.server_msg_of_yojson
 
 let wsdata_of_msg msg =
   Yojson.Safe.to_string (Example_types.client_msg_to_yojson msg)

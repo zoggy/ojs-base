@@ -34,19 +34,7 @@ let (>>=) = Lwt.bind
 let rec wait_forever () = Lwt_unix.sleep 1000.0 >>= wait_forever
 
 let wsdata_of_msg msg = J.to_string (Example_types.server_msg_to_yojson msg)
-let msg_of_wsdata s =
-  try
-    let json = J.from_string s in
-    match Example_types.client_msg_of_yojson json with
-      `Error s -> raise (Yojson.Json_error s)
-    | `Ok msg -> Some msg
-  with
-    Yojson.Json_error s ->
-      prerr_endline s;
-      None
-  | e ->
-      prerr_endline (Printexc.to_string e);
-      None
+let msg_of_wsdata = Ojs_server.mk_msg_of_wsdata Example_types.client_msg_of_yojson
 
 let rights path =
   let filename = Ojs_path.to_string path in

@@ -30,6 +30,21 @@ let (>>=) = Lwt.bind
 
 module J = Yojson.Safe
 
+let mk_msg_of_wsdata client_msg_of_yojson =
+  fun s ->
+    try
+      let json = J.from_string s in
+      match client_msg_of_yojson json with
+        `Error s -> raise (Yojson.Json_error s)
+      | `Ok msg -> Some msg
+    with
+      Yojson.Json_error s ->
+        prerr_endline s;
+        None
+    | e ->
+        prerr_endline (Printexc.to_string e);
+        None
+
 let handle_messages msg_of_wsdata wsdata_of_msg
   handle_message stream push =
   let push_msg msg =
