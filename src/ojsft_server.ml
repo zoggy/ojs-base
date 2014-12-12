@@ -63,36 +63,55 @@ let deletion_forbidden path = `Error ("Forbidden deletion of "^(Ojs_path.to_stri
 let wsdata_of_msg msg = J.to_string (Ojsft_types.server_msg_to_yojson msg)
 let msg_of_wsdata s = Ojs_server.mk_msg_of_wsdata Ojsft_types.client_msg_of_yojson
 
-class ['clt, 'srv] filetree (broad : 'src -> unit) ~id root =
-  object(self)
+class ['clt, 'srv] filetree ?(behav=default_behaviour)
+  (broadcall : 'srv -> ('clt -> unit Lwt.t) -> unit Lwt.t)
+    (broadcast : 'srv -> unit) ~id root =
+    object(self)
+      method id : string = id
+      method root : Ojs_path.t = root
+
+      method can_add_file file = true
+      method can_add_dir (dir : string) = true
 
 
-  end
-
-let send_msg push_msg id msg = push_msg (`Filetree_msg (id, msg))
-
-let handle_add_file behav root path contents =
-  match access_rights behav root path with
-  | (_, None)
-  | (_, Some `RO) -> [ access_forbidden path ]
-  | (norm, Some `RW) ->
-      let contents =
-        try Base64.decode contents
-        with e -> failwith (Printexc.to_string e)
-      in
-      let file = Ojs_path.to_string norm in
-      if not (Sys.file_exists file) &&
-        snd (access_rights behav root (Ojs_path.parent path)) <> Some `RW
-      then
-        [ creation_forbidden path ]
-      else
-        begin
-          behav.before_add_file norm ;
-          Ojs_misc.file_of_string ~file contents ;
-          behav.after_add_file norm ;
-          [`Add_file path]
-        end
-
+      method handle_add_file send_msg path contents =
+        let norm = Ojs_path.normalize path in
+        let file = Ojs_path.to_string norm in
+        match self#can_add_file file with
+          false -> send_msg (creation_forbidden path)
+        | true ->
+            let contents =
+              try Base64.decode contents
+              with e -> failwith (Printexc.to_string e)
+            in
+            behav.before_add_file norm ;
+            Ojs_misc.file_of_string ~file contents ;
+            behav.after_add_file norm ;
+            send_msg `Ok ;
+            broadcast (`Add_file path)
+            (*
+        match access_rights behav root path with
+        | (_, None)
+        | (_, Some `RO) -> [ access_forbidden path ]
+        | (norm, Some `RW) ->
+            let contents =
+              try Base64.decode contents
+              with e -> failwith (Printexc.to_string e)
+            in
+            let file = Ojs_path.to_string norm in
+            if not (Sys.file_exists file) &&
+              snd (access_rights behav root (Ojs_path.parent path)) <> Some `RW
+            then
+              [ creation_forbidden path ]
+            else
+              begin
+                behav.before_add_file norm ;
+                Ojs_misc.file_of_string ~file contents ;
+                behav.after_add_file norm ;
+                [`Add_file path]
+              end
+                 *)
+                 (*
 let handle_add_dir behav root path =
   let parent = Ojs_path.parent path in
   match access_rights behav root parent with
@@ -136,24 +155,24 @@ let handle_delete behav root path =
 
 let handle_rename behav root path1 path2 =
   failwith "Rename: Not implemented"
-
-let handle_client_msg ?filepred behav root id msg =
-  match msg with
-    `Get_tree ->
-      let files = Ojsft_files.file_trees_of_dir ?filepred root in
-      let files = behav.after_get_tree files in
-      (id, [`Tree files])
-  | `Add_file (path, contents) ->
-      (id, handle_add_file behav root path contents)
-  | `Add_dir path ->
-      (id, handle_add_dir behav root path)
-  | `Delete path ->
-      (id, handle_delete behav root path)
-  | `Rename (path1, path2) ->
-      (id, handle_rename behav root path1 path2)
-  | _ ->
-      failwith "Unhandled message"
-
+*)
+      method handle_message (send_msg : 'srv -> unit) (msg : 'clt) =(*?filepred behav*)
+        match msg with
+          `Get_tree ->
+            let files = Ojsft_files.file_trees_of_dir (*?filepred*) root in
+            let files = behav.after_get_tree files in
+            send_msg (`Tree files)
+        | `Add_file (path, contents) ->
+            self#handle_add_file send_msg path contents
+(*        | `Add_dir path ->
+            (id, handle_add_dir behav root path)
+        | `Delete path ->
+            (id, handle_delete behav root path)
+        | `Rename (path1, path2) ->
+            (id, handle_rename behav root path1 path2)*)
+        | _ ->
+            send_msg (`Error "Unhandled message")
+(*
 let send_messages push_msg (id, messages) =
   Lwt_list.iter_s (send_msg push_msg id) messages
 
@@ -176,4 +195,25 @@ let handle_message ?filepred ?(behav=default_behaviour) root push_msg msg =
   with
   | e ->
       Lwt.return (prerr_endline (Printexc.to_string e))
+*)
+    end
 
+class ['clt, 'srv] filetrees broadcall broadcast =
+  object(self)
+    val mutable filetrees = (SMap.empty : ('clt, 'srv) filetree SMap.t)
+
+    method filetree id =
+      try SMap.find id filetrees
+      with Not_found -> failwith (Printf.sprintf "No filetree with id %S" id)
+
+    method add_filetree ~id root =
+      let broadcall msg cb = broadcall (`Filetree_msg (id, msg)) cb in
+      let broadcast msg = broadcast  (`Filetree_msg (id, msg)) in
+      let ft = new filetree broadcall broadcast ~id root in
+      filetrees <- SMap.add id ft filetrees
+
+    method handle_message send_msg (msg : 'clt Ojsft_types.msg) =
+      match msg with
+        `Filetree_msg (id, msg) ->
+          (self#filetree id)#handle_message send_msg msg
+  end

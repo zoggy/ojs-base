@@ -29,6 +29,7 @@
 let (>>=) = Lwt.bind
 
 module J = Yojson.Safe
+module SMap = Map.Make(String)
 
 let mk_msg_of_wsdata client_msg_of_yojson =
   fun s ->
@@ -70,8 +71,10 @@ let handle_messages msg_of_wsdata wsdata_of_msg handle_message stream push =
 
 
 class ['clt, 'srv] connection_group
-  msg_of_wsdata wsdata_of_msg handle_message =
+  (msg_of_wsdata : string -> 'clt option)
+  (wsdata_of_msg : 'srv -> string) =
     object(self)
+      val mutable handle_message = (fun _ _ _ -> Lwt.return_unit)
       val mutable connections =
         ([] : (('srv -> unit Lwt.t) * ('clt, 'srv) Ojs_rpc.t) list)
 
@@ -104,6 +107,8 @@ class ['clt, 'srv] connection_group
         in
         Lwt_list.iter_s f connections
 
-      method handle_message : ('srv -> unit Lwt.t) -> ('clt, 'srv) Ojs_rpc.t -> 'clt -> unit Lwt.t = handle_message
-
+      method handle_message :
+        ('srv -> unit Lwt.t) -> ('clt, 'srv) Ojs_rpc.t -> 'clt -> unit Lwt.t =
+          handle_message
+      method set_handle_message f = handle_message <- f
   end

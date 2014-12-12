@@ -55,6 +55,30 @@ let filepred =
        | _ -> true
       )
 
+
+let connections = new Ojs_server.connection_group msg_of_wsdata wsdata_of_msg
+let filetrees = new Ojsft_server.filetrees connections#broadcall connections#broadcast
+let root =
+  let root = try Sys.argv.(1) with _ -> "." in
+   if Ojs_path.is_absolute root
+  then root
+  else Ojs_path.normalize (Ojs_path.append_path (Ojs_path.of_string (Sys.getcwd())) root)
+
+let () = filetrees#add_filetree "ft" root
+
+let handle_message send_msg rpc msg =
+  match msg with
+    `Filetree_msg t -> filetrees#handle_message send_msg (`Filetree_msg t)
+  | `Editor_msg t -> Ojsed_server.handle_message ~rights root push_msg (`Editor_msg t)
+  | `Call (call_id, `Editor_msg t) ->
+      Ojsed_server.handle_call ~rights root rpc call_id (`Editor_msg t)
+  | _ -> failwith "Unhandled message"
+
+let () = connections#set_handle_message handle_message
+
+let handle_con uri (stream, push) =
+  connections#add_connect stream push
+(*
 let handle_con root uri (stream, push) =
   let root = Ojs_path.of_string root in
   let root =
@@ -81,11 +105,12 @@ let handle_con root uri (stream, push) =
   Ojs_server.handle_messages
     msg_of_wsdata wsdata_of_msg
     handle_message stream push
+*)
 
-let server root sockaddr = Websocket.establish_server sockaddr (handle_con root)
+let server sockaddr = Websocket.establish_server sockaddr handle_con
 
-let run_server root host port =
+let run_server host port =
   Lwt_io_ext.sockaddr_of_dns host (string_of_int port) >>= fun sa ->
-    Lwt.return (server root sa) >>= fun _ -> wait_forever ()
+    Lwt.return (server sa) >>= fun _ -> wait_forever ()
 
-let _ = Lwt_unix.run (run_server (try Sys.argv.(1) with _ -> ".") "0.0.0.0" 8080)
+let _ = Lwt_unix.run (run_server "0.0.0.0" 8080)
