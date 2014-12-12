@@ -36,17 +36,20 @@ type server_msg0 = [
   | Ojsed_types.server_msg Ojsed_types.msg
   ]
   [@@deriving yojson]
-type server_call_msg = server_msg0 Ojs_rpc.msg
-  [@@deriving yojson]
-type server_msg = [ server_msg0 | server_call_msg ]
-  [@@deriving yojson]
+
 
 type client_msg0 = [
   | Ojsft_types.client_msg Ojsft_types.msg
   | Ojsed_types.client_msg Ojsed_types.msg
   ]
   [@@deriving yojson]
-type client_call_msg = client_msg0 Ojs_rpc.msg
+
+type server_rpc_msg = server_msg0 Ojs_rpc.msg
   [@@deriving yojson]
-type client_msg = [ client_msg0 | client_call_msg ]
+type server_msg = [ server_msg0 | server_rpc_msg ]
+  [@@deriving yojson]
+
+type client_rpc_msg = client_msg0 Ojs_rpc.msg
+  [@@deriving yojson]
+type client_msg = [ client_msg0 | client_rpc_msg ]
   [@@deriving yojson]

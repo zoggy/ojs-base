@@ -74,13 +74,20 @@ let handle_con root uri (stream, push) =
     then root
     else Ojs_path.normalize (Ojs_path.append_path (Ojs_path.of_string (Sys.getcwd())) root)
   in
-  let rpc_handler = Ojs_rpc.rpc_handler () in
+  let rpc_handler =
+    let send msg =
+      let wsdata = wsdata_of_msg msg in
+      let frame = Websocket.Frame.of_string wsdata in
+      Lwt.return (push (Some frame))
+    in
+    Ojs_rpc.rpc_handler send
+  in
   let handle_message push_msg msg =
     match msg with
       `Filetree_msg t -> Ojsft_server.handle_message ~filepred root push_msg (`Filetree_msg t)
     | `Editor_msg t -> Ojsed_server.handle_message ~rights root push_msg (`Editor_msg t)
     | `Call (call_id, `Editor_msg t) ->
-        Ojsed_server.handle_call ~rights root push_msg rpc_handler call_id (`Editor_msg t)
+        Ojsed_server.handle_call ~rights root rpc_handler call_id (`Editor_msg t)
     | _ -> failwith "Unhandled message"
   in
   Ojs_server.handle_messages

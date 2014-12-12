@@ -26,7 +26,7 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-let (rpc_handler : Example_types.server_msg Ojs_rpc.t) = Ojs_rpc.rpc_handler ()
+
 
 let msg_of_wsdata json =
   try
@@ -43,8 +43,11 @@ let wsdata_of_msg msg =
 
 let ref_send = ref ((fun _ -> ()) : Example_types.client_msg -> unit)
 let send msg = !ref_send msg
-let call msg callback =
-  Ojs_rpc.call (fun msg -> send msg; Lwt.return_unit) rpc_handler msg callback
+
+let (rpc_handler : (Example_types.client_msg, Example_types.server_msg) Ojs_rpc.t) =
+  Ojs_rpc.rpc_handler (fun msg -> send msg; Lwt.return_unit)
+
+let call = Ojs_rpc.call rpc_handler
 
 let trees = new Ojsft_js.trees call send;;
 let editors = new Ojsed_js.editors call send;;

@@ -12,11 +12,12 @@ let gensym =
   let cpt = ref 0 in
   fun () -> incr cpt; !cpt
 
-type 'a t = {
-  mutable pending : 'a Lwt_condition.t Idmap.t ;
+type ('clt, 'srv) t = {
+  mutable pending : 'srv Lwt_condition.t Idmap.t ;
+  send : 'clt -> unit Lwt.t;
   }
 
-let rpc_handler () = { pending = Idmap.empty }
+let rpc_handler send = { pending = Idmap.empty ; send }
 
 type 'a call_msg = [
   | `Call of call_id * 'a
@@ -28,17 +29,17 @@ type 'a return_msg = [
 
 type 'a msg = [ 'a return_msg | 'a call_msg ] [@@deriving yojson]
 
-let call send t msg callback =
+let call t msg callback =
   let id = gensym () in
   let cond = Lwt_condition.create () in
   t.pending <- Idmap.add id cond t.pending ;
   let msg = `Call (id, msg) in
-  send msg >>=
+  t.send msg >>=
   fun () -> Lwt_condition.wait cond >>= callback
 
-let return send call_id msg =
+let return t call_id msg =
   let msg = `Return (call_id, msg) in
-  send msg
+  t.send msg
 
 let on_return t call_id msg =
   match Idmap.find call_id t.pending with
