@@ -44,12 +44,12 @@ type client_msg0 = [
   ]
   [@@deriving yojson]
 
-type server_rpc_msg = server_msg0 Ojs_rpc.msg
-  [@@deriving yojson]
-type server_msg = [ server_msg0 | server_rpc_msg ]
+(*type server_rpc_msg = server_msg0 Ojs_rpc.msg
+  [@@deriving yojson]*)
+type server_msg = [ server_msg0 |  server_msg Ojs_rpc.msg]
   [@@deriving yojson]
 
-type client_rpc_msg = client_msg0 Ojs_rpc.msg
-  [@@deriving yojson]
-type client_msg = [ client_msg0 | client_rpc_msg ]
+(*type client_rpc_msg = client_msg0 Ojs_rpc.msg
+  [@@deriving yojson]*)
+type client_msg = [ client_msg0 | client_msg Ojs_rpc.msg ]
   [@@deriving yojson]

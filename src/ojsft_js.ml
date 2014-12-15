@@ -118,6 +118,7 @@ let expand_buttons base_id subs_id =
   (span_exp, span_col)
 
 class ['clt, 'srv] tree
+  (*(call: [>Ojsft_types.client_msg] -> ([>Ojsft_types.server_msg] -> unit Lwt.t) -> unit Lwt.t)*)
   call (send : 'clt -> unit)
     ?(show_files=true)
     ?(on_select= fun _ _ -> ())
@@ -443,9 +444,9 @@ class ['clt, 'srv] tree
            | `Add_dir path -> self#handle_add_dir path
            | `Error msg ->
                Ojsmsg_js.display_text_error msg_id msg
-           | `Del_file _
-           | `Del_dir _
+           | `Delete _
            | `Rename _ -> failwith "Unhandled message received from server"
+           | `Ok -> ()
           );
           Js._false
         with
@@ -472,7 +473,13 @@ class ['clt, 'srv] trees
 
     method setup_filetree ?show_files ?on_select ?on_deselect ~msg_id id =
       let send msg = send (`Filetree_msg (id, msg)) in
-      let call msg cb = call (`Filetree_msg (id, msg)) cb in
+      let call msg cb =
+          let cb = function
+            `Filetree_msg (_, msg) -> cb msg
+          | _ -> Lwt.return_unit
+          in
+          call (`Filetree_msg (id, msg)) cb
+        in
       let tree = new tree call send ?show_files ?on_select ?on_deselect ~msg_id id in
       trees <- SMap.add id tree trees
 

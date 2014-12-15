@@ -36,7 +36,7 @@ let wsdata_of_msg msg =
 let ref_send = ref ((fun _ -> ()) : Example_types.client_msg -> unit)
 let send msg = !ref_send msg
 
-let (rpc_handler : (Example_types.client_msg, Example_types.server_msg) Ojs_rpc.t) =
+let (rpc_handler : (Example_types.server_msg, Example_types.client_msg) Ojs_rpc.t) =
   Ojs_rpc.rpc_handler (fun msg -> send msg; Lwt.return_unit)
 
 let call = Ojs_rpc.call rpc_handler

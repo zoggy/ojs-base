@@ -65,7 +65,7 @@ let msg_of_wsdata s = Ojs_server.mk_msg_of_wsdata Ojsft_types.client_msg_of_yojs
 
 class ['clt, 'srv] filetree ?(behav=default_behaviour)
   (broadcall : 'srv -> ('clt -> unit Lwt.t) -> unit Lwt.t)
-    (broadcast : 'srv -> unit) ~id root =
+    (broadcast : 'srv -> unit Lwt.t) ~id root =
     object(self)
       method id : string = id
       method root : Ojs_path.t = root
@@ -87,8 +87,8 @@ class ['clt, 'srv] filetree ?(behav=default_behaviour)
             behav.before_add_file norm ;
             Ojs_misc.file_of_string ~file contents ;
             behav.after_add_file norm ;
-            send_msg `Ok ;
-            broadcast (`Add_file path)
+            send_msg `Ok >>=
+            fun () -> broadcast (`Add_file path)
             (*
         match access_rights behav root path with
         | (_, None)
@@ -156,7 +156,7 @@ let handle_delete behav root path =
 let handle_rename behav root path1 path2 =
   failwith "Rename: Not implemented"
 *)
-      method handle_message (send_msg : 'srv -> unit) (msg : 'clt) =(*?filepred behav*)
+      method handle_message (send_msg : 'srv -> unit Lwt.t) (msg : 'clt) =(*?filepred behav*)
         match msg with
           `Get_tree ->
             let files = Ojsft_files.file_trees_of_dir (*?filepred*) root in
@@ -198,7 +198,9 @@ let handle_message ?filepred ?(behav=default_behaviour) root push_msg msg =
 *)
     end
 
-class ['clt, 'srv] filetrees broadcall broadcast =
+class ['clt, 'srv] filetrees
+   (broadcall : [>'srv Ojsft_types.msg] -> ([>'clt Ojsft_types.msg] -> unit Lwt.t) -> unit Lwt.t)
+   (broadcast : [>'srv Ojsft_types.msg] -> unit Lwt.t) =
   object(self)
     val mutable filetrees = (SMap.empty : ('clt, 'srv) filetree SMap.t)
 
@@ -207,13 +209,21 @@ class ['clt, 'srv] filetrees broadcall broadcast =
       with Not_found -> failwith (Printf.sprintf "No filetree with id %S" id)
 
     method add_filetree ~id root =
-      let broadcall msg cb = broadcall (`Filetree_msg (id, msg)) cb in
-      let broadcast msg = broadcast  (`Filetree_msg (id, msg)) in
-      let ft = new filetree broadcall broadcast ~id root in
-      filetrees <- SMap.add id ft filetrees
+        let broadcall msg cb =
+          let cb = function
+            `Filetree_msg (_, msg) -> cb msg
+          | _ -> Lwt.return_unit
+          in
+          broadcall (`Filetree_msg (id, msg)) cb
+        in
+        let broadcast msg = broadcast  (`Filetree_msg (id, msg)) in
+        let ft = new filetree broadcall broadcast ~id root in
+        filetrees <- SMap.add id ft filetrees
 
-    method handle_message send_msg (msg : 'clt Ojsft_types.msg) =
+    method handle_message
+      (send_msg : 'srv Ojsft_types.msg -> unit Lwt.t) (msg : 'clt Ojsft_types.msg) =
       match msg with
         `Filetree_msg (id, msg) ->
+          let send_msg msg = send_msg (`Filetree_msg (id, msg)) in
           (self#filetree id)#handle_message send_msg msg
   end

@@ -13,8 +13,8 @@ let gensym =
   fun () -> incr cpt; !cpt
 
 type ('clt, 'srv) t = {
-  mutable pending : 'srv Lwt_condition.t Idmap.t ;
-  send : 'clt -> unit Lwt.t;
+  mutable pending : 'clt Lwt_condition.t Idmap.t ;
+  send : 'srv -> unit Lwt.t;
   }
 
 let rpc_handler send = { pending = Idmap.empty ; send }

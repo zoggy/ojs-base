@@ -56,20 +56,22 @@ let filepred =
       )
 
 
-let connections = new Ojs_server.connection_group msg_of_wsdata wsdata_of_msg
+let connections : (Example_types.client_msg, Example_types.server_msg) Ojs_server.connection_group =
+  new Ojs_server.connection_group msg_of_wsdata wsdata_of_msg
 let filetrees = new Ojsft_server.filetrees connections#broadcall connections#broadcast
 let root =
   let root = try Sys.argv.(1) with _ -> "." in
-   if Ojs_path.is_absolute root
+  let root = Ojs_path.of_string root in
+  if Ojs_path.is_absolute root
   then root
   else Ojs_path.normalize (Ojs_path.append_path (Ojs_path.of_string (Sys.getcwd())) root)
 
 let () = filetrees#add_filetree "ft" root
 
-let handle_message send_msg rpc msg =
+let handle_message (send_msg : Example_types.server_msg -> unit Lwt.t) rpc msg =
   match msg with
-    `Filetree_msg t -> filetrees#handle_message send_msg (`Filetree_msg t)
-  | `Editor_msg t -> Ojsed_server.handle_message ~rights root push_msg (`Editor_msg t)
+  | `Editor_msg t -> Ojsed_server.handle_message ~rights root send_msg (`Editor_msg t)
+  | `Filetree_msg t -> filetrees#handle_message (function `Filetree_msg x -> send_msg (`Filetree_msg x)) (`Filetree_msg t)
   | `Call (call_id, `Editor_msg t) ->
       Ojsed_server.handle_call ~rights root rpc call_id (`Editor_msg t)
   | _ -> failwith "Unhandled message"
@@ -77,7 +79,7 @@ let handle_message send_msg rpc msg =
 let () = connections#set_handle_message handle_message
 
 let handle_con uri (stream, push) =
-  connections#add_connect stream push
+  connections#add_connection stream push
 (*
 let handle_con root uri (stream, push) =
   let root = Ojs_path.of_string root in

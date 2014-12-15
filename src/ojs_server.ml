@@ -99,7 +99,7 @@ class ['clt, 'srv] connection_group
         in
         Lwt_list.iter_s f connections
 
-      method broadcall msg cb =
+      method broadcall (msg : 'srv) (cb : 'clt -> unit Lwt.t) =
         let f (send, rpc) =
           Lwt.catch
             (fun _ -> Ojs_rpc.call rpc msg cb)
