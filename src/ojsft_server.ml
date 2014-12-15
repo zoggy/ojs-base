@@ -30,9 +30,15 @@
 
 open Ojs_server
 
-let access_forbidden path = `Error ("Forbidden access to "^(Ojs_path.to_string path))
-let creation_forbidden path = `Error ("Forbidden creation of "^(Ojs_path.to_string path))
-let deletion_forbidden path = `Error ("Forbidden deletion of "^(Ojs_path.to_string path))
+let access_forbidden path =
+  `Error (Printf.sprintf "Forbidden access to %S" (Ojs_path.to_string path))
+let creation_forbidden path =
+  `Error (Printf.sprintf "Forbidden creation of %S" (Ojs_path.to_string path))
+let deletion_forbidden path =
+  `Error (Printf.sprintf "Forbidden deletion of %S " (Ojs_path.to_string path))
+let renaming_forbidden path1 path2 =
+  `Error (Printf.sprintf "Forbidden renaming of %S to %S"
+   (Ojs_path.to_string path1) (Ojs_path.to_string path2))
 
 let wsdata_of_msg msg = J.to_string (Ojsft_types.server_msg_to_yojson msg)
 let msg_of_wsdata s = Ojs_server.mk_msg_of_wsdata Ojsft_types.client_msg_of_yojson
@@ -48,9 +54,9 @@ class ['clt, 'srv] filetree
       method root : Ojs_path.t = root
 
       method can_add_file file = true
-      method can_add_dir (dir : string) = true
+      method can_add_dir dir = true
       method can_delete file = true
-
+      method can_rename file1 file2 = true
 
       method before_add_file (filename : Ojs_path.t) = ()
       method after_add_file (filename : Ojs_path.t) = ()
@@ -103,7 +109,26 @@ class ['clt, 'srv] filetree
                   reply_msg (`Error msg)
 
       method handle_rename reply_msg path1 path2 =
-        reply_msg (`Error "Rename: Not implemented")
+        let norm1 = Ojs_path.normalize path1 in
+        let file1 = Ojs_path.to_string norm1 in
+        let norm2 = Ojs_path.normalize path2 in
+        let file2 = Ojs_path.to_string norm2 in
+        match self#can_rename file1 file2 with
+          false -> reply_msg (renaming_forbidden path1 path2)
+        | true ->
+            try 
+              Sys.rename file1 file2;
+              reply_msg `Ok;
+              broadcast (`Delete path1);
+              if Sys.is_directory file2 then
+                broadcast (`Add_dir path2)
+              else
+                broadcast (`Add_file path2)
+            with Sys_error msg ->
+                let msg = Printf.sprintf "Could not rename %S to %S: %s"
+                  (Ojs_path.to_string path1) (Ojs_path.to_string path2) msg
+                in
+                reply_msg (`Error msg)
 
       method after_get_tree files = files
 
