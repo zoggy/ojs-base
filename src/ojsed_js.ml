@@ -64,18 +64,30 @@ class ['clt, 'srv] editor call (send : 'clt -> unit)
           sessions <- SMap.add filename sess sessions;
           sess
 
+    method display_error msg = Ojsmsg_js.display_text_error msg_id msg
+    method display_message msg = Ojsmsg_js.display_text_message msg_id msg
+
     method display_filename ed fname =
       let node = Ojs_js.node_by_id filename_id in
       Ojs_js.clear_children node ;
       let t = Dom_html.document##createTextNode (Js.string (Ojs_path.to_string fname)) in
       Dom.appendChild node t
 
+    method simple_call : 'clt -> unit Lwt.t = fun msg ->
+      call msg
+        (fun msg -> Lwt.return
+           (match msg with
+            | `Error msg -> self#display_error msg
+            | `Ok msg -> self#display_message msg
+            | _ -> ()
+           )
+        )
     method save =
       match current_file with
-        None -> ()
+        None -> Lwt.return_unit
       | Some file ->
           let contents = Js.to_string (editor##getValue()) in
-          self#send_msg (`Save_file (file, contents))
+          self#simple_call (`Save_file (file, contents))
 
     method edit_file ?contents path =
       let sess = self#get_session ?contents path in
@@ -88,8 +100,8 @@ class ['clt, 'srv] editor call (send : 'clt -> unit)
         (match msg with
          | `File_contents (path, contents) ->
              self#edit_file ~contents path
-         | `Ok msg -> Ojsmsg_js.display_text_message msg_id msg
-         | `Error msg -> Ojsmsg_js.display_text_error msg_id msg
+         | `Ok msg -> self#display_message msg
+         | `Error msg -> self#display_error msg
         );
         Js._false
       with
@@ -103,7 +115,10 @@ class ['clt, 'srv] editor call (send : 'clt -> unit)
 
 class ['clt, 'srv] editors
   (call : [> 'clt Ojsed_types.msg] -> ([> 'srv Ojsed_types.msg] -> unit Lwt.t) -> unit Lwt.t)
-    (send : [> 'clt Ojsed_types.msg] -> unit) =
+    (send : [> 'clt Ojsed_types.msg] -> unit)
+    (spawn : ('clt -> ('srv -> unit Lwt.t) -> unit Lwt.t) ->
+             ('clt -> unit) ->
+             bar_id: string -> msg_id: string -> string -> ('clt, 'srv) editor) =
     object(self)
       val mutable editors = (SMap.empty : ('clt, 'srv) editor SMap.t)
 
@@ -119,8 +134,14 @@ class ['clt, 'srv] editors
 
       method setup_editor ~bar_id ~msg_id ed_id =
         let send msg = send (`Editor_msg (ed_id, msg)) in
-        let call msg cb = call (`Editor_msg (ed_id, msg)) cb in
-        let editor = new editor call send ~bar_id ~msg_id ed_id in
+        let call msg cb =
+          let cb = function
+            `Editor_msg (_, msg) -> cb msg
+          | _ -> Lwt.return_unit
+          in
+          call (`Editor_msg (ed_id, msg)) cb
+        in
+        let editor = spawn call send ~bar_id ~msg_id ed_id in
         editors <- SMap.add ed_id editor editors
 
     end

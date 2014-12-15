@@ -42,7 +42,7 @@ let (rpc_handler : (Example_types.server_msg, Example_types.client_msg) Ojs_rpc.
 let call = Ojs_rpc.call rpc_handler
 
 let trees = new Ojsft_js.trees call send (new Ojsft_js.tree);;
-let editors = new Ojsed_js.editors call send;;
+let editors = new Ojsed_js.editors call send (new Ojsed_js.editor);;
 
 let on_deselect ti path =
   Ojs_js.log (Printf.sprintf "Node %S deselected" (Ojs_path.to_string path))
