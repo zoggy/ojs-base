@@ -30,105 +30,91 @@
 
 open Ojs_server
 
-type access_right = [`RW | `RO]
 
 let wsdata_of_msg msg = J.to_string (Ojsed_types.server_msg_to_yojson msg)
-let msg_of_wsdata s =
-  try
-    let json = J.from_string s in
-    match Ojsed_types.client_msg_of_yojson json with
-      `Error s -> raise (Yojson.Json_error s)
-    | `Ok msg -> Some msg
-  with
-    Yojson.Json_error s ->
-      prerr_endline s;
-      None
-  | e ->
-      prerr_endline (Printexc.to_string e);
-      None
-
-let send_msg push_msg id msg = push_msg (`Editor_msg (id, msg))
-
-let access_rights ?(rights=fun _ -> Some `RW) root path =
-  let path = Ojs_path.append_path root path in
-  let norm = Ojs_path.normalize path in
-  (*prerr_endline ("norm="^norm);*)
-  if Ojs_path.is_prefix root norm then
-    (norm, rights norm)
-  else
-    (norm, None)
+let msg_of_wsdata s = Ojs_server.mk_msg_of_wsdata Ojsed_types.client_msg_of_yojson
 
 let access_forbidden path = `Error ("Forbidden access to "^(Ojs_path.to_string path))
 
-let handle_client_msg ?rights root id msg =
-  match msg with
-  |  `Get_file_contents path ->
-      begin
-        match access_rights ?rights root path with
-        | (_, None) -> (id, [access_forbidden path])
-        | (file, Some `RW)
-        | (file, Some `RO) ->
-            let contents = Ojsed_files.string_of_file (Ojs_path.to_string file) in
-            (id, [`File_contents (path, contents)])
-      end
-  | `Save_file (path, contents) ->
-      begin
-        match access_rights ?rights root path with
-        | (_, None)
-        | (_, Some `RO) -> (id, [access_forbidden path])
-        | (file, Some `RW) ->
-            let file = Ojs_path.to_string file in
+class ['clt, 'srv] editor
+  (broadcall : 'srv -> ('clt -> unit Lwt.t) -> unit Lwt.t)
+    (broadcast : 'srv -> unit Lwt.t) ~id root =
+    object(self)
+      method id = (id : string)
+      method root = (root : Ojs_path.t)
+
+      method can_read_file file = true
+      method can_write_file file = true
+
+      method handle_get_file_contents reply_msg path =
+        let norm = Ojs_path.normalize path in
+        let file = Ojs_path.to_string norm in
+        match self#can_read_file file with
+        | false -> reply_msg (access_forbidden path)
+        | true ->
+            let contents = Ojsed_files.string_of_file file in
+            reply_msg (`File_contents (path, contents))
+
+      method handle_save_file reply_msg path contents =
+        let norm = Ojs_path.normalize path in
+        let file = Ojs_path.to_string norm in
+        match self#can_write_file file with
+        | false -> reply_msg (access_forbidden path)
+        | true ->
             Ojsed_files.file_of_string ~file contents ;
-            (id, [`Ok (Printf.sprintf "File %S saved" (Ojs_path.to_string path))])
+            reply_msg (`Ok (Printf.sprintf "File %S saved" (Ojs_path.to_string path)))
+
+      method handle_message (send_msg : 'srv -> unit Lwt.t) (msg : 'clt) =
+        self#handle_call send_msg msg
+
+      method handle_call (reply_msg : 'srv -> unit Lwt.t) (msg : 'clt) =
+        match msg with
+        |  `Get_file_contents path ->
+            self#handle_get_file_contents reply_msg path
+        | `Save_file (path, contents) ->
+            self#handle_save_file reply_msg path contents
+        | _ ->
+            reply_msg (`Error "Unhandled message")
       end
-  | _ ->
-      failwith "Unhandled message"
 
-let send_messages push_msg (id, messages) =
-  Lwt_list.iter_s (send_msg push_msg id) messages
+class ['clt, 'srv] editors
+  (broadcall : [>'srv Ojsed_types.msg] -> ([>'clt Ojsed_types.msg] -> unit Lwt.t) -> unit Lwt.t)
+    (broadcast : [>'srv Ojsed_types.msg] -> unit Lwt.t)
+    (spawn : ('src -> ('clt -> unit Lwt.t) -> unit Lwt.t) ->
+     ('srv -> unit Lwt.t) ->
+       id: string -> Ojs_path.t -> ('clt, 'srv) editor
+    )
+    =
+    object(self)
+      val mutable editors = (SMap.empty : ('clt, 'srv) editor SMap.t)
 
-let handle_message ?rights root push_msg msg =
-  try
-    match msg with
-    | `Editor_msg (id, t) ->
-        Lwt.catch
-          (fun () ->
-             send_messages push_msg
-               (handle_client_msg ?rights root id t))
-          (fun e ->
-             let msg =
-               match e with
-                 Failure s | Sys_error s -> s
-               | _ -> Printexc.to_string e
-             in
-             send_msg push_msg id (`Error msg)
-          )
-  with
-  | e ->
-      Lwt.return (prerr_endline (Printexc.to_string e))
+      method editor id =
+        try SMap.find id editors
+        with Not_found -> failwith (Printf.sprintf "No editor with id %S" id)
 
-let return_error rpc_handler call_id s =
-  Ojs_rpc.return rpc_handler call_id (`Editor_msg ("", `Error s))
+      method add_editor ~id root =
+        let broadcall msg cb =
+          let cb = function
+            `Editor_msg (_, msg) -> cb msg
+          | _ -> Lwt.return_unit
+          in
+          broadcall (`Editor_msg (id, msg)) cb
+        in
+        let broadcast msg = broadcast  (`Editor_msg (id, msg)) in
+        let ed = spawn broadcall broadcast ~id root in
+        editors <- SMap.add id ed editors;
+        ed
 
-let handle_call ?rights root rpc_handler call_id msg =
-  try
-    match msg with
-    | `Editor_msg (id, t) ->
-        Lwt.catch
-          (fun () ->
-             let (id, messages) = handle_client_msg ?rights root id t in
-             Lwt_list.iter_s
-                 (fun msg -> Ojs_rpc.return rpc_handler call_id (`Editor_msg (id, msg)))
-                 messages
-          )
-          (fun e ->
-             let msg =
-               match e with
-                 Failure s | Sys_error s -> s
-               | _ -> Printexc.to_string e
-             in
-             return_error rpc_handler call_id msg
-          )
-  with
-  | e ->
-      return_error rpc_handler call_id (Printexc.to_string e)
+      method handle_message
+        (send_msg : 'srv Ojsed_types.msg -> unit Lwt.t) (msg : 'clt Ojsed_types.msg) =
+          match msg with
+            `Editor_msg (id, msg) ->
+              let send_msg msg = send_msg (`Editor_msg (id, msg)) in
+              (self#editor id)#handle_message send_msg msg
+
+      method handle_call (return : 'srv Ojsed_types.msg -> unit Lwt.t) (msg : 'clt Ojsed_types.msg) =
+        match msg with
+          `Editor_msg (id, msg) ->
+            let reply_msg msg = return (`Editor_msg (id, msg)) in
+            (self#editor id)#handle_call reply_msg msg
+  end

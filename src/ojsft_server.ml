@@ -116,14 +116,15 @@ class ['clt, 'srv] filetree
         match self#can_rename file1 file2 with
           false -> reply_msg (renaming_forbidden path1 path2)
         | true ->
-            try 
+            try
               Sys.rename file1 file2;
-              reply_msg `Ok;
-              broadcast (`Delete path1);
-              if Sys.is_directory file2 then
-                broadcast (`Add_dir path2)
-              else
-                broadcast (`Add_file path2)
+              reply_msg `Ok
+              >>= fun () ->
+                broadcast (`Delete path1) >>= fun () ->
+                if Sys.is_directory file2 then
+                  broadcast (`Add_dir path2)
+                else
+                  broadcast (`Add_file path2)
             with Sys_error msg ->
                 let msg = Printf.sprintf "Could not rename %S to %S: %s"
                   (Ojs_path.to_string path1) (Ojs_path.to_string path2) msg
@@ -162,14 +163,14 @@ class ['clt, 'srv] filetrees
             id: string -> Ojs_path.t -> ('clt, 'srv) filetree
    )
    =
-  object(self)
-    val mutable filetrees = (SMap.empty : ('clt, 'srv) filetree SMap.t)
+    object(self)
+      val mutable filetrees = (SMap.empty : ('clt, 'srv) filetree SMap.t)
 
-    method filetree id =
-      try SMap.find id filetrees
-      with Not_found -> failwith (Printf.sprintf "No filetree with id %S" id)
+      method filetree id =
+        try SMap.find id filetrees
+        with Not_found -> failwith (Printf.sprintf "No filetree with id %S" id)
 
-    method add_filetree ~id root =
+      method add_filetree ~id root =
         let broadcall msg cb =
           let cb = function
             `Filetree_msg (_, msg) -> cb msg
