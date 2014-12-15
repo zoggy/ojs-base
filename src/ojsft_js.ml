@@ -118,21 +118,39 @@ let expand_buttons base_id subs_id =
   (span_exp, span_col)
 
 class ['clt, 'srv] tree
-  (*(call: [>Ojsft_types.client_msg] -> ([>Ojsft_types.server_msg] -> unit Lwt.t) -> unit Lwt.t)*)
-  call (send : 'clt -> unit)
-    ?(show_files=true)
-    ?(on_select= fun _ _ -> ())
-    ?(on_deselect=fun _ _-> ())
-    ~msg_id id =
+  call
+  (send : 'clt -> unit) ~msg_id id =
     object(self:'self)
       val mutable selected = (None :  (id * Ojs_path.t) option )
       val mutable filetree = ([] : tree_node list)
-      val on_select = (on_select :'self -> Ojs_path.t -> unit)
-      val on_deselect = (on_deselect :'self -> Ojs_path.t -> unit)
+
+      val mutable on_select  :'self -> Ojs_path.t -> unit = fun _ _ -> ()
+      val mutable on_deselect : 'self -> Ojs_path.t -> unit = fun  _ _ -> ()
+      val mutable show_files = true
+
+      method set_on_select f = on_select <- f
+      method set_on_deselect f = on_deselect <- f
+      method set_show_files b = show_files <- b
+
+      method on_select = on_select
+      method on_deselect = on_deselect
+
       method id : string = id
       method msg_id : string = msg_id
 
+      method display_error msg = Ojsmsg_js.display_text_error msg_id msg
+
       method send_msg = send
+
+      method simple_call : 'clt -> unit Lwt.t = fun msg ->
+        call msg
+          (fun msg -> Lwt.return
+             (match msg with
+              | `Error msg -> self#display_error msg
+              | _ -> ()
+             )
+          )
+
 
       method set_unselected div_id path =
         (
@@ -142,7 +160,7 @@ class ['clt, 'srv] tree
          with Not_found -> ()
         );
         selected <- None ;
-        on_deselect self path
+        self#on_deselect self path
 
       method set_selected div_id path =
         (
@@ -152,7 +170,7 @@ class ['clt, 'srv] tree
          with Not_found -> ()
         );
         selected <- Some (div_id, path) ;
-        on_select self path
+        self#on_select self path
 
       method set_onclick (node : Dom_html.element Js.t) div_id fname =
         let f _ =
@@ -183,7 +201,7 @@ class ['clt, 'srv] tree
              http://css-tricks.com/data-uris/
              *)
           let p = try String.index contents ',' with _ -> failwith "No Base64" in
-          self#send_msg (`Add_file (path, String.sub contents (p+1) (len - p - 1)))
+          ignore(self#simple_call (`Add_file (path, String.sub contents (p+1) (len - p - 1))))
         in
         let on_error exn =
           log (Printf.sprintf "Reading file: %s" (Printexc.to_string exn))
@@ -193,12 +211,12 @@ class ['clt, 'srv] tree
 
       method add_dir path name =
         let path = Ojs_path.append path [name] in
-        self#send_msg (`Add_dir path)
+        self#simple_call (`Add_dir path)
 
       method prompt_add_dir path =
         let answer = Dom_html.window##prompt(Js.string "Create directory", Js.string "") in
         Js.Opt.case answer
-          (fun () -> ())
+          (fun () -> Lwt.return_unit)
           (fun name -> self#add_dir path (Js.to_string name))
 
       method handle_drag_drop kind fname node =
@@ -439,11 +457,10 @@ class ['clt, 'srv] tree
       method handle_message (msg : 'srv) =
         try
           (match msg with
-             `Tree l -> self#build_from_tree l
+           | `Tree l -> self#build_from_tree l
            | `Add_file path -> self#handle_add_file path
            | `Add_dir path -> self#handle_add_dir path
-           | `Error msg ->
-               Ojsmsg_js.display_text_error msg_id msg
+           | `Error msg -> self#display_error msg
            | `Delete _
            | `Rename _ -> failwith "Unhandled message received from server"
            | `Ok -> ()
@@ -454,14 +471,21 @@ class ['clt, 'srv] tree
             log (Printexc.to_string e);
             Js._false
 
+      method update_tree : unit Lwt.t =
+        call `Get_tree
+          (function `Tree l -> self#build_from_tree l; Lwt.return_unit | _ -> Lwt.return_unit)
+
       initializer
-        self#send_msg (`Get_tree)
+        ignore(self#update_tree)
 
     end
 
 class ['clt, 'srv] trees
   (call : [> 'clt Ojsft_types.msg] -> ([> 'srv Ojsft_types.msg] -> unit Lwt.t) -> unit Lwt.t)
-  (send : [> 'clt Ojsft_types.msg] -> unit) =
+  (send : [> 'clt Ojsft_types.msg] -> unit)
+  (spawn : ('clt -> ('srv -> unit Lwt.t) -> unit Lwt.t) ->
+           ('clt -> unit) ->
+           msg_id: string -> string -> ('clt, 'srv) tree) =
   object(self)
     val mutable trees = (SMap.empty : ('clt, 'srv) tree SMap.t)
 
@@ -471,7 +495,7 @@ class ['clt, 'srv] trees
 
     method get_msg_id id = (self#get_tree id)#msg_id
 
-    method setup_filetree ?show_files ?on_select ?on_deselect ~msg_id id =
+    method setup_filetree ~msg_id id =
       let send msg = send (`Filetree_msg (id, msg)) in
       let call msg cb =
           let cb = function
@@ -480,8 +504,9 @@ class ['clt, 'srv] trees
           in
           call (`Filetree_msg (id, msg)) cb
         in
-      let tree = new tree call send ?show_files ?on_select ?on_deselect ~msg_id id in
-      trees <- SMap.add id tree trees
+      let tree = spawn call send ~msg_id id in
+      trees <- SMap.add id tree trees;
+      tree
 
     method handle_message (msg : 'srv Ojsft_types.msg) =
         match msg with

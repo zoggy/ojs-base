@@ -41,7 +41,7 @@ let (rpc_handler : (Example_types.server_msg, Example_types.client_msg) Ojs_rpc.
 
 let call = Ojs_rpc.call rpc_handler
 
-let trees = new Ojsft_js.trees call send;;
+let trees = new Ojsft_js.trees call send (new Ojsft_js.tree);;
 let editors = new Ojsed_js.editors call send;;
 
 let on_deselect ti path =
@@ -59,7 +59,9 @@ let on_select ti path =
 
 let onopen ws =
   ref_send := (fun msg -> Ojs_js.send_msg ws (wsdata_of_msg msg));
-  trees#setup_filetree ~on_select ~on_deselect ~msg_id: "ojs-msg" "ft" ;
+  let tree = trees#setup_filetree ~msg_id: "ojs-msg" "ft" in
+  tree#set_on_select on_select;
+  tree#set_on_deselect on_deselect;
   editors#setup_editor ~msg_id: "ojs-msg" ~bar_id: "bar" "ed"
 
 let onmessage ws msg =

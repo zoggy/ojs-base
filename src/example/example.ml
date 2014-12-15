@@ -59,6 +59,7 @@ let filepred =
 let connections : (Example_types.client_msg, Example_types.server_msg) Ojs_server.connection_group =
   new Ojs_server.connection_group msg_of_wsdata wsdata_of_msg
 let filetrees = new Ojsft_server.filetrees connections#broadcall connections#broadcast
+  (new Ojsft_server.filetree)
 let root =
   let root = try Sys.argv.(1) with _ -> "." in
   let root = Ojs_path.of_string root in
@@ -66,15 +67,24 @@ let root =
   then root
   else Ojs_path.normalize (Ojs_path.append_path (Ojs_path.of_string (Sys.getcwd())) root)
 
-let () = filetrees#add_filetree "ft" root
+let _ = filetrees#add_filetree "ft" root
 
-let handle_message (send_msg : Example_types.server_msg -> unit Lwt.t) rpc msg =
-  match msg with
-  | `Editor_msg t -> Ojsed_server.handle_message ~rights root send_msg (`Editor_msg t)
-  | `Filetree_msg t -> filetrees#handle_message (function `Filetree_msg x -> send_msg (`Filetree_msg x)) (`Filetree_msg t)
-  | `Call (call_id, `Editor_msg t) ->
-      Ojsed_server.handle_call ~rights root rpc call_id (`Editor_msg t)
-  | _ -> failwith "Unhandled message"
+let handle_message (send_msg : Example_types.server_msg -> unit Lwt.t)
+  (rpc : (Example_types.client_msg, Example_types.server_msg) Ojs_rpc.t) msg =
+    match msg with
+    | `Editor_msg t -> Ojsed_server.handle_message ~rights root send_msg (`Editor_msg t)
+    | `Filetree_msg t ->
+        filetrees#handle_message
+          (function `Filetree_msg x -> send_msg (`Filetree_msg x)) (`Filetree_msg t)
+
+    | `Call (call_id, `Filetree_msg t) ->
+        let return msg = Ojs_rpc.return rpc call_id (msg :> Example_types.server_msg) in
+        filetrees#handle_call return (`Filetree_msg t)
+
+    | `Call (call_id, `Editor_msg t) ->
+        Ojsed_server.handle_call ~rights root rpc call_id (`Editor_msg t)
+
+    | _ -> failwith "Unhandled message"
 
 let () = connections#set_handle_message handle_message
 
