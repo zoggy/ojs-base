@@ -72,10 +72,11 @@ let handle_message (send_msg : Example_types.server_msg -> unit Lwt.t)
     match msg with
     | `Editor_msg t ->
         editors#handle_message
-          (function `Editor_msg x -> send_msg (`Editor_msg x)) (`Editor_msg t)
+          (fun msg -> send_msg (msg :> Example_types.server_msg)) (`Editor_msg t)
+
     | `Filetree_msg t ->
         filetrees#handle_message
-          (function `Filetree_msg x -> send_msg (`Filetree_msg x)) (`Filetree_msg t)
+          (fun msg -> send_msg (msg :> Example_types.server_msg)) (`Filetree_msg t)
 
     | `Call (call_id, `Filetree_msg t) ->
         let return msg = Ojs_rpc.return rpc call_id (msg :> Example_types.server_msg) in
