@@ -36,14 +36,7 @@ let rec wait_forever () = Lwt_unix.sleep 1000.0 >>= wait_forever
 let wsdata_of_msg msg = J.to_string (Example_types.server_msg_to_yojson msg)
 let msg_of_wsdata = Ojs_server.mk_msg_of_wsdata Example_types.client_msg_of_yojson
 
-let rights path =
-  let filename = Ojs_path.to_string path in
-  match String.lowercase (Ojs_misc.filename_extension filename) with
-    "ml" | "mli" -> Some `RO
-  | "txt" | "html"-> Some `RW
-  | _ -> None
-
-let filepred =
+let file_filter =
   let re = Str.regexp "^\\(\\(cm.*\\)\\|[oa]\\|\\(\\annot\\)\\)$" in
   fun path ->
     let base = Ojs_path.basename path in
@@ -70,14 +63,15 @@ let root =
   then root
   else Ojs_path.normalize (Ojs_path.append_path (Ojs_path.of_string (Sys.getcwd())) root)
 
-let _ = filetrees#add_filetree "ft" root
+let ft = filetrees#add_filetree "ft" root
+let () = ft#set_file_filter file_filter
 let _ = editors#add_editor "ed" root
 
 let handle_message (send_msg : Example_types.server_msg -> unit Lwt.t)
   (rpc : (Example_types.client_msg, Example_types.server_msg) Ojs_rpc.t) msg =
     match msg with
-    | `Editor_msg t -> 
-        editors#handle_message 
+    | `Editor_msg t ->
+        editors#handle_message
           (function `Editor_msg x -> send_msg (`Editor_msg x)) (`Editor_msg t)
     | `Filetree_msg t ->
         filetrees#handle_message
