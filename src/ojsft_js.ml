@@ -228,7 +228,7 @@ class ['clt, 'srv] tree
 
       method prompt_delete path =
         let msg = Printf.sprintf "Delete %S ?" (Ojs_path.to_string path) in
-        if Js.to_bool Dom_html.window##confirm(Js.string msg) then
+        if Js.to_bool (Dom_html.window##confirm(Js.string msg)) then
           self#delete path
         else
           Lwt.return_unit
@@ -472,13 +472,14 @@ class ['clt, 'srv] tree
 
       method handle_delete path =
         match self#tree_node_by_path path with
-        | exception Not_found -> ()
+        | exception Not_found -> log ("handle_delete: path not found: "^(Ojs_path.to_string path))
         | tn ->
             tree_nodes := SMap.remove tn.tn_id !tree_nodes;
             (match Ojs_js.node_by_id tn.tn_id with
              | exception _ -> ()
-             | node -> Js.Opt.iter (node##parentNode)
-                 (fun p -> ignore(p##removeChild((node :> Dom.node Js.t))))
+             | node ->
+                 Js.Opt.iter (node##parentNode)
+                   (fun p -> ignore(p##removeChild((node :> Dom.node Js.t))));
             );
             let filter = List.filter (fun tn2 -> tn2.tn_id <> tn.tn_id) in
             match self#tree_node_by_path (Ojs_path.parent path) with

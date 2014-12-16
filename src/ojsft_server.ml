@@ -95,15 +95,18 @@ class ['clt, 'srv] filetree
       method handle_delete reply_msg path =
         let norm = Ojs_path.normalize path in
         let file = Ojs_path.to_string norm in
+        prerr_endline ("handle_delete, file="^file);
         match self#can_delete file with
         | false -> reply_msg (deletion_forbidden path)
         | true ->
-            if Sys.is_directory file then
+            if not (Sys.is_directory file) then
               try Sys.remove file; reply_msg `Ok
               with Sys_error msg -> failwith msg
             else
               match Sys.command (Printf.sprintf "rm -fr %s" (Filename.quote file)) with
-                0 -> reply_msg `Ok
+                0 ->
+                  reply_msg `Ok >>= fun () ->
+                  broadcast (`Delete path)
               | n ->
                   let msg = Printf.sprintf "Could not delete %s" (Ojs_path.to_string path) in
                   reply_msg (`Error msg)
