@@ -82,6 +82,12 @@ let add_button_add_dir base_id bar =
   let span = add_button id ~cls "+dir" bar in
   span
 
+let add_button_delete base_id bar =
+  let id = base_id^"-delete" in
+  let cls = button_class^"-delete" in
+  let span = add_button id ~cls "✘" bar in
+  span
+
 let drag_class = Ojs_js.class_"drag"
 
 let preventDefault evt = ignore(Js.Unsafe.meth_call evt "preventDefault" [| |])
@@ -151,7 +157,6 @@ class ['clt, 'srv] tree
              )
           )
 
-
       method set_unselected div_id path =
         (
          try
@@ -218,6 +223,15 @@ class ['clt, 'srv] tree
         Js.Opt.case answer
           (fun () -> Lwt.return_unit)
           (fun name -> self#add_dir path (Js.to_string name))
+
+      method delete path = self#simple_call (`Delete path)
+
+      method prompt_delete path =
+        let msg = Printf.sprintf "Delete %S ?" (Ojs_path.to_string path) in
+        if Js.to_bool Dom_html.window##confirm(Js.string msg) then
+          self#delete path
+        else
+          Lwt.return_unit
 
       method handle_drag_drop kind fname node =
         let on_dragover evt =
@@ -421,7 +435,9 @@ class ['clt, 'srv] tree
             let (span_exp, span_col) = expand_buttons div_id subs_id in
             let bbar = button_bar div_id in
             let btn_add_dir = add_button_add_dir div_id bbar in
+            let btn_delete = add_button_delete div_id bbar in
             Ojs_js.set_onclick btn_add_dir (fun _ -> self#prompt_add_dir path);
+            Ojs_js.set_onclick btn_delete (fun _ -> self#prompt_delete path);
 
             Dom.appendChild div head ;
             Dom.appendChild head span ;
@@ -454,6 +470,21 @@ class ['clt, 'srv] tree
       method handle_add_dir path =
         self#insert_dir path
 
+      method handle_delete path =
+        match self#tree_node_by_path path with
+        | exception Not_found -> ()
+        | tn ->
+            tree_nodes := SMap.remove tn.tn_id !tree_nodes;
+            (match Ojs_js.node_by_id tn.tn_id with
+             | exception _ -> ()
+             | node -> Js.Opt.iter (node##parentNode)
+                 (fun p -> ignore(p##removeChild((node :> Dom.node Js.t))))
+            );
+            let filter = List.filter (fun tn2 -> tn2.tn_id <> tn.tn_id) in
+            match self#tree_node_by_path (Ojs_path.parent path) with
+            | exception Not_found -> filetree <- filter filetree
+            | parent_tn -> parent_tn.tn_subs <- filter parent_tn.tn_subs
+
       method handle_message (msg : 'srv) =
         try
           (match msg with
@@ -461,9 +492,9 @@ class ['clt, 'srv] tree
            | `Add_file path -> self#handle_add_file path
            | `Add_dir path -> self#handle_add_dir path
            | `Error msg -> self#display_error msg
-           | `Delete _
-           | `Rename _ -> failwith "Unhandled message received from server"
+           | `Delete path -> self#handle_delete path
            | `Ok -> ()
+           | _ -> failwith "Unhandled message received from server"
           );
           Js._false
         with

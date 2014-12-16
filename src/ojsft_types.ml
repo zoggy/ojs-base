@@ -44,7 +44,6 @@ type server_msg =
   | `Add_file of path
   | `Add_dir of path
   | `Delete of path
-  | `Rename of path * path
   ]  [@@deriving yojson]
 
 

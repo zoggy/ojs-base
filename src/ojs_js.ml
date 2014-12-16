@@ -141,3 +141,4 @@ let set_class span_id cl =
     node_set_class node cl
   with
     Failure msg -> log msg
+
