@@ -343,6 +343,11 @@ class ['clt, 'srv] tree
                 div##setAttribute (Js.string "id", Js.string div_id);
                 div##setAttribute (Js.string "class", Js.string "ojsft-file");
 
+                let head = doc##createElement (Js.string "div") in
+                let head_id = div_id^"-head" in
+                head##setAttribute (Js.string "id", Js.string head_id);
+                head##setAttribute (Js.string "class", Js.string "ojsft-file-head");
+
                 let span_id = div_id^"text" in
                 let span = doc##createElement (Js.string span_id) in
                 span##setAttribute (Js.string "id", Js.string (div_id^"text"));
@@ -373,8 +378,15 @@ class ['clt, 'srv] tree
                 update_items items ;
 
                 let text = doc##createTextNode (Js.string basename) in
-                Dom.appendChild div span ;
+
+                let bbar = button_bar div_id in
+                let btn_delete = add_button_delete div_id bbar in
+                Ojs_js.set_onclick btn_delete (fun _ -> self#prompt_delete path);
+
+                Dom.appendChild div head ;
+                Dom.appendChild head span ;
                 Dom.appendChild span text ;
+                Dom.appendChild head bbar ;
 
                 self#handle_drag_drop `File path div ;
           end
@@ -394,7 +406,7 @@ class ['clt, 'srv] tree
             let head = doc##createElement (Js.string "div") in
             let head_id = div_id^"-head" in
             head##setAttribute (Js.string "id", Js.string head_id);
-            head##setAttribute (Js.string "class", Js.string "ojsft-dir-head");
+            head##setAttribute (Js.string "class", Js.string "ojsft-file-head");
 
             let span_id = div_id^"text" in
             let span = doc##createElement (Js.string "span") in

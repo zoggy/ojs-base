@@ -7,10 +7,10 @@
   z-index: 1000 ;
 }
 
-.ojsft-dir-head > .ojs-button-bar {
+.ojsft-file-head > .ojs-button-bar {
   display: none ;
   }
-.ojsft-dir-head:hover > .ojs-button-bar {
+.ojsft-file-head:hover > .ojs-button-bar {
   display: inline ;
 }
 
@@ -21,8 +21,8 @@
 .ojs-button-bar > .ojs-button {
   font-size: 0.9em;
   padding: 0.1em 0.1em 0.1em 0.1em;
-  border-style: solid ;
-  border-width: 1px;
+  margin-left: 0.1em;
+  background-color: #ccccff ;
   -webkit-border-radius: 2px;
      -moz-border-radius: 2px;
           border-radius: 2px;

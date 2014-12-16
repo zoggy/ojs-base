@@ -100,13 +100,16 @@ class ['clt, 'srv] filetree
         | false -> reply_msg (deletion_forbidden path)
         | true ->
             if not (Sys.is_directory file) then
-              try Sys.remove file; reply_msg `Ok
+              try
+                Sys.remove file;
+                reply_msg `Ok >>= fun () ->
+                  broadcast (`Delete path)
               with Sys_error msg -> failwith msg
             else
               match Sys.command (Printf.sprintf "rm -fr %s" (Filename.quote file)) with
                 0 ->
                   reply_msg `Ok >>= fun () ->
-                  broadcast (`Delete path)
+                    broadcast (`Delete path)
               | n ->
                   let msg = Printf.sprintf "Could not delete %s" (Ojs_path.to_string path) in
                   reply_msg (`Error msg)
