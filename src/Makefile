@@ -116,13 +116,42 @@ LIBEDJS_CMOFILES=ojsed_types.cmo \
 
 LIBEDJS_CMIFILES=$(LIBEDJS_CMOFILES:.cmx=.cmi)
 
+# Lists
+
+LIBL=ojs-filetree.cmxa
+LIBL_A=$(LIBL:.cmxa=.a)
+LIBL_CMXS=$(LIBL:.cmxs)
+LIBL_BYTE=$(LIBL:.cmxa=.cma)
+
+LIBL_CMXFILES=\
+	ojsl_types.cmx \
+	ojsl_server.cmx
+
+LIBL_CMOFILES=$(LIBL_CMXFILES:.cmx=.cmo)
+LIBL_CMIFILES=$(LIBL_CMXFILES:.cmx=.cmi)
+LIBL_OFILES=$(LIBL_CMXFILES:.cmx=.o)
+
+LIBLJS=ojs-list-js.cma
+
+LIBLJS_CMOFILES= \
+	ojsl_types.cmo \
+#	ojsl_js.cmo
+
+LIBLJS_CMIFILES=$(LIBLJS_CMOFILES:.cmx=.cmi)
+
 #
 
 all: opt byte
 
-opt: $(LIB) $(LIB_CMXS) $(LIBFT) $(LIBFT_CMXS) $(LIBED) $(LIBED_CMXS)
+opt: $(LIB) $(LIB_CMXS) \
+	$(LIBED) $(LIBED_CMXS) \
+	$(LIBFT) $(LIBFT_CMXS) \
+	$(LIBL) $(LIBL_CMXS)
 
-byte: $(LIB_BYTE) $(LIBJS) $(LIBFT_BYTE) $(LIBFTJS) $(LIBED_BYTE) $(LIBEDJS)
+byte: $(LIB_BYTE) $(LIBJS) \
+	$(LIBED_BYTE) $(LIBEDJS) \
+	$(LIBFT_BYTE) $(LIBFTJS) \
+	$(LIBL_BYTE) $(LIBLJS)
 
 # Base
 
@@ -166,15 +195,29 @@ $(LIBED_BYTE): $(LIBED_CMIFILES) $(LIBED_CMOFILES)
 $(LIBEDJS): $(LIBEDJS_CMIFILES) $(LIBEDJS_CMOFILES)
 	$(OCAMLFIND) ocamlc$(PBYTE) -a -o $@ $(LIBEDJS_CMOFILES)
 
+# Lists
+
+$(LIBL): $(LIBL_CMIFILES) $(LIBL_CMXFILES)
+	$(OCAMLFIND) ocamlopt$(P) -a -o $@ $(LIBL_CMXFILES)
+
+$(LIBL_CMXS): $(LIBL_CMIFILES) $(LIBL_CMXFILES)
+	$(OCAMLFIND) ocamlopt$(P) -shared -o $@ $(LIBL_CMXFILES)
+
+$(LIBL_BYTE): $(LIBL_CMIFILES) $(LIBL_CMOFILES)
+	$(OCAMLFIND) ocamlc$(PBYTE) -a -o $@ $(LIBL_CMOFILES)
+
+$(LIBLJS): $(LIBLJS_CMIFILES) $(LIBLJS_CMOFILES)
+	$(OCAMLFIND) ocamlc$(PBYTE) -a -o $@ $(LIBLJS_CMOFILES)
+
 # Example
 
 .PHONY: example
 example: example/example-server example/example.js
 
-example/example-server: $(LIB) $(LIBFT) $(LIBED) \
+example/example-server: $(LIB) $(LIBED) $(LIBFT) $(LIBL) \
 	example/example_types.cmx example/example.cmx
 	$(OCAMLFIND) ocamlopt -o $@ $(OF_FLAGS) -linkpkg $^
-example/example.js: $(LIBJS) $(LIBFTJS) $(LIBEDJS) \
+example/example.js: $(LIBJS)$(LIBEDJS) $(LIBFTJS)  $(LIBLJS)  \
 	example/example_types.cmo example/example_js.cmo
 	$(OCAMLFIND) ocamlc -o t.x $^ -package yojson,ppx_deriving_yojson,js_of_ocaml -linkpkg
 	$(JS_OF_OCAML) t.x -o $@
@@ -212,7 +255,10 @@ install-lib:
 		$(LIBFTJS) $(LIBFTJS_CMIFILES) \
 		$(LIBED_CMIFILES) $(LIBED_CMXFILES) $(LIBED_OFILES) \
 		$(LIBED_BYTE) $(LIBED) $(LIBED_A) $(LIBED_CMXS) \
-		$(LIBEDJS) $(LIBEDJS_CMIFILES)
+		$(LIBEDJS) $(LIBEDJS_CMIFILES) \
+		$(LIBL_CMIFILES) $(LIBL_CMXFILES) $(LIBL_OFILES) \
+		$(LIBL_BYTE) $(LIBL) $(LIBL_A) $(LIBL_CMXS) \
+		$(LIBLJS) $(LIBLJS_CMIFILES)
 
 
 uninstall: uninstall-lib

@@ -164,7 +164,7 @@ class ['clt, 'srv] filetree
 class ['clt, 'srv] filetrees
    (broadcall : [>'srv Ojsft_types.msg] -> ([>'clt Ojsft_types.msg] -> unit Lwt.t) -> unit Lwt.t)
    (broadcast : [>'srv Ojsft_types.msg] -> unit Lwt.t)
-   (spawn : ('src -> ('clt -> unit Lwt.t) -> unit Lwt.t) ->
+   (spawn : ('srv -> ('clt -> unit Lwt.t) -> unit Lwt.t) ->
             ('srv -> unit Lwt.t) ->
             id: string -> Ojs_path.t -> ('clt, 'srv) filetree
    )

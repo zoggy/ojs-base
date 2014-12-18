@@ -32,6 +32,7 @@ let (>>=) = Lwt.(>>=)
 class ['clt, 'srv] editor call (send : 'clt -> unit)
   ~bar_id ~msg_id ed_id =
   let editor = Ojs_ace.ace##edit (Js.string ed_id) in
+  let _ = editor##setFontSize(Js.string "14px") in
   let bar = Ojs_js.node_by_id bar_id in
   let doc = Dom_html.document in
   let button = doc##createElement(Js.string "button") in
@@ -49,7 +50,7 @@ class ['clt, 'srv] editor call (send : 'clt -> unit)
     val mutable current_file = (None : Ojsed_types.path option)
     val mutable sessions = (SMap.empty : Ojs_ace.editSession Js.t SMap.t)
 
-    method id= ed_id
+    method id = ed_id
     method msg_id = msg_id
 
     method send_msg = send
@@ -93,7 +94,16 @@ class ['clt, 'srv] editor call (send : 'clt -> unit)
       let sess = self#get_session ?contents path in
       editor##setSession(sess);
       current_file <- Some path ;
-      self#display_filename editor path
+      self#display_filename editor path ;
+      let mode =
+        let mode =
+          Ojs_ace.modeList##getModeForPath(Js.string (Ojs_path.to_string path))
+        in
+        mode##mode
+      in
+      (*log("mode to set: "^(Js.to_string mode));*)
+      sess##setMode(mode)
+
 
     method handle_message (msg : 'srv) =
       try

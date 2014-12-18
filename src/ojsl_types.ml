@@ -26,51 +26,35 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-open Js
+(** Types for lists. *)
 
-class type document =
-  object
+module Base = struct
+    type 'a server_msg = .. [@@deriving yojson]
+    type 'a server_msg +=
+      | SOk
+        | SError of string
+        | SAdd of 'a
+        | SDelete of 'a
+        | SList of 'a list
+        [@@deriving yojson]
 
+    type 'a client_msg = .. [@@deriving yojson]
+    type 'a client_msg +=
+      | Get
+      | Add of 'a
+        | Delete of 'a
+        [@@deriving yojson]
   end
 
-class type editSession =
-  object
-    method getValue : js_string t meth
-    method setValue : js_string t -> unit meth
-    method getDocument : document t meth
-    method setMode : js_string t -> unit meth
+module Make_base() = struct include Base end
+
+module type P =
+  sig
+    include (module type of Base)
+
+    type 'a msg [@@deriving yojson]
+
+    val pack_msg : string -> 'msg -> (string * 'msg) msg
+    val unpack_msg : (string * 'msg) msg -> (string * 'msg) option
   end
-
-let newEditSession s mode =
-  (Unsafe.new_obj (Unsafe.variable "ace.EditSession")
-    [| Unsafe.inject (Js.string s) ; Unsafe.inject (Js.string mode) |] : editSession Js.t)
-
-class type editor =
-  object
-    method setSession : editSession t -> unit meth
-    method getSession : editSession t prop
-    method getValue : js_string t meth
-    method setFontSize : js_string t -> unit meth
-  end
-
-class type mode =
-  object
-    method mode : js_string t prop
-  end
-class type modeList =
-  object
-    method getModeForPath : js_string t -> mode t meth
-  end
-
-
-class type ace =
-  object
-    method edit : js_string t -> editor Js.t meth
-    method createEditSession : js_string t -> js_string t -> document meth
-  end
-
-let ace = ((Unsafe.variable "ace") : ace Js.t)
-let modeList : modeList Js.t =
-  Js.Unsafe.meth_call ace "require"
-    [| Unsafe.inject (Js.string "ace/ext/modelist") |]
 
