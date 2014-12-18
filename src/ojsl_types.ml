@@ -50,13 +50,19 @@ module Make_base() = struct include Base end
 
 module type P =
   sig
+    type app_server_msg = ..
+    type app_client_msg = ..
+
     include (module type of Base)
 
     type elt
-    type 'a msg [@@deriving yojson]
 
-    val pack_msg : string -> 'msg -> (string * 'msg) msg
-    val unpack_msg : (string * 'msg) msg -> (string * 'msg) option
+    val pack_server_msg : string -> elt server_msg -> app_server_msg
+    val unpack_server_msg : app_server_msg -> (string * elt server_msg) option
+
+    val pack_client_msg : string -> elt client_msg -> app_client_msg
+    val unpack_client_msg : app_client_msg -> (string * elt client_msg) option
+
   end
 
 

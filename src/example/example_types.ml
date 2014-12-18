@@ -31,41 +31,33 @@
 
 type path = string [@@deriving yojson]
 
+module App_msg = Ojs_types.Make_app_msg()
+
 module PList =
   struct
+    type app_server_msg = App_msg.app_server_msg = ..[@@deriving yojson]
+    type app_client_msg = App_msg.app_client_msg = ..[@@deriving yojson]
     include (Ojsl_types.Make_base())
 
     type 'a server_msg += SUpdate of 'a list [@@deriving yojson]
     type 'a client_msg += Clear [@@deriving yojson]
 
-    type elt = int
+    type elt = int [@@deriving yojson]
+    type app_server_msg += SMylist of string * elt server_msg [@@deriving yojson]
+    type app_client_msg += Mylist of string * elt client_msg [@@deriving yojson]
 
-    type 'a msg = [`Mylist_msg of 'a] [@@deriving yojson]
-    let pack_msg id msg = `Mylist_msg (id, msg)
-    let unpack_msg = function `Mylist_msg (id, msg) -> Some (id, msg) | _ -> None
+    let pack_server_msg id msg = SMylist (id, msg)
+    let unpack_server_msg = function SMylist (id, msg) -> Some (id, msg) | _ -> None
+
+    let pack_client_msg id msg = Mylist (id, msg)
+    let unpack_client_msg = function Mylist (id, msg) -> Some (id, msg) | _ -> None
   end
 
-type server_msg0 = [
-  | Ojsft_types.server_msg Ojsft_types.msg
-  | Ojsed_types.server_msg Ojsed_types.msg
-  | (string * int PList.server_msg) PList.msg
-  ]
-  [@@deriving yojson]
+module FT = Ojsft_types.Default_P(App_msg)
+module ED = Ojsed_types.Default_P(App_msg)
 
+let server_msg_to_yojson = App_msg.app_server_msg_to_yojson
+let server_msg_of_yojson = App_msg.app_server_msg_of_yojson
 
-type client_msg0 = [
-  | Ojsft_types.client_msg Ojsft_types.msg
-  | Ojsed_types.client_msg Ojsed_types.msg
-  | (string * int PList.client_msg) PList.msg
-  ]
-  [@@deriving yojson]
-
-(*type server_rpc_msg = server_msg0 Ojs_rpc.msg
-  [@@deriving yojson]*)
-type server_msg = [ server_msg0 |  server_msg Ojs_rpc.msg]
-  [@@deriving yojson]
-
-(*type client_rpc_msg = client_msg0 Ojs_rpc.msg
-  [@@deriving yojson]*)
-type client_msg = [ client_msg0 | client_msg Ojs_rpc.msg ]
-  [@@deriving yojson]
+let client_msg_to_yojson = App_msg.app_client_msg_to_yojson
+let client_msg_of_yojson = App_msg.app_client_msg_of_yojson

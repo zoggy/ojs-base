@@ -26,56 +26,15 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-(** Type for editor. *)
+(** *)
 
-(** All paths should relative to root directory. *)
-type path = Ojs_path.t [@@deriving yojson]
-
-module Base =
-  struct
-    type server_msg = .. [@@deriving yojson]
-    type server_msg +=
-      | SError of string
-      | SOk of string
-      | SFile_contents of path * string
-      [@@deriving yojson]
-
-    type client_msg = .. [@@deriving yojson]
-    type client_msg +=
-      | Get_file_contents of path
-      | Save_file of path * string
-      [@@deriving yojson]
+module type App_msg = sig
+  type app_server_msg = .. [@@deriving yojson]
+  type app_client_msg = ..  [@@deriving yojson]
   end
 
-module Make_base() = struct include Base end
-
-module type P =
-  sig
+module Make_app_msg() = struct
     type app_server_msg = .. [@@deriving yojson]
     type app_client_msg = .. [@@deriving yojson]
-
-    include (module type of Base)
-
-    val pack_server_msg : string -> server_msg -> app_server_msg
-    val unpack_server_msg : app_server_msg -> (string * server_msg) option
-
-    val pack_client_msg : string -> client_msg -> app_client_msg
-    val unpack_client_msg : app_client_msg -> (string * client_msg) option
   end
 
-module Default_P(App:Ojs_types.App_msg) : P =
-  struct
-    type app_server_msg = App.app_server_msg = .. [@@deriving yojson]
-    type app_client_msg = App.app_server_msg = .. [@@deriving yojson]
-
-    include (Make_base())
-
-    type app_server_msg += SEditor of string * server_msg [@@deriving yojson]
-    type app_client_msg += Editor of string * client_msg [@@deriving yojson]
-
-    let pack_server_msg id msg = SEditor (id, msg)
-    let unpack_server_msg = function SEditor (id,msg) -> Some (id,msg) | _ -> None
-
-    let pack_client_msg id msg = Editor (id, msg)
-    let unpack_client_msg = function Editor (id,msg) -> Some (id,msg) | _ -> None
-  end

@@ -109,9 +109,9 @@ module Make (P : P) =
       end
 
     class ['a] elists
-      (call : (string * 'a P.client_msg) P.msg ->
-              ((string * 'a P.server_msg) P.msg -> unit Lwt.t) -> unit Lwt.t)
-        (send : (string * 'a P.client_msg) P.msg -> unit)
+      (call : P.app_client_msg ->
+              (P.app_server_msg -> unit Lwt.t) -> unit Lwt.t)
+        (send : P.app_client_msg -> unit)
         spawn
 (*  (spawn : ('clt -> ('srv -> unit Lwt.t) -> unit Lwt.t) ->
            ('clt -> unit) ->
@@ -126,21 +126,21 @@ module Make (P : P) =
         method get_msg_id id = (self#get_list id)#msg_id
 
         method setup_list ~(msg_id:string) (id : string) =
-          let send msg = send (P.pack_msg id msg) in
+          let send msg = send (P.pack_client_msg id msg) in
           let call msg cb =
             let cb msg =
-              match P.unpack_msg msg with
+              match P.unpack_server_msg msg with
               | Some (_, msg) -> cb msg
               | None -> Lwt.return_unit
             in
-            call (P.pack_msg id msg) cb
+            call (P.pack_client_msg id msg) cb
           in
           let l = spawn call send ~msg_id id in
           lists <- SMap.add id l lists;
           l
 
         method handle_message msg =
-          match P.unpack_msg msg with
+          match P.unpack_server_msg msg with
           | Some (id, msg) ->
               let l = self#get_list id in
               l#handle_message msg

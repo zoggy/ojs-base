@@ -49,6 +49,7 @@ LIB_BYTE=$(LIB:.cmxa=.cma)
 
 LIB_CMXFILES= \
 	ojs_misc.cmx \
+	ojs_types.cmx \
 	ojs_rpc.cmx \
 	ojs_path.cmx \
 	ojs_server.cmx
@@ -61,6 +62,7 @@ LIBJS=ojs-base-js.cma
 
 LIBJS_CMOFILES=	\
 	ojs_misc.cmo \
+	ojs_types.cmo \
 	ojs_rpc.cmo \
 	ojs_path.cmo \
 	ojs_js.cmo \

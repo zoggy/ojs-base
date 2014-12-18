@@ -65,10 +65,16 @@ class mylist
   end
 
 
+module Server_P = struct
+  include Ojs_rpc.Base(Example_types.App_msg)
+  let wsdata_of_msg msg = J.to_string (Example_types.server_msg_to_yojson msg)
+  let msg_of_wsdata = Ojs_server.mk_msg_of_wsdata Example_types.client_msg_of_yojson
+  end
+module Server = Ojs_server.Make(Server_P)
+module FT = Ojsft_server.Make(Example_types.FT)
 
-let connections : (Example_types.client_msg, Example_types.server_msg) Ojs_server.connection_group =
-  new Ojs_server.connection_group msg_of_wsdata wsdata_of_msg
-let filetrees = new Ojsft_server.filetrees connections#broadcall connections#broadcast
+let connections = new Server.connection_group
+let filetrees = new FT.filetrees connections#broadcall connections#broadcast
   (new Ojsft_server.filetree)
 let editors = new Ojsed_server.editors connections#broadcall connections#broadcast
   (new Ojsed_server.editor)

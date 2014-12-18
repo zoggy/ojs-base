@@ -69,24 +69,30 @@ let handle_messages msg_of_wsdata wsdata_of_msg handle_message stream push =
     (fun _ -> Lwt_stream.iter_s f (mk_msg_stream msg_of_wsdata stream))
     (fun _ -> Lwt.return_unit)
 
-
-class ['clt, 'srv] connection_group
-  (msg_of_wsdata : string -> 'clt option)
-  (wsdata_of_msg : 'srv -> string) =
-    object(self)
-      val mutable handle_message = (fun _ _ _ -> Lwt.return_unit)
-      val mutable connections =
-        ([] : (('srv -> unit Lwt.t) * ('clt, 'srv) Ojs_rpc.t) list)
+module type P =
+  sig
+    include Ojs_rpc.P
+    val msg_of_wsdata : string -> app_client_msg option
+    val wsdata_of_msg : app_server_msg -> string
+  end
+module Make(P:P) =
+  struct
+    module Rpc = Ojs_rpc.Make_server(P)
+    class connection_group =
+      object(self)
+        val mutable handle_message = (fun _ _ _ -> Lwt.return_unit)
+        val mutable connections =
+          ([] : ((P.app_server_msg -> unit Lwt.t) * Rpc.t) list)
 
       method remove_connection send =
         let pred (send2, _) = send <> send2 in
         connections <- List.filter pred connections
 
       method add_connection stream push =
-        let send_msg = mk_send_msg wsdata_of_msg push in
-        let rpc = Ojs_rpc.rpc_handler send_msg in
+        let send_msg = mk_send_msg P.wsdata_of_msg push in
+        let rpc = Rpc.rpc_handler send_msg in
         connections <- (send_msg, rpc) :: connections;
-        let stream = mk_msg_stream msg_of_wsdata stream in
+        let stream = mk_msg_stream P.msg_of_wsdata stream in
         Lwt.catch
           (fun _ -> Lwt_stream.iter_s (self#handle_message send_msg rpc) stream)
           (fun _ -> Lwt.return_unit)
@@ -102,13 +108,14 @@ class ['clt, 'srv] connection_group
       method broadcall (msg : 'srv) (cb : 'clt -> unit Lwt.t) =
         let f (send, rpc) =
           Lwt.catch
-            (fun _ -> Ojs_rpc.call rpc msg cb)
+            (fun _ -> Rpc.call rpc msg cb)
             (fun _ -> self#remove_connection send; Lwt.return_unit)
         in
         Lwt_list.iter_s f connections
 
       method handle_message :
-        ('srv -> unit Lwt.t) -> ('clt, 'srv) Ojs_rpc.t -> 'clt -> unit Lwt.t =
+        (P.app_server_msg -> unit Lwt.t) -> Rpc.t -> P.app_client_msg -> unit Lwt.t =
           handle_message
       method set_handle_message f = handle_message <- f
   end
+end

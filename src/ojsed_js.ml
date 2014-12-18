@@ -114,6 +114,7 @@ module Make(P:Ojsed_types.P) =
                self#edit_file ~contents path
            | P.SOk msg -> self#display_message msg
            | P.SError msg -> self#display_error msg
+           | _ -> failwith "Unhandled message received from server"
           );
           Js._false
         with

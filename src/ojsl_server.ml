@@ -85,32 +85,32 @@ module Make (P : Ojsl_types.P) =
           method add_list ~id (init : 'a list) =
             let broadcall msg cb =
               let cb msg =
-                match P.unpack_msg msg with
+                match P.unpack_client_msg msg with
                 | Some (_, msg) -> cb msg
                 | None -> Lwt.return_unit
               in
-              broadcall (P.pack_msg id msg) cb
+              broadcall (P.pack_server_msg id msg) cb
             in
-            let broadcast msg = broadcast (P.pack_msg id msg) in
+            let broadcast msg = broadcast (P.pack_server_msg id msg) in
             let elist = spawn broadcall broadcast ~id init in
             lists <- SMap.add id elist lists;
             elist
 
           method handle_message
-            (send_msg : (string * 'a P.server_msg) P.msg -> unit Lwt.t)
-              (msg : (string * 'a P.client_msg) P.msg) =
-              match P.unpack_msg msg with
+            (send_msg : P.app_server_msg -> unit Lwt.t)
+              (msg : P.app_client_msg) =
+              match P.unpack_client_msg msg with
               | Some (id, msg) ->
-                  let send_msg msg = send_msg (P.pack_msg id msg) in
+                  let send_msg msg = send_msg (P.pack_server_msg id msg) in
                   (self#list id)#handle_message send_msg msg
               | None -> Lwt.return_unit
 
           method handle_call
-            (return : (string * 'a P.server_msg) P.msg -> unit Lwt.t)
-              (msg : (string * 'a P.client_msg) P.msg) =
-              match P.unpack_msg msg with
+            (return : P.app_server_msg -> unit Lwt.t)
+              (msg : P.app_client_msg) =
+              match P.unpack_client_msg msg with
               | Some (id, msg) ->
-                  let reply_msg msg = return (P.pack_msg id msg) in
+                  let reply_msg msg = return (P.pack_server_msg id msg) in
                   (self#list id)#handle_call reply_msg msg
               | None -> Lwt.return_unit
         end

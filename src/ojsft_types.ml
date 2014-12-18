@@ -62,9 +62,7 @@ module Make_base() = struct include Base end
 
 module type P =
   sig
-    type app_server_msg = ..
-    type app_client_msg = ..
-
+    include Ojs_types.App_msg
     include (module type of Base)
 
     val pack_server_msg : string -> server_msg -> app_server_msg
@@ -72,5 +70,22 @@ module type P =
 
     val pack_client_msg : string -> client_msg -> app_client_msg
     val unpack_client_msg : app_client_msg -> (string * client_msg) option
+  end
+
+module Default_P(App:Ojs_types.App_msg) =
+  struct
+    type app_server_msg = App.app_server_msg = .. [@@deriving yojson]
+    type app_client_msg = App.app_server_msg = .. [@@deriving yojson]
+
+    include (Make_base())
+
+    type app_server_msg += SFiletree of string * server_msg [@@deriving yojson]
+    type app_client_msg += Filetree of string * client_msg [@@deriving yojson]
+
+    let pack_server_msg id msg = SFiletree (id, msg)
+    let unpack_server_msg = function SFiletree (id,msg) -> Some (id,msg) | _ -> None
+
+    let pack_client_msg id msg = Filetree (id, msg)
+    let unpack_client_msg = function Filetree (id,msg) -> Some (id,msg) | _ -> None
   end
   
