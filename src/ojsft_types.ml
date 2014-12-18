@@ -32,30 +32,45 @@
 type path = Ojs_path.t [@@deriving yojson]
 
 type file_tree = [
- | `Dir of string * file_tree list
- | `File of string
- ] [@@deriving yojson]
-
-type server_msg =
-  [
-  | `Ok
-  | `Error of string
-  | `Tree of file_tree list
-  | `Add_file of path
-  | `Add_dir of path
-  | `Delete of path
-  ]  [@@deriving yojson]
-
-
-type client_msg = [
-  | `Get_tree
-  | `Add_file of path * string (* path * (contents in base 64) *)
-  | `Add_dir of path
-  | `Delete of path
-  | `Rename of path * path
+  | `Dir of string * file_tree list
+  | `File of string
   ] [@@deriving yojson]
 
-type 'a msg = [
-    `Filetree_msg of string * 'a
-  ]
-  [@@deriving yojson]
+module Base =
+  struct
+
+    type server_msg = .. [@@deriving yojson]
+    type server_msg +=
+      | SOk
+      | SError of string
+      | STree of file_tree list
+      | SAdd_file of path
+      | SAdd_dir of path
+      | SDelete of path
+      [@@deriving yojson]
+
+    type client_msg = .. [@@deriving yojson]
+    type client_msg +=
+      | Get_tree
+      | Add_file of path * string (* path * (contents in base 64) *)
+      | Add_dir of path
+      | Delete of path
+      | Rename of path * path
+      [@@deriving yojson]
+  end
+module Make_base() = struct include Base end
+
+module type P =
+  sig
+    type app_server_msg = ..
+    type app_client_msg = ..
+
+    include (module type of Base)
+
+    val pack_server_msg : string -> server_msg -> app_server_msg
+    val unpack_server_msg : app_server_msg -> (string * server_msg) option
+
+    val pack_client_msg : string -> client_msg -> app_client_msg
+    val unpack_client_msg : app_client_msg -> (string * client_msg) option
+  end
+  

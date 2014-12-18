@@ -30,18 +30,17 @@
 
 open Ojs_server
 
+module Make (P: Ojsed_types.P) =
+  struct
+    let access_forbidden path =
+      P.SError ("Forbidden access to "^(Ojs_path.to_string path))
 
-let wsdata_of_msg msg = J.to_string (Ojsed_types.server_msg_to_yojson msg)
-let msg_of_wsdata s = Ojs_server.mk_msg_of_wsdata Ojsed_types.client_msg_of_yojson
-
-let access_forbidden path = `Error ("Forbidden access to "^(Ojs_path.to_string path))
-
-class ['clt, 'srv] editor
-  (broadcall : 'srv -> ('clt -> unit Lwt.t) -> unit Lwt.t)
-    (broadcast : 'srv -> unit Lwt.t) ~id root =
+    class editor
+      (broadcall : P.server_msg -> (P.client_msg -> unit Lwt.t) -> unit Lwt.t)
+        (broadcast : P.server_msg -> unit Lwt.t) ~id root =
     object(self)
       method id = (id : string)
-      method root = (root : Ojs_path.t)
+       method root = (root : Ojs_path.t)
 
       method can_read_file file = true
       method can_write_file file = true
@@ -53,7 +52,7 @@ class ['clt, 'srv] editor
         | false -> reply_msg (access_forbidden path)
         | true ->
             let contents = Ojsed_files.string_of_file file in
-            reply_msg (`File_contents (path, contents))
+            reply_msg (P.SFile_contents (path, contents))
 
       method handle_save_file reply_msg path contents =
         let norm = Ojs_path.normalize path in
@@ -62,31 +61,33 @@ class ['clt, 'srv] editor
         | false -> reply_msg (access_forbidden path)
         | true ->
             Ojsed_files.file_of_string ~file contents ;
-            reply_msg (`Ok (Printf.sprintf "File %S saved" (Ojs_path.to_string path)))
+            reply_msg (P.SOk (Printf.sprintf "File %S saved" (Ojs_path.to_string path)))
 
-      method handle_message (send_msg : 'srv -> unit Lwt.t) (msg : 'clt) =
+      method handle_message
+            (send_msg : P.server_msg -> unit Lwt.t) (msg : P.client_msg) =
         self#handle_call send_msg msg
 
-      method handle_call (reply_msg : 'srv -> unit Lwt.t) (msg : 'clt) =
+      method handle_call
+            (reply_msg : P.server_msg -> unit Lwt.t) (msg : P.client_msg) =
         match msg with
-        |  `Get_file_contents path ->
+        | P.Get_file_contents path ->
             self#handle_get_file_contents reply_msg path
-        | `Save_file (path, contents) ->
+        | P.Save_file (path, contents) ->
             self#handle_save_file reply_msg path contents
         | _ ->
-            reply_msg (`Error "Unhandled message")
+            reply_msg (P.SError "Unhandled message")
       end
 
-class ['clt, 'srv] editors
-  (broadcall : [>'srv Ojsed_types.msg] -> ([>'clt Ojsed_types.msg] -> unit Lwt.t) -> unit Lwt.t)
-    (broadcast : [>'srv Ojsed_types.msg] -> unit Lwt.t)
-    (spawn : ('src -> ('clt -> unit Lwt.t) -> unit Lwt.t) ->
-     ('srv -> unit Lwt.t) ->
-       id: string -> Ojs_path.t -> ('clt, 'srv) editor
+class editors
+  (broadcall : P.app_server_msg -> (P.app_client_msg -> unit Lwt.t) -> unit Lwt.t)
+    (broadcast : P.app_server_msg -> unit Lwt.t)
+    (spawn : (P.server_msg -> (P.client_msg -> unit Lwt.t) -> unit Lwt.t) ->
+     (P.server_msg -> unit Lwt.t) ->
+       id: string -> Ojs_path.t -> editor
     )
     =
     object(self)
-      val mutable editors = (SMap.empty : ('clt, 'srv) editor SMap.t)
+      val mutable editors = (SMap.empty : editor SMap.t)
 
       method editor id =
         try SMap.find id editors
@@ -94,27 +95,32 @@ class ['clt, 'srv] editors
 
       method add_editor ~id root =
         let broadcall msg cb =
-          let cb = function
-            `Editor_msg (_, msg) -> cb msg
-          | _ -> Lwt.return_unit
+          let cb msg =
+             match P.unpack_client_msg msg with
+             | Some (_, msg) -> cb msg
+             | None -> Lwt.return_unit
           in
-          broadcall (`Editor_msg (id, msg)) cb
+          broadcall (P.pack_server_msg id msg) cb
         in
-        let broadcast msg = broadcast  (`Editor_msg (id, msg)) in
+        let broadcast msg = broadcast (P.pack_server_msg id msg) in
         let ed = spawn broadcall broadcast ~id root in
         editors <- SMap.add id ed editors;
         ed
 
       method handle_message
-        (send_msg : 'srv Ojsed_types.msg -> unit Lwt.t) (msg : 'clt Ojsed_types.msg) =
-          match msg with
-            `Editor_msg (id, msg) ->
-              let send_msg msg = send_msg (`Editor_msg (id, msg)) in
+        (send_msg : P.app_server_msg -> unit Lwt.t) (msg : P.app_client_msg) =
+          match P.unpack_client_msg msg with
+          | Some (id, msg) ->
+              let send_msg msg = send_msg (P.pack_server_msg id msg) in
               (self#editor id)#handle_message send_msg msg
+          | None -> Lwt.return_unit
 
-      method handle_call (return : 'srv Ojsed_types.msg -> unit Lwt.t) (msg : 'clt Ojsed_types.msg) =
-        match msg with
-          `Editor_msg (id, msg) ->
-            let reply_msg msg = return (`Editor_msg (id, msg)) in
+      method handle_call
+         (return : P.app_server_msg -> unit Lwt.t) (msg : P.app_client_msg) =
+        match P.unpack_client_msg msg with
+        | Some (id, msg) ->
+            let reply_msg msg = return (P.pack_server_msg id msg) in
             (self#editor id)#handle_call reply_msg msg
+        | None -> Lwt.return_unit
   end
+end

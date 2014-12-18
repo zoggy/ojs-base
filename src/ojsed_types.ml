@@ -31,22 +31,34 @@
 (** All paths should relative to root directory. *)
 type path = Ojs_path.t [@@deriving yojson]
 
-type server_msg =
-  [
-  | `Error of string
-  | `Ok of string
-  | `File_contents of path * string
-  ]  [@@deriving yojson]
+module Base =
+  struct
+    type server_msg = .. [@@deriving yojson]
+    type server_msg +=
+      | SError of string
+      | SOk of string
+      | SFile_contents of path * string
+      [@@deriving yojson]
 
+    type client_msg = .. [@@deriving yojson]
+    type client_msg +=
+      | Get_file_contents of path
+      | Save_file of path * string
+      [@@deriving yojson]
+  end
 
-type client_msg =
-  [
-  | `Get_file_contents of path
-  | `Save_file of path * string
-  ]
-  [@@deriving yojson]
+module Make_base() = struct include Base end
 
-type 'a msg = [
-    `Editor_msg of string * 'a
-  ]
-  [@@deriving yojson]
+module type P =
+  sig
+    type app_server_msg = ..
+    type app_client_msg = ..
+
+    include (module type of Base)
+
+    val pack_server_msg : string -> server_msg -> app_server_msg
+    val unpack_server_msg : app_server_msg -> (string * server_msg) option
+
+    val pack_client_msg : string -> client_msg -> app_client_msg
+    val unpack_client_msg : app_client_msg -> (string * client_msg) option
+  end
