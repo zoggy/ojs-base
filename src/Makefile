@@ -135,7 +135,7 @@ LIBLJS=ojs-list-js.cma
 
 LIBLJS_CMOFILES= \
 	ojsl_types.cmo \
-#	ojsl_js.cmo
+	ojsl_js.cmo
 
 LIBLJS_CMIFILES=$(LIBLJS_CMOFILES:.cmx=.cmi)
 

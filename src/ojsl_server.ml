@@ -29,7 +29,7 @@
 (** Handling lists on server side. *)
 
 open Ojs_server
-open Ojsl_types
+
 let (>>=) = Lwt.(>>=)
 
 module Make (P : Ojsl_types.P) =
