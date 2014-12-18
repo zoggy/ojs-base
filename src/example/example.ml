@@ -75,7 +75,7 @@ let editors = new Ojsed_server.editors connections#broadcall connections#broadca
 let lists = new Mylist.elists
   (fun msg cb ->
      connections#broadcall (msg:> Example_types.server_msg )
-     (function `Mylist (string, msg) -> cb (`Mylist (string, msg))
+     (function `Mylist_msg (string, msg) -> cb (`Mylist_msg (string, msg))
        | _ -> assert false)
   )
   (fun msg -> connections#broadcast (msg :> Example_types.server_msg))
@@ -95,21 +95,29 @@ let _ = editors#add_editor "ed" root
 let handle_message (send_msg : Example_types.server_msg -> unit Lwt.t)
   (rpc : (Example_types.client_msg, Example_types.server_msg) Ojs_rpc.t) msg =
     match msg with
-    | `Editor_msg t ->
+    | `Editor_msg _ as msg ->
         editors#handle_message
-          (fun msg -> send_msg (msg :> Example_types.server_msg)) (`Editor_msg t)
+          (fun msg -> send_msg (msg :> Example_types.server_msg)) msg
 
-    | `Filetree_msg t ->
+    | `Filetree_msg _ as msg ->
         filetrees#handle_message
-          (fun msg -> send_msg (msg :> Example_types.server_msg)) (`Filetree_msg t)
+          (fun msg -> send_msg (msg :> Example_types.server_msg)) msg
 
-    | `Call (call_id, `Filetree_msg t) ->
-        let return msg = Ojs_rpc.return rpc call_id (msg :> Example_types.server_msg) in
-        filetrees#handle_call return (`Filetree_msg t)
+    | `Mylist_msg _ as msg ->
+        lists#handle_message
+          (fun msg -> send_msg (msg :> Example_types.server_msg)) msg
 
-    | `Call (call_id, `Editor_msg t) ->
+    | `Call (call_id, ((`Filetree_msg _) as msg))->
         let return msg = Ojs_rpc.return rpc call_id (msg :> Example_types.server_msg) in
-        editors#handle_call return (`Editor_msg t)
+        filetrees#handle_call return msg
+
+    | `Call (call_id, ((`Editor_msg _) as msg)) ->
+        let return msg = Ojs_rpc.return rpc call_id (msg :> Example_types.server_msg) in
+        editors#handle_call return msg
+
+    | `Call (call_id, ((`Mylist_msg _) as msg)) ->
+        let return msg = Ojs_rpc.return rpc call_id (msg :> Example_types.server_msg) in
+        lists#handle_call return msg
 
     | _ -> failwith "Unhandled message"
 

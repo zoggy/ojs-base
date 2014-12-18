@@ -38,9 +38,9 @@ module PList =
     type 'a server_msg += SUpdate of 'a list [@@deriving yojson]
     type 'a client_msg += Clear [@@deriving yojson]
 
-    type 'a msg = [`Mylist of 'a] [@@deriving yojson]
-    let pack_msg id msg = `Mylist (id, msg)
-    let unpack_msg = function `Mylist (id, msg) -> Some (id, msg) | _ -> None
+    type 'a msg = [`Mylist_msg of 'a] [@@deriving yojson]
+    let pack_msg id msg = `Mylist_msg (id, msg)
+    let unpack_msg = function `Mylist_msg (id, msg) -> Some (id, msg) | _ -> None
   end
 
 type server_msg0 = [
