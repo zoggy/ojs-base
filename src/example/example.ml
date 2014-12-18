@@ -48,6 +48,23 @@ let file_filter =
        | _ -> true
       )
 
+module PList = Example_types.PList
+module Mylist = Ojsl_server.Make(PList)
+
+class mylist
+  broadcall broadcast ~id init =
+   object(self)
+     inherit [int] Mylist.elist broadcall broadcast ~id init as super
+     method private handle_clear reply =
+       list <- [];
+       reply PList.SOk >>= fun _ -> broadcast (PList.SUpdate [])
+
+     method handle_call reply_msg = function
+       PList.Clear -> self#handle_clear reply_msg
+     | msg -> super#handle_call reply_msg msg
+  end
+
+
 
 let connections : (Example_types.client_msg, Example_types.server_msg) Ojs_server.connection_group =
   new Ojs_server.connection_group msg_of_wsdata wsdata_of_msg
@@ -55,6 +72,14 @@ let filetrees = new Ojsft_server.filetrees connections#broadcall connections#bro
   (new Ojsft_server.filetree)
 let editors = new Ojsed_server.editors connections#broadcall connections#broadcast
   (new Ojsed_server.editor)
+let lists = new Mylist.elists
+  (fun msg cb ->
+     connections#broadcall (msg:> Example_types.server_msg )
+     (function `Mylist (string, msg) -> cb (`Mylist (string, msg))
+       | _ -> assert false)
+  )
+  (fun msg -> connections#broadcast (msg :> Example_types.server_msg))
+  (new mylist)
 
 let root =
   let root = try Sys.argv.(1) with _ -> "." in

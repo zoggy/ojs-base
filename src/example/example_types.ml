@@ -31,9 +31,22 @@
 
 type path = string [@@deriving yojson]
 
+module PList =
+  struct
+    include (Ojsl_types.Make_base())
+
+    type 'a server_msg += SUpdate of 'a list [@@deriving yojson]
+    type 'a client_msg += Clear [@@deriving yojson]
+
+    type 'a msg = [`Mylist of 'a] [@@deriving yojson]
+    let pack_msg id msg = `Mylist (id, msg)
+    let unpack_msg = function `Mylist (id, msg) -> Some (id, msg) | _ -> None
+  end
+
 type server_msg0 = [
   | Ojsft_types.server_msg Ojsft_types.msg
   | Ojsed_types.server_msg Ojsed_types.msg
+  | (string * int PList.server_msg) PList.msg
   ]
   [@@deriving yojson]
 
@@ -41,6 +54,7 @@ type server_msg0 = [
 type client_msg0 = [
   | Ojsft_types.client_msg Ojsft_types.msg
   | Ojsed_types.client_msg Ojsed_types.msg
+  | (string * int PList.client_msg) PList.msg
   ]
   [@@deriving yojson]
 

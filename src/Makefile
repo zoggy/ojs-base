@@ -118,7 +118,7 @@ LIBEDJS_CMIFILES=$(LIBEDJS_CMOFILES:.cmx=.cmi)
 
 # Lists
 
-LIBL=ojs-filetree.cmxa
+LIBL=ojs-list.cmxa
 LIBL_A=$(LIBL:.cmxa=.a)
 LIBL_CMXS=$(LIBL:.cmxs)
 LIBL_BYTE=$(LIBL:.cmxa=.cma)
@@ -217,7 +217,7 @@ example: example/example-server example/example.js
 example/example-server: $(LIB) $(LIBED) $(LIBFT) $(LIBL) \
 	example/example_types.cmx example/example.cmx
 	$(OCAMLFIND) ocamlopt -o $@ $(OF_FLAGS) -linkpkg $^
-example/example.js: $(LIBJS)$(LIBEDJS) $(LIBFTJS)  $(LIBLJS)  \
+example/example.js: $(LIBJS) $(LIBEDJS) $(LIBFTJS) $(LIBLJS)  \
 	example/example_types.cmo example/example_js.cmo
 	$(OCAMLFIND) ocamlc -o t.x $^ -package yojson,ppx_deriving_yojson,js_of_ocaml -linkpkg
 	$(JS_OF_OCAML) t.x -o $@

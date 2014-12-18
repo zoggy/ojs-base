@@ -66,14 +66,14 @@ module Make (P : Ojsl_types.P) =
 
         end
 
-    class ['a] elists
-      (broadcall : (string * 'a P.server_msg) P.msg ->
+    class ['a] elists broadcall broadcast spawn
+(*      (broadcall : (string * 'a P.server_msg) P.msg ->
          ((string * 'a P.client_msg) P.msg -> unit Lwt.t) -> unit Lwt.t)
         (broadcast : (string * 'a P.server_msg) P.msg -> unit Lwt.t)
         (spawn : ('a P.server_msg -> ('a P.client_msg -> unit Lwt.t) -> unit Lwt.t) ->
          ('a P.server_msg -> unit Lwt.t) ->
            id: string -> 'a list -> 'a elist
-        )
+        )*)
         =
         object(self)
           val mutable lists = (SMap.empty : 'a elist SMap.t)
@@ -82,7 +82,7 @@ module Make (P : Ojsl_types.P) =
             try SMap.find id lists
             with Not_found -> failwith (Printf.sprintf "No list with id %S" id)
 
-          method add_list ~id init =
+          method add_list ~id (init : 'a list) =
             let broadcall msg cb =
               let cb msg =
                 match P.unpack_msg msg with
@@ -115,35 +115,6 @@ module Make (P : Ojsl_types.P) =
               | None -> Lwt.return_unit
         end
   end
-
-module P =
-  struct
-    include (Ojsl_types.Make_base())
-
-    type 'a server_msg += SUpdate of 'a list [@@deriving yojson]
-    type 'a client_msg += Clear [@@deriving yojson]
-
-    type 'a msg = [`Mylist of 'a] [@@deriving yojson]
-    let pack_msg id msg = `Mylist (id, msg)
-    let unpack_msg = function `Mylist (id, msg) -> Some (id, msg) | _ -> None
-  end
-
-module M = Make(P)
-
-class mylist
-  (broadcall : int P.server_msg -> (int P.client_msg -> unit Lwt.t) -> unit Lwt.t)
-    (broadcast : int P.server_msg -> unit Lwt.t) ~id init =
-   object(self)
-     inherit [int] M.elist broadcall broadcast ~id init as super
-     method handle_clear reply =
-       list <- [];
-       reply P.SOk >>= fun _ -> broadcast (P.SUpdate [])
-
-     method handle_call reply_msg = function
-       P.Clear -> self#handle_clear reply_msg
-     | msg -> super#handle_call reply_msg msg
-  end
-
 
 
 
