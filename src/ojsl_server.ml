@@ -44,24 +44,24 @@ module Make (P : Ojsl_types.P) =
 
           method id = (id : string)
 
-          method add reply x =
+          method handle_add reply x =
             list <- x :: list;
             reply P.SOk >>= fun _ -> broadcast (P.SAdd x)
 
-          method delete reply x =
+          method handle_delete reply x =
             list <- List.filter ((<>) x) list;
             reply P.SOk >>= fun _ -> broadcast (P.SAdd x)
 
-          method get reply = reply (P.SList list)
+          method handle_get reply = reply (P.SList list)
 
           method handle_message (send_msg : 'a P.server_msg -> unit Lwt.t) (msg : 'a P.client_msg) =
             self#handle_call send_msg msg
 
           method handle_call (reply_msg : 'a P.server_msg -> unit Lwt.t) (msg : 'a P.client_msg) =
             match msg with
-            | P.Get -> self#get reply_msg
-            | P.Add x -> self#add reply_msg x
-            | P.Delete x -> self#delete reply_msg x
+            | P.Get -> self#handle_get reply_msg
+            | P.Add x -> self#handle_add reply_msg x
+            | P.Delete x -> self#handle_delete reply_msg x
             | _ -> failwith "List: Unhandled message"
 
         end
@@ -135,12 +135,12 @@ class mylist
     (broadcast : int P.server_msg -> unit Lwt.t) ~id init =
    object(self)
      inherit [int] M.elist broadcall broadcast ~id init as super
-     method clear reply =
+     method handle_clear reply =
        list <- [];
        reply P.SOk >>= fun _ -> broadcast (P.SUpdate [])
 
      method handle_call reply_msg = function
-       P.Clear -> self#clear reply_msg
+       P.Clear -> self#handle_clear reply_msg
      | msg -> super#handle_call reply_msg msg
   end
 
