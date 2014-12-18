@@ -91,6 +91,7 @@ let root =
 let ft = filetrees#add_filetree "ft" root
 let () = ft#set_file_filter file_filter
 let _ = editors#add_editor "ed" root
+let list = lists#add_list "elist" [1 ; 2 ; 3]
 
 let handle_message (send_msg : Example_types.server_msg -> unit Lwt.t)
   (rpc : (Example_types.client_msg, Example_types.server_msg) Ojs_rpc.t) msg =

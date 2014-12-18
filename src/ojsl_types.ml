@@ -52,9 +52,11 @@ module type P =
   sig
     include (module type of Base)
 
+    type elt
     type 'a msg [@@deriving yojson]
 
     val pack_msg : string -> 'msg -> (string * 'msg) msg
     val unpack_msg : (string * 'msg) msg -> (string * 'msg) option
   end
+
 

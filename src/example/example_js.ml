@@ -27,7 +27,6 @@
 (*********************************************************************************)
 
 
-
 let msg_of_wsdata = Ojs_js.mk_msg_of_wsdata Example_types.server_msg_of_yojson
 
 let wsdata_of_msg msg =
@@ -41,8 +40,31 @@ let (rpc_handler : (Example_types.server_msg, Example_types.client_msg) Ojs_rpc.
 
 let call = Ojs_rpc.call rpc_handler
 
+module PList = struct
+  include Example_types.PList
+    let gensym = let cpt = ref 0 in fun () -> incr cpt; string_of_int !cpt
+    let insert id elt =
+      let node = Ojs_js.node_by_id id in
+      let new_id = id^"-"^(gensym()) in
+      let doc = Dom_html.document in
+      let div = doc##createElement (Js.string "div") in
+      div##setAttribute (Js.string "id", Js.string new_id);
+      let text = doc##createTextNode (Js.string (string_of_int elt)) in
+      Dom.insertBefore node div Js.null;
+      Dom.appendChild div text ;
+      new_id
+
+  end
+
+module Mylist = Ojsl_js.Make(PList)
+
 let trees = new Ojsft_js.trees call send (new Ojsft_js.tree);;
 let editors = new Ojsed_js.editors call send (new Ojsed_js.editor);;
+let lists = new Mylist.elists
+  (fun msg cb -> call (msg :> Example_types.client_msg)
+    (function `Mylist_msg _ as msg -> cb msg | _ -> Lwt.return_unit))
+    (fun msg -> send (msg :> Example_types.client_msg))
+    (new Mylist.elist);;
 
 let on_deselect ti path =
   Ojs_js.log (Printf.sprintf "Node %S deselected" (Ojs_path.to_string path))
@@ -62,7 +84,8 @@ let onopen ws =
   let tree = trees#setup_filetree ~msg_id: "ojs-msg" "ft" in
   tree#set_on_select on_select;
   tree#set_on_deselect on_deselect;
-  editors#setup_editor ~msg_id: "ojs-msg" ~bar_id: "bar" "ed"
+  editors#setup_editor ~msg_id: "ojs-msg" ~bar_id: "bar" "ed";
+  lists#setup_list ~msg_id: "ojs-msg" "elist"
 
 let onmessage ws msg =
   match msg with

@@ -1,6 +1,7 @@
-#ft { position: absolute; top: 10px; left: 0px; width: 290px ;
+#ft { position: absolute; top: 160px; left: 0px; width: 290px ;
       overflow: scroll ; padding-right: 1em;
-      height: 95%; }
+      height: 500px;
+}
 
 #ojs-msg {
   position: absolute; top: 10px; right: 10px;
@@ -100,4 +101,11 @@ div.ojsft-file { font-weight: normal; margin-left: 1em ; }
   right: 0;
   bottom: 0;
   left: 310px;
+}
+
+#list {
+  position: absolute;
+  top: 10px; left: 0px; width: 290px ;
+  overflow: scroll ; padding-right: 1em;
+  height: 150px;
 }

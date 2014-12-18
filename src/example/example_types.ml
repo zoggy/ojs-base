@@ -38,6 +38,8 @@ module PList =
     type 'a server_msg += SUpdate of 'a list [@@deriving yojson]
     type 'a client_msg += Clear [@@deriving yojson]
 
+    type elt = int
+
     type 'a msg = [`Mylist_msg of 'a] [@@deriving yojson]
     let pack_msg id msg = `Mylist_msg (id, msg)
     let unpack_msg = function `Mylist_msg (id, msg) -> Some (id, msg) | _ -> None
