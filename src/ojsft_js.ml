@@ -125,7 +125,7 @@ let expand_buttons base_id subs_id =
 
 module Make(P:Ojsft_types.P) =
   struct
-    class tree call (send : P.client_msg -> unit) ~msg_id id =
+    class tree call (send : P.client_msg -> unit Lwt.t) ~msg_id id =
       object(self:'self)
         val mutable selected = (None :  (id * Ojs_path.t) option )
         val mutable filetree = ([] : tree_node list)
@@ -145,8 +145,6 @@ module Make(P:Ojsft_types.P) =
         method msg_id : string = msg_id
 
         method display_error msg = Ojsmsg_js.display_text_error msg_id msg
-
-        method send_msg = send
 
         method simple_call : P.client_msg -> unit Lwt.t = fun msg ->
           call msg
@@ -526,9 +524,9 @@ module Make(P:Ojsft_types.P) =
 
     class trees
       (call : P.app_client_msg -> (P.app_server_msg -> unit Lwt.t) -> unit Lwt.t)
-        (send : P.app_client_msg -> unit)
+        (send : P.app_client_msg -> unit Lwt.t)
         (spawn : (P.client_msg -> (P.server_msg -> unit Lwt.t) -> unit Lwt.t) ->
-         (P.client_msg -> unit) ->
+         (P.client_msg -> unit Lwt.t) ->
            msg_id: string -> string -> tree) =
         object(self)
           val mutable trees = (SMap.empty : tree SMap.t)

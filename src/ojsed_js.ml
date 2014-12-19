@@ -31,7 +31,7 @@ let (>>=) = Lwt.(>>=)
 
 module Make(P:Ojsed_types.P) =
   struct
-    class editor call (send : P.client_msg -> unit)
+    class editor call (send : P.client_msg -> unit Lwt.t)
       ~bar_id ~msg_id ed_id =
     let editor = Ojs_ace.ace##edit (Js.string ed_id) in
     let _ = editor##setFontSize(Js.string "14px") in
@@ -54,8 +54,6 @@ module Make(P:Ojsed_types.P) =
 
       method id = ed_id
       method msg_id = msg_id
-
-      method send_msg = send
 
       method get_session ?contents filename =
         let filename = Ojs_path.to_string filename in
@@ -128,9 +126,9 @@ module Make(P:Ojsed_types.P) =
 
     class editors
       (call : P.app_client_msg -> (P.app_server_msg -> unit Lwt.t) -> unit Lwt.t)
-        (send : P.app_client_msg -> unit)
+        (send : P.app_client_msg -> unit Lwt.t)
         (spawn : (P.client_msg -> (P.server_msg -> unit Lwt.t) -> unit Lwt.t) ->
-         (P.client_msg -> unit) ->
+         (P.client_msg -> unit Lwt.t) ->
            bar_id: string -> msg_id: string -> string -> editor) =
         object(self)
           val mutable editors = (SMap.empty : editor SMap.t)

@@ -32,13 +32,14 @@ let msg_of_wsdata = Ojs_js.mk_msg_of_wsdata Example_types.server_msg_of_yojson
 let wsdata_of_msg msg =
   Yojson.Safe.to_string (Example_types.client_msg_to_yojson msg)
 
-let ref_send = ref ((fun _ -> ()) : Example_types.client_msg -> unit)
+let ref_send = ref ((fun _ -> Lwt.return_unit) : Example_types.App_msg.app_client_msg -> unit Lwt.t)
 let send msg = !ref_send msg
 
-let (rpc_handler : (Example_types.server_msg, Example_types.client_msg) Ojs_rpc.t) =
-  Ojs_rpc.rpc_handler (fun msg -> send msg; Lwt.return_unit)
+module Rpc_base = Ojs_rpc.Base(Example_types.App_msg)
+module Rpc = Ojs_rpc.Make_client(Rpc_base)
+let rpc_handler = Rpc.rpc_handler send
 
-let call = Ojs_rpc.call rpc_handler
+let call = Rpc.call rpc_handler
 
 module PList = struct
   include Example_types.PList
@@ -57,41 +58,44 @@ module PList = struct
   end
 
 module Mylist = Ojsl_js.Make(PList)
+module FT = Ojsft_js.Make(Example_types.FT)
+module ED = Ojsed_js.Make(Example_types.ED)
 
-let trees = new Ojsft_js.trees call send (new Ojsft_js.tree);;
-let editors = new Ojsed_js.editors call send (new Ojsed_js.editor);;
-let lists = new Mylist.elists
-  (fun msg cb -> call (msg :> Example_types.client_msg)
+let trees = new FT.trees call send (new FT.tree);;
+let editors = new ED.editors call send (new ED.editor);;
+let lists = new Mylist.elists call send (new Mylist.elist)
+(*  (fun msg cb -> call (msg :> Example_types.client_msg)
     (function `Mylist_msg _ as msg -> cb msg | _ -> Lwt.return_unit))
     (fun msg -> send (msg :> Example_types.client_msg))
-    (new Mylist.elist);;
+    (new Mylist.elist);;*)
 
 let on_deselect ti path =
   Ojs_js.log (Printf.sprintf "Node %S deselected" (Ojs_path.to_string path))
 
 let on_select ti path =
   Ojs_js.log (Printf.sprintf "Node %S selected" (Ojs_path.to_string path));
-  ignore(call (`Editor_msg ("ed", `Get_file_contents path))
-   (function
-    | `Editor_msg (id, msg) ->
-        ignore(editors#handle_message (`Editor_msg (id, msg)));
+  ignore(call (Example_types.ED.pack_client_msg "ed" (Example_types.ED.Get_file_contents path))
+   (function msg ->
+     match Example_types.ED.unpack_server_msg msg with
+    | Some (id, msg) ->
+        ignore(editors#handle_message (Example_types.ED.SEditor (id, msg)));
         Lwt.return_unit
-    | _ -> Lwt.return_unit))
+    | None -> Lwt.return_unit))
 
 
 let onopen ws =
-  ref_send := (fun msg -> Ojs_js.send_msg ws (wsdata_of_msg msg));
+  ref_send := (fun msg -> Ojs_js.send_msg ws (wsdata_of_msg msg); Lwt.return_unit);
   let tree = trees#setup_filetree ~msg_id: "ojs-msg" "ft" in
   tree#set_on_select on_select;
   tree#set_on_deselect on_deselect;
-  editors#setup_editor ~msg_id: "ojs-msg" ~bar_id: "bar" "ed";
-  lists#setup_list ~msg_id: "ojs-msg" "elist"
+  ignore(editors#setup_editor ~msg_id: "ojs-msg" ~bar_id: "bar" "ed");
+  ignore(lists#setup_list ~msg_id: "ojs-msg" "elist")
 
 let onmessage ws msg =
   match msg with
-    `Filetree_msg _ as msg -> trees#handle_message msg
-  | `Editor_msg _  as msg -> editors#handle_message msg
-  | `Return (call_id, msg) -> Ojs_rpc.on_return rpc_handler call_id msg; Js._false
+  | Example_types.FT.SFiletree _ -> trees#handle_message msg
+  | Example_types.ED.SEditor _  -> editors#handle_message msg
+  | Rpc_base.SReturn (call_id, msg) -> Rpc.on_return rpc_handler call_id msg; Js._false
   | _ -> failwith "Unhandled message"
 
 

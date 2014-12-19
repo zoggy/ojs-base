@@ -48,13 +48,23 @@ let file_filter =
        | _ -> true
       )
 
+
+module Server_P = struct
+  include Ojs_rpc.Base(Example_types.App_msg)
+  let wsdata_of_msg msg = J.to_string (Example_types.server_msg_to_yojson msg)
+  let msg_of_wsdata = Ojs_server.mk_msg_of_wsdata Example_types.client_msg_of_yojson
+  end
+module Server = Ojs_server.Make(Server_P)
+module SFT = Ojsft_server.Make(Example_types.FT)
+module SED = Ojsed_server.Make(Example_types.ED)
+
 module PList = Example_types.PList
-module Mylist = Ojsl_server.Make(PList)
+module SMylist = Ojsl_server.Make(PList)
 
 class mylist
   broadcall broadcast ~id init =
    object(self)
-     inherit [int] Mylist.elist broadcall broadcast ~id init as super
+     inherit [int] SMylist.elist broadcall broadcast ~id init as super
      method private handle_clear reply =
        list <- [];
        reply PList.SOk >>= fun _ -> broadcast (PList.SUpdate [])
@@ -65,26 +75,13 @@ class mylist
   end
 
 
-module Server_P = struct
-  include Ojs_rpc.Base(Example_types.App_msg)
-  let wsdata_of_msg msg = J.to_string (Example_types.server_msg_to_yojson msg)
-  let msg_of_wsdata = Ojs_server.mk_msg_of_wsdata Example_types.client_msg_of_yojson
-  end
-module Server = Ojs_server.Make(Server_P)
-module FT = Ojsft_server.Make(Example_types.FT)
-
 let connections = new Server.connection_group
-let filetrees = new FT.filetrees connections#broadcall connections#broadcast
-  (new Ojsft_server.filetree)
-let editors = new Ojsed_server.editors connections#broadcall connections#broadcast
-  (new Ojsed_server.editor)
-let lists = new Mylist.elists
-  (fun msg cb ->
-     connections#broadcall (msg:> Example_types.server_msg )
-     (function `Mylist_msg (string, msg) -> cb (`Mylist_msg (string, msg))
-       | _ -> assert false)
-  )
-  (fun msg -> connections#broadcast (msg :> Example_types.server_msg))
+let filetrees = new SFT.filetrees connections#broadcall connections#broadcast
+  (new SFT.filetree)
+let editors = new SED.editors connections#broadcall connections#broadcast
+  (new SED.editor)
+
+let lists = new SMylist.elists connections#broadcall connections#broadcast
   (new mylist)
 
 let root =
@@ -99,31 +96,19 @@ let () = ft#set_file_filter file_filter
 let _ = editors#add_editor "ed" root
 let list = lists#add_list "elist" [1 ; 2 ; 3]
 
-let handle_message (send_msg : Example_types.server_msg -> unit Lwt.t)
-  (rpc : (Example_types.client_msg, Example_types.server_msg) Ojs_rpc.t) msg =
+let handle_message send_msg rpc msg =
     match msg with
-    | `Editor_msg _ as msg ->
-        editors#handle_message
-          (fun msg -> send_msg (msg :> Example_types.server_msg)) msg
-
-    | `Filetree_msg _ as msg ->
-        filetrees#handle_message
-          (fun msg -> send_msg (msg :> Example_types.server_msg)) msg
-
-    | `Mylist_msg _ as msg ->
-        lists#handle_message
-          (fun msg -> send_msg (msg :> Example_types.server_msg)) msg
-
-    | `Call (call_id, ((`Filetree_msg _) as msg))->
-        let return msg = Ojs_rpc.return rpc call_id (msg :> Example_types.server_msg) in
+    | Example_types.ED.Editor _ -> editors#handle_message send_msg msg
+    | Example_types.FT.Filetree _ -> filetrees#handle_message  send_msg msg
+    | PList.Mylist _ -> lists#handle_message send_msg msg
+    | Server_P.Call (call_id, ((Example_types.FT.Filetree _) as msg))->
+        let return msg = Server.Rpc.return rpc call_id msg in
         filetrees#handle_call return msg
-
-    | `Call (call_id, ((`Editor_msg _) as msg)) ->
-        let return msg = Ojs_rpc.return rpc call_id (msg :> Example_types.server_msg) in
+    | Server_P.Call (call_id, ((Example_types.ED.Editor _) as msg)) ->
+        let return msg = Server.Rpc.return rpc call_id msg in
         editors#handle_call return msg
-
-    | `Call (call_id, ((`Mylist_msg _) as msg)) ->
-        let return msg = Ojs_rpc.return rpc call_id (msg :> Example_types.server_msg) in
+    | Server_P.Call (call_id, ((PList.Mylist _) as msg)) ->
+        let return msg = Server.Rpc.return rpc call_id msg in
         lists#handle_call return msg
 
     | _ -> failwith "Unhandled message"

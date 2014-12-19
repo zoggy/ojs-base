@@ -111,7 +111,7 @@ module Make (P : P) =
     class ['a] elists
       (call : P.app_client_msg ->
               (P.app_server_msg -> unit Lwt.t) -> unit Lwt.t)
-        (send : P.app_client_msg -> unit)
+        (send : P.app_client_msg -> unit Lwt.t)
         spawn
 (*  (spawn : ('clt -> ('srv -> unit Lwt.t) -> unit Lwt.t) ->
            ('clt -> unit) ->
