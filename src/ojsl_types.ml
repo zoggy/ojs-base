@@ -31,7 +31,7 @@
 module Base = struct
     type 'a server_msg = .. [@@deriving yojson]
     type 'a server_msg +=
-      | SOk
+        | SOk
         | SError of string
         | SAdd of 'a
         | SDelete of 'a
@@ -40,8 +40,8 @@ module Base = struct
 
     type 'a client_msg = .. [@@deriving yojson]
     type 'a client_msg +=
-      | Get
-      | Add of 'a
+        | Get
+        | Add of 'a
         | Delete of 'a
         [@@deriving yojson]
   end
