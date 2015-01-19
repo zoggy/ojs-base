@@ -93,7 +93,7 @@ LIBFTJS_CMOFILES= \
 	ojsft_types.cmo \
 	ojsft_js.cmo
 
-LIBFTJS_CMIFILES=$(LIBFTJS_CMOFILES:.cmx=.cmi)
+LIBFTJS_CMIFILES=$(LIBFTJS_CMOFILES:.cmo=.cmi)
 
 # Editor
 
@@ -116,7 +116,7 @@ LIBEDJS_CMOFILES=ojsed_types.cmo \
 	ojs_ace.cmo \
 	ojsed_js.cmo
 
-LIBEDJS_CMIFILES=$(LIBEDJS_CMOFILES:.cmx=.cmi)
+LIBEDJS_CMIFILES=$(LIBEDJS_CMOFILES:.cmo=.cmi)
 
 # Lists
 
@@ -139,7 +139,7 @@ LIBLJS_CMOFILES= \
 	ojsl_types.cmo \
 	ojsl_js.cmo
 
-LIBLJS_CMIFILES=$(LIBLJS_CMOFILES:.cmx=.cmi)
+LIBLJS_CMIFILES=$(LIBLJS_CMOFILES:.cmo=.cmi)
 
 #
 

@@ -16,7 +16,7 @@ package "js" (
 package "filetree" (
   version = "@VERSION@"
   description = "Editing server-side file tree in web pages"
-  requires = "ojs-base"
+  requires = "ojs"
   archive(byte) = "ojs-filetree.cma"
   archive(native) = "ojs-filetree.cmxa"
   archive(plugin,byte) = "ojs-filetree.cma"
@@ -32,7 +32,7 @@ package "filetree" (
 package "editor" (
   version = "@VERSION@"
   description = "Editing server-side files in web pages"
-  requires = "ojs-editor"
+  requires = "ojs"
   archive(byte) = "ojs-editor.cma"
   archive(native) = "ojs-editor.cmxa"
   archive(plugin,byte) = "ojs-editor.cma"
