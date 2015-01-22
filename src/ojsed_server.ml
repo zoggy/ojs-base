@@ -46,7 +46,10 @@ module Make (P: Ojsed_types.P) =
       method can_write_file file = true
 
       method handle_get_file_contents reply_msg path =
-        let norm = Ojs_path.normalize path in
+        let norm =
+          let path = Ojs_path.append_path root path in
+          Ojs_path.normalize path
+        in
         let file = Ojs_path.to_string norm in
         match self#can_read_file file with
         | false -> reply_msg (access_forbidden path)
@@ -55,7 +58,10 @@ module Make (P: Ojsed_types.P) =
             reply_msg (P.SFile_contents (path, contents))
 
       method handle_save_file reply_msg path contents =
-        let norm = Ojs_path.normalize path in
+        let norm =
+          let path = Ojs_path.append_path root path in
+          Ojs_path.normalize path
+        in
         let file = Ojs_path.to_string norm in
         match self#can_write_file file with
         | false -> reply_msg (access_forbidden path)
