@@ -94,8 +94,19 @@ module Make(P:P) =
         connections <- (send_msg, rpc) :: connections;
         let stream = mk_msg_stream P.msg_of_wsdata stream in
         Lwt.catch
-          (fun _ -> Lwt_stream.iter_s (self#handle_message send_msg rpc) stream)
-          (fun _ -> Lwt.return_unit)
+          (fun _ -> Lwt_stream.iter_s
+               (fun msg ->
+                  Lwt.catch
+                    (fun () -> self#handle_message send_msg rpc msg)
+                    (fun e ->
+                       prerr_endline (Printexc.to_string e);
+                       Lwt.return_unit)
+               )
+                 stream
+            )
+          (fun e ->
+             prerr_endline (Printexc.to_string e);
+             Lwt.return_unit)
 
       method broadcast msg =
         let f (send, _) =
