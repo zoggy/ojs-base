@@ -31,9 +31,9 @@ include ../master.Makefile
 P=#p -p
 PBYTE=#p -p a
 
-OF_FLAGS=-package $(PACKAGES)
+OF_FLAGS=-package $(PACKAGES),xtmpl
 
-COMPFLAGS=-I +ocamldoc -I example -annot -g -thread -verbose -annot #-w +K
+COMPFLAGS=-I +ocamldoc -I example -annot -g -thread -rectypes -verbose -annot #-w +K
 OCAMLPP=
 
 RM=rm -f
@@ -49,6 +49,7 @@ LIB_BYTE=$(LIB:.cmxa=.cma)
 
 LIB_CMXFILES= \
 	ojs_misc.cmx \
+	ojs_tmpl.cmx \
 	ojs_types.cmx \
 	ojs_rpc.cmx \
 	ojs_path.cmx
