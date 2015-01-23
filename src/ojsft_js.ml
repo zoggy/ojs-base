@@ -93,17 +93,26 @@ let drag_class = Ojs_js.class_"drag"
 let preventDefault evt = ignore(Js.Unsafe.meth_call evt "preventDefault" [| |])
 let stopPropagation evt = ignore(Js.Unsafe.meth_call evt "stopPropagation" [| |])
 
-let expand_buttons base_id subs_id =
+let expand_buttons ?(start=`Collapsed) base_id subs subs_id =
   let doc = Dom_html.document in
   let id_exp = base_id^"expand" in
   let id_col = base_id^"collapse" in
 
   let span_exp = doc##createElement (Js.string "span") in
   span_exp##setAttribute (Js.string "id", Js.string id_exp);
-  span_exp##className <- Js.string collapsed_class ;
 
   let span_col = doc##createElement (Js.string "span") in
   span_col##setAttribute (Js.string "id", Js.string id_col);
+
+  (match start with
+   | `Expand ->
+       span_exp##className <- Js.string collapsed_class ;
+       Ojs_js.node_unset_class subs collapsed_class
+   | `Collapsed ->
+       span_col##className <- Js.string collapsed_class ;
+       Ojs_js.node_set_class subs collapsed_class
+  );
+
   let t_exp = doc##createTextNode (Js.string " ▶") in
   let t_col = doc##createTextNode (Js.string " ▼") in
   Dom.appendChild span_exp t_exp;
@@ -442,7 +451,7 @@ module Make(P:Ojsft_types.P) =
       let items = self#insert_tn parent_id tn (div :> Dom.node Js.t) items in
       update_items items ;
 
-      let (span_exp, span_col) = expand_buttons div_id subs_id in
+      let (span_exp, span_col) = expand_buttons div_id div_subs subs_id in
       let bbar = button_bar div_id in
       let btn_add_dir = add_button_add_dir div_id bbar in
       let btn_delete = add_button_delete div_id bbar in
