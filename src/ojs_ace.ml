@@ -28,6 +28,14 @@
 
 open Js
 
+class type undoManager =
+  object
+
+  end
+
+let newUndoManager () =
+  Unsafe.new_obj (Unsafe.variable "ace.UndoManager") [| |]
+
 class type document =
   object
 
@@ -39,9 +47,14 @@ class type editSession =
     method setValue : js_string t -> unit meth
     method getDocument : document t meth
     method setMode : js_string t -> unit meth
+    method setUndoManager : undoManager t -> unit meth
   end
 
 let newEditSession s mode =
+  (Unsafe.new_obj (Unsafe.variable "ace.EditSession")
+    [| Unsafe.inject (Js.string s) ; Unsafe.inject (Js.string mode) |] : editSession Js.t)
+
+let createEditSession s mode =
   (Unsafe.new_obj (Unsafe.variable "ace.EditSession")
     [| Unsafe.inject (Js.string s) ; Unsafe.inject (Js.string mode) |] : editSession Js.t)
 
@@ -51,6 +64,7 @@ class type editor =
     method getSession : editSession t prop
     method getValue : js_string t meth
     method setFontSize : js_string t -> unit meth
+    method setKeyboardHandler : js_string t -> unit meth
   end
 
 class type mode =

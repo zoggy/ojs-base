@@ -35,6 +35,7 @@ module Make(P:Ojsed_types.P) =
       ~bar_id ~msg_id ed_id =
     let editor = Ojs_ace.ace##edit (Js.string ed_id) in
     let _ = editor##setFontSize(Js.string "14px") in
+    let _ = editor##setKeyboardHandler(Js.string "ace/keyboard/emacs") in
     let bar = Ojs_js.node_by_id bar_id in
     let doc = Dom_html.document in
     let button = doc##createElement(Js.string "button") in
@@ -62,6 +63,7 @@ module Make(P:Ojsed_types.P) =
             let sess = Ojs_ace.newEditSession
               (match contents with None -> "" | Some s -> s) ""
             in
+            sess##setUndoManager(Ojs_ace.newUndoManager());
             sessions <- SMap.add filename sess sessions;
             sess
 
