@@ -478,6 +478,15 @@ let mk_read_form loc inputs =
     let fields = SMap.fold field inputs [] in
     Exp.record fields None
   in
+  let call_form =
+    let f name i acc =
+      let label = "?"^(to_id name) in
+      let exp = Exp.ident (lid loc (to_id name)) in
+      (label, exp) :: acc
+    in
+    let args = SMap.fold f inputs [] in
+    Exp.apply [%expr form ~env] args
+  in
   let ending =
     [%expr
       match !errors with
@@ -485,7 +494,7 @@ let mk_read_form loc inputs =
       | _ ->
           let (f : template) = fun ?env ->
             let env = Xtmpl.env_of_list ?env !defs in
-            form ~env
+            [%e call_form]
           in
           raise (Error (f, !errors))
     ]
@@ -502,9 +511,10 @@ let map_ojs_form exp =
   let typ_template = mk_typ_template loc tmpl in
   let exn = mk_exn loc in
   let val_template = mk_template loc tmpl_form in
+  let val_form = [%stri let form = template_ ] in
   let typ = mk_type loc inputs in
   let read_form = mk_read_form loc inputs in
-  let items = [typ_form ; typ_template ; exn ; typ ; val_template ; read_form] in
+  let items = [typ_form ; typ_template ; exn ; typ ; val_template ; val_form ; read_form] in
   Mod.structure items
 
 let ojs_mapper argv =
