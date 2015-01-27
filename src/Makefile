@@ -181,16 +181,25 @@ LIBLJS_CMOFILES= \
 
 LIBLJS_CMIFILES=$(LIBLJS_CMOFILES:.cmo=.cmi)
 
+# PPX
+
+PPX=ppx_ojs
+PPX_BYTE=$(PPX).byte
+PPX_CMXFILES=ppx_ojs.cmx
+PPX_CMOFILES=$(PPX_CMXFILES:.cmx=.cmo)
+
 #
 
 all: opt byte
 
 opt: $(LIB) $(LIB_SERVER) $(LIB_CMXS) $(LIB_SERVER_CMXS) \
+	$(PPX) \
 	$(LIBED) $(LIBED_SERVER) $(LIBED_CMXS) $(LIBED_SERVER_CMXS) \
 	$(LIBFT) $(LIBFT_SERVER) $(LIBFT_CMXS) $(LIBFT_SERVER_CMXS) \
 	$(LIBL) $(LIBL_SERVER) $(LIBL_CMXS) $(LIBL_SERVER_CMXS)
 
 byte: $(LIB_BYTE) $(LIB_SERVER_BYTE) $(LIBJS) \
+	$(PPX_BYTE) \
 	$(LIBED_BYTE) $(LIBED_SERVER_BYTE) $(LIBEDJS) \
 	$(LIBFT_BYTE) $(LIBFT_SERVER_BYTE) $(LIBFTJS) \
 	$(LIBL_BYTE) $(LIBL_SERVER_BYTE) $(LIBLJS)
@@ -217,6 +226,22 @@ $(LIB_SERVER_BYTE): $(LIB_BYTE) $(LIB_SERVER_CMIFILES) $(LIB_SERVER_CMOFILES)
 
 $(LIBJS): $(LIB_BYTE) $(LIBJS_CMIFILES) $(LIBJS_CMOFILES)
 	$(OCAMLFIND) ocamlc$(PBYTE) -a -o $@ $(LIBJS_CMOFILES)
+
+# PPX
+
+$(PPX): $(PPX_CMXFILES)
+	$(OCAMLFIND) ocamlopt -o $@ -package ppx_tools.metaquot,str,xmlm,xtmpl \
+	$(COMPFLAGS) -linkpkg $<
+
+$(PPX_BYTE): $(PPX_CMOFILES)
+	$(OCAMLFIND) ocamlc -o $@ -package ppx_tools.metaquot,str,xmlm,xtmpl \
+	$(COMPFLAGS) -linkpkg $<
+
+ppx_ojs.cmx: ppx_ojs.ml
+	$(OCAMLFIND) ocamlopt -c -rectypes -package ppx_tools.metaquot,xtmpl $<
+
+ppx_ojs.cmo: ppx_ojs.ml
+	$(OCAMLFIND) ocamlc -c -rectypes -package ppx_tools.metaquot,xtmpl $<
 
 # Filetree
 
@@ -301,6 +326,17 @@ example/example.js: $(LIB_BYTE) $(LIBJS) $(LIBED_BYTE) $(LIBEDJS) \
 	example/example_types.cmo example/example_js.cmo
 	$(OCAMLFIND) ocamlc -o t.x $^ -package yojson,ppx_deriving_yojson,js_of_ocaml -linkpkg
 	$(JS_OF_OCAML) t.x -o $@
+
+test_ppx: test_ppx_ojs
+.PHONY: test_ppx_ojs
+
+test_ppx_ojs:
+	$(OCAMLFIND) ocamlopt -o $@ -dsource -rectypes -package xtmpl -linkpkg \
+	-ppx ./ppx_ojs ojs-base.cmxa test_ppx_ojs.ml
+	@echo "======"
+	$(OCAMLFIND) ocamlopt -i -rectypes -package xtmpl -ppx ./ppx_ojs test_ppx_ojs.ml
+	@echo "======"
+	./$@
 
 ##########
 .PHONY: doc webdoc ocamldoc
