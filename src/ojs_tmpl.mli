@@ -34,4 +34,4 @@ val script_js :
 val html_page :
   ?env:unit Xtmpl.env ->
   page_title:string ->
-  ?headers:Xtmpl.tree list -> body:Xtmpl.tree list -> unit -> Xtmpl.tree list
+  ?headers:Xtmpl.tree list -> content:Xtmpl.tree list -> unit -> Xtmpl.tree list

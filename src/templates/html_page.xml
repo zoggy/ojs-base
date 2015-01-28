@@ -4,6 +4,7 @@
 <title><page-title param_="true" type_="cdata"/></title>
 <headers param_="true" optional_="true" type_="xmls"></headers>
 </header>
-<body param_="true" type_="xmls">
+<body>
+<content param_="true" type_="xmls"/>
 </body>
 </html>
