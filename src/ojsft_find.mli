@@ -28,9 +28,9 @@
 
 (*i==m=[File.Find]=0.1=t==*)
 (** Finding files.
-@@author Didier Remy
-@@version 0.1
-@@cgname File.Find*)
+@author Didier Remy
+@version 0.1
+@cgname File.Find*)
 
       type filter =
 	  Maxdepth of int
@@ -51,6 +51,6 @@
         (string -> unit) -> unit
 
       val find_list : mode -> string list -> filter list -> string list
-    
+
 (*/i==m=[File.Find]=0.1=t==*)
 

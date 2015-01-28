@@ -344,13 +344,13 @@ test_ppx_ojs:
 doc: dump.odoc dump_js.odoc
 	$(MKDIR) ocamldoc
 	$(OCAMLFIND) ocamldoc -d ocamldoc -html $(OF_FLAGS) -verbose \
-	-load dump.odoc -load dump_js.odoc -t Ojs-base
+	-load dump.odoc -load dump_js.odoc -sort -t Ojs-base
 
 
 dump.odoc:
-	$(OCAMLFIND) ocamldoc $(OF_FLAGS) `ls ojs*.ml | grep -v _js.ml` -dump $@
+	$(OCAMLFIND) ocamldoc -v $(OF_FLAGS) `ls ojs*.ml ojs*.mli | grep -v _js.ml` -rectypes -dump $@
 dump_js.odoc:
-	$(OCAMLFIND) ocamldoc $(OF_FLAGS) $(JSOC_SYNTAX) `ls *_js.ml` -dump $@
+	$(OCAMLFIND) ocamldoc $(OF_FLAGS) $(JSOC_SYNTAX) `ls *_js.ml` -rectypes -dump $@
 
 docstog: dump.odoc dump_js.odoc
 	$(MKDIR) ../web/refdoc

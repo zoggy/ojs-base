@@ -6,7 +6,7 @@ archive(native) = "ojs-base.cmxa"
 archive(plugin,byte) = "ojs-base.cma"
 archive(plugin,native) = "ojs-base.cmxs"
 ppx(byte) = "./ppx_ojs.byte"
-ppx(native) = "./ppx_ojs"
+ppx(-byte) = "./ppx_ojs"
 
 package "server" (
   version = "@VERSION@"

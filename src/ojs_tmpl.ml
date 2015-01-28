@@ -30,3 +30,12 @@
 
 let script_js = [%xtmpl "templates/script_js.xml"]
 let html_page = [%xtmpl "templates/html_page.xml"]
+let link_css url =
+  let atts = Xtmpl.atts_of_list
+    [
+      ("","href"), [ Xtmpl.D url ] ;
+      ("","rel"), [ Xtmpl.D "stylesheet" ] ;
+      ("","type"), [ Xtmpl.D  "text/css" ] ;
+    ]
+  in
+  Xtmpl.E(("","link"), atts, [])
