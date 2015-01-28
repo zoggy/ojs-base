@@ -5,6 +5,6 @@
 <headers param_="true" optional_="true" type_="xmls"></headers>
 </header>
 <body>
-<content param_="true" type_="xmls"/>
+<body_ name_="body" param_="true" type_="xmls"/>
 </body>
 </html>

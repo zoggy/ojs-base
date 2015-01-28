@@ -130,6 +130,7 @@ type input = {
   i_mltype : [ `CData | `Other of (string * string * string) (* typ, to_string, of_string *)] ;
   i_value : Xtmpl.tree list option ;
   i_mandatory : bool ;
+  i_mlname : string option ;
 }
 
 let att_ s = ("", s)
@@ -143,17 +144,23 @@ let att_optional = att_"optional_"
 let att_name = att_"name"
 let att_mandatory = att_"mand_"
 let att_value = att_"value"
+let att_mlname = att_"name_"
 
 let get_name atts = Xtmpl.get_arg_cdata atts att_name
 
 let string_of_name = function ("", s) -> s | (p,s) -> p ^ ":" ^ s
 
-let to_id = String.map
-  (function
-   | 'a'..'z' as c -> c
-   | '0'..'9' as c -> c
-   | 'A'..'Z' as c -> Char.lowercase c
-   | _ -> '_')
+let to_id i =
+  match i.i_mlname with
+  | Some s -> s
+  | None ->
+      String.map
+        (function
+         | 'a'..'z' as c -> c
+         | '0'..'9' as c -> c
+         | 'A'..'Z' as c -> Char.lowercase c
+         | _ -> '_')
+         i.i_name
 
 
 let parse_ocaml_expression loc str =
@@ -228,8 +235,9 @@ let input_of_atts loc i_name ?kind atts subs =
         | Some to_s, Some of_s ->
             `Other (str, to_s, of_s)
   in
+  let i_mlname = Xtmpl.get_arg_cdata atts att_mlname in
   { i_name ; i_kind ; i_mltype ;
-    i_value ; i_mandatory ;
+    i_value ; i_mandatory ; i_mlname ;
   }
 
 let clear_atts atts =
@@ -249,8 +257,13 @@ let mk_value_param i =
     in
     Xtmpl.atts_of_list
       (( att_param, [ Xtmpl.D "true" ]) ::
-      ( att_optional, [ Xtmpl.D "true"] ) ::
-        type_atts)
+       ( att_optional, [ Xtmpl.D "true"] ) ::
+         type_atts @
+         (match i.i_mlname with
+            None -> []
+          | Some id -> [ att_mlname, [ Xtmpl.D id ] ]
+         )        
+      )
   in
   Xtmpl.E (("",i.i_name), value_atts, match i.i_value with None -> [] | Some l -> l)
 
@@ -420,7 +433,7 @@ let mk_template loc tmpl =
 
 let mk_type loc inputs =
   let field name i acc =
-    let id = to_id name in
+    let id = to_id i in
     let typ =
       let str = match i.i_mltype with
         | `CData -> "string"
@@ -467,7 +480,7 @@ let mk_exn loc =
 
 let mk_read_form loc inputs =
   let read_input name i exp =
-    let id = to_id name in
+    let id = to_id i in
     let mand = if i.i_mandatory then [%expr true] else [%expr false] in
     let of_string =
       match i.i_kind with
@@ -511,7 +524,7 @@ let mk_read_form loc inputs =
   in
   let fill_t =
     let field name i acc =
-      let lid_name = lid loc (to_id name) in
+      let lid_name = lid loc (to_id i) in
       let e =
         let id = Exp.ident lid_name  in
         match i.i_kind with
@@ -528,7 +541,7 @@ let mk_read_form loc inputs =
   in
   let call_form =
     let f name i acc =
-      let label = "?"^(to_id name) in
+      let label = "?"^(to_id i) in
       let exp = [%expr None] in
       (label, exp) :: acc
     in

@@ -415,6 +415,8 @@ ojsed_server.cmo: ojs_path.cmi ojsed_types.cmi
 ojsed_server.cmx: ojs_path.cmi ojs_path.cmx ojsed_types.cmi ojsed_types.cmx
 ojsed_js.cmo: ojs_path.cmi ojsed_types.cmi
 
+ojs_tmpl.cm*: templates/*.xml
+
 include .depend
 
 ############
