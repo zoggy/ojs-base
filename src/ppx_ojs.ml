@@ -320,6 +320,54 @@ let with_name acc tag f loc atts subs =
     let (p, xml) = f loc tag name atts subs in
     (acc, Some p, xml)
 
+let add_form_attributes =
+  let add_atts atts =
+    let name_method = att_"method" in
+    let name_action = att_"action" in
+    let atts =
+      match Xtmpl.get_arg atts name_method with
+      | Some _ -> atts
+      | None ->
+          let m_atts = Xtmpl.atts_of_list
+            [
+              att_param, [ Xtmpl.D "true" ] ;
+              att_optional, [ Xtmpl.D "true" ] ;
+              att_to_xml, [ Xtmpl.D "fun s -> [Xtmpl.D (Cohttp.Code.string_of_method s)]" ] ;
+              att_mltype, [ Xtmpl.D "Cohttp.Code.meth" ] ;
+            ]
+          in
+          Xtmpl.atts_one ~atts name_method
+            [ Xtmpl.E (name_method, m_atts, [Xtmpl.D "`POST"]) ]
+    in
+    let atts =
+      match Xtmpl.get_arg atts name_action with
+      | Some _ -> atts
+      | None ->
+          let a_atts = Xtmpl.atts_of_list
+            [
+              att_param, [ Xtmpl.D "true" ] ;
+              att_optional, [ Xtmpl.D "true" ] ;
+            ]
+          in
+          Xtmpl.atts_one ~atts name_action
+            [ Xtmpl.E (name_action, a_atts, []) ]
+    in
+    atts
+  in
+  let env = Xtmpl.env_of_list
+    [ ("", "form"), 
+      fun () env atts subs ->
+        let new_atts = add_atts atts in
+        if new_atts = atts then
+          raise Xtmpl.No_change
+        else
+          ((), [ Xtmpl.E (("","form"), new_atts, subs) ])
+    ]
+  in
+  fun tmpl ->
+    let (_, xmls) = Xtmpl.apply_to_xmls () env tmpl in
+    xmls
+
 let map_form_tmpl loc tmpl =
   let rec iter_list acc xmls =
     let (acc, xmls) = List.fold_left
@@ -505,6 +553,7 @@ let map_ojs_form exp =
   let loc = exp.pexp_loc in
   let file = file_path "ojs.form" exp in
   let tmpl = read_template loc file in
+  let tmpl = add_form_attributes tmpl in
   let (inputs, tmpl_form) = map_form_tmpl loc tmpl in
   let typ_form = mk_typ_form loc tmpl_form in
   let typ_template = mk_typ_template loc tmpl in
