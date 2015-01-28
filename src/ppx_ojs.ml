@@ -262,7 +262,7 @@ let mk_value_param i =
          (match i.i_mlname with
             None -> []
           | Some id -> [ att_mlname, [ Xtmpl.D id ] ]
-         )        
+         )
       )
   in
   Xtmpl.E (("",i.i_name), value_atts, match i.i_value with None -> [] | Some l -> l)
@@ -347,6 +347,7 @@ let add_form_attributes =
               att_optional, [ Xtmpl.D "true" ] ;
               att_to_xml, [ Xtmpl.D "fun s -> [Xtmpl.D (Cohttp.Code.string_of_method s)]" ] ;
               att_mltype, [ Xtmpl.D "Cohttp.Code.meth" ] ;
+              att_mlname, [ Xtmpl.D "meth" ] ;
             ]
           in
           Xtmpl.atts_one ~atts name_method
@@ -368,7 +369,7 @@ let add_form_attributes =
     atts
   in
   let env = Xtmpl.env_of_list
-    [ ("", "form"), 
+    [ ("", "form"),
       fun () env atts subs ->
         let new_atts = add_atts atts in
         if new_atts = atts then
