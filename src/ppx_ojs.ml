@@ -481,7 +481,7 @@ let mk_read_form loc inputs =
   let call_form =
     let f name i acc =
       let label = "?"^(to_id name) in
-      let exp = Exp.ident (lid loc (to_id name)) in
+      let exp = [%expr None] in
       (label, exp) :: acc
     in
     let args = SMap.fold f inputs [] in
