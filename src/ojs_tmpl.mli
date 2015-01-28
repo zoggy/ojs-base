@@ -26,7 +26,12 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-(** *)
+(** Some templates to create HTML pages. *)
 
-let script_js = [%xtmpl "templates/script_js.xml"]
-let html_page = [%xtmpl "templates/html_page.xml"]
+val script_js :
+  ?env:unit Xtmpl.env -> src:string -> ?msg:string -> unit -> Xtmpl.tree list
+
+val html_page :
+  ?env:unit Xtmpl.env ->
+  page_title:string ->
+  ?headers:Xtmpl.tree list -> body:Xtmpl.tree list -> unit -> Xtmpl.tree list
