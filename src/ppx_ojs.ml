@@ -489,14 +489,13 @@ let mk_read_form loc inputs =
   in
   let ending =
     [%expr
+      let (f : template) = fun ?env ->
+        let env = Xtmpl.env_of_list ?env !defs in
+        [%e call_form]
+      in
       match !errors with
-        [] -> [%e fill_t]
-      | _ ->
-          let (f : template) = fun ?env ->
-            let env = Xtmpl.env_of_list ?env !defs in
-            [%e call_form]
-          in
-          raise (Error (f, !errors))
+        [] -> (f, [%e fill_t])
+      | _ -> raise (Error (f, !errors))
     ]
   in
   let reads = SMap.fold read_input inputs ending in
