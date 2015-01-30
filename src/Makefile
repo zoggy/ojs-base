@@ -49,7 +49,6 @@ LIB_BYTE=$(LIB:.cmxa=.cma)
 
 LIB_CMXFILES= \
 	ojs_misc.cmx \
-	ojs_tmpl.cmx \
 	ojs_types.cmx \
 	ojs_rpc.cmx \
 	ojs_path.cmx
@@ -64,6 +63,7 @@ LIB_SERVER_CMXS=$(LIB_SERVER:.cmxs)
 LIB_SERVER_BYTE=$(LIB_SERVER:.cmxa=.cma)
 
 LIB_SERVER_CMXFILES= \
+	ojs_tmpl.cmx \
 	ojs_server.cmx
 
 LIB_SERVER_CMOFILES=$(LIB_SERVER_CMXFILES:.cmx=.cmo)
