@@ -40,7 +40,7 @@ module Make (P: Ojsed_types.P) =
         (broadcast : P.server_msg -> unit Lwt.t) ~id root =
     object(self)
       method id = (id : string)
-       method root = (root : Ojs_path.t)
+      method root = (root : Ojs_path.t)
 
       method can_read_file file = true
       method can_write_file file = true
