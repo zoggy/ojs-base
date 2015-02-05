@@ -62,7 +62,7 @@ class filetree
       method after_add_file (filename : Ojs_path.t) = ()
       method handle_add_file reply_msg path contents =
         let norm = Ojs_path.normalize path in
-        let file = Ojs_path.to_string norm in
+        let file = Ojs_path.to_string (Ojs_path.append_path root norm) in
         match self#can_add_file file with
           false -> reply_msg (creation_forbidden path)
         | true ->
@@ -78,7 +78,7 @@ class filetree
 
       method handle_add_dir reply_msg path =
         let norm = Ojs_path.normalize path in
-        let dir = Ojs_path.to_string norm in
+        let dir = Ojs_path.to_string (Ojs_path.append_path root norm) in
         match self#can_add_dir dir with
         | false -> reply_msg (creation_forbidden path)
         | true ->
@@ -94,7 +94,7 @@ class filetree
 
       method handle_delete reply_msg path =
         let norm = Ojs_path.normalize path in
-        let file = Ojs_path.to_string norm in
+        let file = Ojs_path.to_string (Ojs_path.append_path root norm) in
         prerr_endline ("handle_delete, file="^file);
         match self#can_delete file with
         | false -> reply_msg (deletion_forbidden path)
@@ -116,9 +116,9 @@ class filetree
 
       method handle_rename reply_msg path1 path2 =
         let norm1 = Ojs_path.normalize path1 in
-        let file1 = Ojs_path.to_string norm1 in
+        let file1 = Ojs_path.to_string (Ojs_path.append_path root norm1) in
         let norm2 = Ojs_path.normalize path2 in
-        let file2 = Ojs_path.to_string norm2 in
+        let file2 = Ojs_path.to_string (Ojs_path.append_path root norm2) in
         match self#can_rename file1 file2 with
           false -> reply_msg (renaming_forbidden path1 path2)
         | true ->
