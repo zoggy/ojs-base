@@ -49,12 +49,14 @@ let mk_msg_of_wsdata client_msg_of_yojson =
 let mk_send_msg wsdata_of_msg push =
   fun msg ->
     let wsdata = wsdata_of_msg msg in
-    let frame = Websocket.Frame.of_string wsdata in
+    let frame = Websocket.Frame.of_string ~content: wsdata () in
     Lwt.return (push (Some frame))
 
 let mk_msg_stream msg_of_wsdata =
   let f frame =
-    msg_of_wsdata (Websocket.Frame.content frame)
+    match Websocket.Frame.content frame with
+    | None -> None
+    | Some content -> msg_of_wsdata content
   in
   Lwt_stream.filter_map f
 

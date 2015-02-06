@@ -2,3 +2,4 @@ editor:
 - associate by default some file extensions to syntax highlight
 - allow new assocations
 - show modified state ?
+- use base64 to transfer file contents

@@ -67,7 +67,7 @@ class filetree
           false -> reply_msg (creation_forbidden path)
         | true ->
             let contents =
-              try Base64.decode contents
+              try B64.decode contents
               with e -> failwith (Printexc.to_string e)
             in
             self#before_add_file norm ;
