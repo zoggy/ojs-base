@@ -2,10 +2,10 @@ example/example.cmo : ojsl_server.cmo ojsft_server.cmo ojsed_server.cmo \
     ojs_server.cmo ojs_rpc.cmo ojs_path.cmi ojs_misc.cmi
 example/example.cmx : ojsl_server.cmx ojsft_server.cmx ojsed_server.cmx \
     ojs_server.cmx ojs_rpc.cmx ojs_path.cmx ojs_misc.cmx
-example/example_js.cmo : ojsft_js.cmo ojsed_js.cmo ojs_rpc.cmo ojs_path.cmi \
-    ojs_js.cmo
-example/example_js.cmx : ojsft_js.cmx ojsed_js.cmx ojs_rpc.cmx ojs_path.cmx \
-    ojs_js.cmx
+example/example_js.cmo : ojsl_js.cmo ojsft_js.cmo ojsed_js.cmo ojs_rpc.cmo \
+    ojs_path.cmi ojs_js.cmo
+example/example_js.cmx : ojsl_js.cmx ojsft_js.cmx ojsed_js.cmx ojs_rpc.cmx \
+    ojs_path.cmx ojs_js.cmx
 ojs_ace.cmo :
 ojs_ace.cmx :
 ojs_js.cmo :
@@ -17,12 +17,13 @@ ojs_rpc.cmo :
 ojs_rpc.cmx :
 ojs_server.cmo : ojs_rpc.cmo
 ojs_server.cmx : ojs_rpc.cmx
+ojs_tmpl.cmo : ojs_tmpl.cmi
+ojs_tmpl.cmx : ojs_tmpl.cmi
+ojs_tmpl.cmi :
 ojsed_files.cmo :
 ojsed_files.cmx :
-ojsed_js.cmo : ojsmsg_js.cmo ojsed_types.cmo ojs_path.cmi ojs_js.cmo \
-    ojs_ace.cmo
-ojsed_js.cmx : ojsmsg_js.cmx ojsed_types.cmx ojs_path.cmx ojs_js.cmx \
-    ojs_ace.cmx
+ojsed_js.cmo :
+ojsed_js.cmx :
 ojsed_server.cmo : ojsed_types.cmo ojsed_files.cmo ojs_server.cmo \
     ojs_path.cmi
 ojsed_server.cmx : ojsed_types.cmx ojsed_files.cmx ojs_server.cmx \

@@ -38,7 +38,7 @@ let newUndoManager () =
 
 class type document =
   object
-
+    method on : js_string t -> (unit -> unit) -> unit meth
   end
 
 class type editSession =

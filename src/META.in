@@ -77,6 +77,3 @@ package "editor" (
     archive(byte) = "ojs-editor-js.cma"
   )
 )
-
-
-

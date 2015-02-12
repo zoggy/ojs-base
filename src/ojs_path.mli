@@ -30,6 +30,9 @@
 
 type t [@@deriving yojson]
 
+module Map : Map.S with type key = t
+module Set : Set.S with type elt = t
+
 val dir_sep : char
 val empty : t
 val root : t

@@ -33,6 +33,14 @@ type t = {
   path : string list ;
   } [@@deriving yojson]
 
+module Ord = struct
+    type u = t
+    type t = u
+    let compare = Pervasives.compare
+  end
+module Map = Map.Make (Ord)
+module Set = Set.Make (Ord)
+
 let dir_sep = String.get Filename.dir_sep 0
 
 let empty = { abs = false ; path = [] }

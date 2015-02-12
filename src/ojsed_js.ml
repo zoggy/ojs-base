@@ -29,6 +29,13 @@
 open Ojs_js
 let (>>=) = Lwt.(>>=)
 
+type session = {
+  sess_ace : Ojs_ace.editSession Js.t ;
+  mutable sess_changed : bool ;
+}
+
+module PMap = Ojs_path.Map
+
 module Make(P:Ojsed_types.P) =
   struct
     class editor call (send : P.client_msg -> unit Lwt.t)
@@ -51,52 +58,106 @@ module Make(P:Ojsed_types.P) =
     in
     object(self)
       val mutable current_file = (None : Ojsed_types.path option)
-      val mutable sessions = (SMap.empty : Ojs_ace.editSession Js.t SMap.t)
+      val mutable sessions = (PMap.empty : session PMap.t)
 
       method id = ed_id
       method msg_id = msg_id
 
+      method on_changed path changed =
+        match current_file with
+        | Some fname when fname = path -> self#display_filename ~changed fname
+        | _ -> ()
+
       method get_session ?contents filename =
-        let filename = Ojs_path.to_string filename in
-        try  SMap.find filename sessions
+        try PMap.find filename sessions
         with Not_found ->
-            let sess = Ojs_ace.newEditSession
+            let sess_ace = Ojs_ace.newEditSession
               (match contents with None -> "" | Some s -> s) ""
             in
-            sess##setUndoManager(Ojs_ace.newUndoManager());
-            sessions <- SMap.add filename sess sessions;
-            sess
+            sess_ace##setUndoManager(Ojs_ace.newUndoManager());
+            let doc = sess_ace##getDocument() in
+            let s = { sess_ace ; sess_changed = false } in
+            doc##on(Js.string "change",
+             fun _ ->
+               if not s.sess_changed then
+                 begin s.sess_changed <- true; self#on_changed filename true end
+            );
+            sessions <- PMap.add filename s sessions;
+            s
 
       method display_error msg = Ojsmsg_js.display_text_error msg_id msg
       method display_message msg = Ojsmsg_js.display_text_message msg_id msg
 
-      method display_filename ed fname =
+      method display_filename ?(changed=false) fname =
         let node = Ojs_js.node_by_id filename_id in
         Ojs_js.clear_children node ;
-        let t = Dom_html.document##createTextNode (Js.string (Ojs_path.to_string fname)) in
+        let fname = Printf.sprintf "%s%s"
+          (if changed then "*" else "")
+          (Ojs_path.to_string fname)
+        in
+        let t = Dom_html.document##createTextNode (Js.string fname) in
         Dom.appendChild node t
 
-      method simple_call : 'clt -> unit Lwt.t = fun msg ->
+      method simple_call : ?on_ok: (unit -> unit) -> 'clt -> unit Lwt.t = fun ?on_ok msg ->
         call msg
           (fun msg -> Lwt.return
              (match msg with
               | P.SError msg -> self#display_error msg
-              | P.SOk msg -> self#display_message msg
+              | P.SOk msg ->
+                  begin
+                    self#display_message msg ;
+                    match on_ok with
+                    | None -> ()
+                    | Some f -> f ()
+                  end
               | _ -> ()
              )
           )
+
+      method call_save path contents =
+        let on_ok () =
+          match PMap.find path sessions with
+          | exception Not_found -> ()
+          | sess -> 
+            let b = sess.sess_changed in
+            if b then
+              begin
+                sess.sess_changed <- false ;
+                self#on_changed path false
+              end
+        in
+        self#simple_call ~on_ok (P.Save_file (path, contents))
+
       method save =
         match current_file with
           None -> Lwt.return_unit
         | Some file ->
             let contents = Js.to_string (editor##getValue()) in
-            self#simple_call (P.Save_file (file, contents))
+            self#call_save file contents
+
+      method save_file path =
+        try
+          let s = PMap.find path sessions in
+          let contents = Js.to_string (s.sess_ace##getValue()) in
+          self#call_save path contents
+        with Not_found ->
+            Lwt.return_unit
+
+      method changed_files =
+        PMap.fold (fun path s acc ->
+           if s.sess_changed then path :: acc else acc)
+           sessions []
+
+      method save_changed_files =
+        match self#changed_files with
+        | [] -> Lwt.return_unit
+        | l -> Lwt_list.iter_p self#save_file l
 
       method edit_file ?contents path =
         let sess = self#get_session ?contents path in
-        editor##setSession(sess);
+        editor##setSession(sess.sess_ace);
         current_file <- Some path ;
-        self#display_filename editor path ;
+        self#display_filename path ;
         let mode =
           let mode =
             Ojs_ace.modeList##getModeForPath(Js.string (Ojs_path.to_string path))
@@ -104,8 +165,7 @@ module Make(P:Ojsed_types.P) =
           mode##mode
         in
         (*log("mode to set: "^(Js.to_string mode));*)
-        sess##setMode(mode)
-
+        sess.sess_ace##setMode(mode)
 
       method handle_message (msg : 'srv) =
         try
@@ -157,7 +217,8 @@ module Make(P:Ojsed_types.P) =
               call (P.pack_client_msg ed_id msg) cb
             in
             let editor = spawn call send ~bar_id ~msg_id ed_id in
-            editors <- SMap.add ed_id editor editors
+            editors <- SMap.add ed_id editor editors;
+            editor
         end
 
 end
