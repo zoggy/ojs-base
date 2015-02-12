@@ -907,6 +907,7 @@ let _ = check_ocamlfind_package conf ~min_version: [2;4;5] "lwt.unix"
 let _ = check_ocamlfind_package conf ~min_version: [1;1;8] "yojson"
 let _ = check_ocamlfind_package conf ~min_version: [2;0] "ppx_deriving_yojson"
 let _ = check_ocamlfind_package conf ~min_version: [1;0] "base64"
+let _ = check_ocamlfind_package conf ~min_version: [0;11] "xtmpl"
 let _ = add_subst "JS_OF_OCAML" (ocaml_prog "js_of_ocaml")
 
 let _ = !print "\n###\n"

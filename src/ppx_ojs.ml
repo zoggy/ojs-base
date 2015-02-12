@@ -146,7 +146,7 @@ let att_mandatory = att_"mand_"
 let att_value = att_"value"
 let att_mlname = att_"name_"
 
-let get_name atts = Xtmpl.get_arg_cdata atts att_name
+let get_name atts = Xtmpl.get_att_cdata atts att_name
 
 let string_of_name = function ("", s) -> s | (p,s) -> p ^ ":" ^ s
 
@@ -186,15 +186,15 @@ let input_of_atts loc i_name ?kind atts subs =
     match kind with
     | Some k -> k
     | None ->
-      match Xtmpl.get_arg_cdata atts att_type with
+      match Xtmpl.get_att_cdata atts att_type with
         | None -> Text
         | Some s -> input_kind_of_string loc s
   in
-  let i_mandatory = Xtmpl.get_arg_cdata atts att_mandatory = Some "true" in
+  let i_mandatory = Xtmpl.get_att_cdata atts att_mandatory = Some "true" in
   let i_value =
     match i_kind with
       Textarea -> Some subs
-    | _ -> Xtmpl.get_arg atts att_value
+    | _ -> Xtmpl.get_att atts att_value
   in
   let def_type =
     match i_kind with
@@ -218,13 +218,13 @@ let input_of_atts loc i_name ?kind atts subs =
     | Number | Range -> `Other ("int", "string_of_int", "int_of_string")
   in
   let i_mltype =
-    match Xtmpl.get_arg_cdata atts att_mltype with
+    match Xtmpl.get_att_cdata atts att_mltype with
       None -> def_type
     | Some "cdata" -> `CData
     | Some str ->
         match
-          Xtmpl.get_arg_cdata atts att_to_string,
-          Xtmpl.get_arg_cdata atts att_of_string
+          Xtmpl.get_att_cdata atts att_to_string,
+          Xtmpl.get_att_cdata atts att_of_string
         with
         | None, _ -> kerror loc
             "Input %S: Missing attribute %s"
@@ -235,7 +235,7 @@ let input_of_atts loc i_name ?kind atts subs =
         | Some to_s, Some of_s ->
             `Other (str, to_s, of_s)
   in
-  let i_mlname = Xtmpl.get_arg_cdata atts att_mlname in
+  let i_mlname = Xtmpl.get_att_cdata atts att_mlname in
   { i_name ; i_kind ; i_mltype ;
     i_value ; i_mandatory ; i_mlname ;
   }
@@ -338,7 +338,7 @@ let add_form_attributes =
     let name_method = att_"method" in
     let name_action = att_"action" in
     let atts =
-      match Xtmpl.get_arg atts name_method with
+      match Xtmpl.get_att atts name_method with
       | Some _ -> atts
       | None ->
           let m_atts = Xtmpl.atts_of_list
@@ -354,7 +354,7 @@ let add_form_attributes =
             [ Xtmpl.E (name_method, m_atts, [Xtmpl.D "`POST"]) ]
     in
     let atts =
-      match Xtmpl.get_arg atts name_action with
+      match Xtmpl.get_att atts name_action with
       | Some _ -> atts
       | None ->
           let a_atts = Xtmpl.atts_of_list
@@ -500,11 +500,11 @@ let mk_read_form loc inputs =
     ]
   in
   let body exp =
-    [% expr fun get_arg ->
+    [% expr fun get_att ->
         let errors = ref [] in
         let defs = ref [] in
         let read_param__ mandatory name of_string =
-          let v = get_arg name in
+          let v = get_att name in
           defs := (("", name), fun x _ _ _ -> (x, [Xtmpl.D (match v with None -> "" | Some s -> s)])) :: !defs ;
           try
             match mandatory, v with
