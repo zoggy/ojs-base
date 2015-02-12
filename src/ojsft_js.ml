@@ -132,6 +132,13 @@ let expand_buttons ?(start=`Collapsed) base_id subs subs_id =
 
   (span_exp, span_col)
 
+let mime_is_text =
+  let text = "text/" in 
+  let len_text = String.length text in
+  fun mime -> 
+    String.length mime >= len_text &&
+    String.sub mime 0 len_text = text
+
 module Make(P:Ojsft_types.P) =
   struct
     class tree call (send : P.client_msg -> unit Lwt.t) ~msg_id id =
@@ -336,7 +343,7 @@ module Make(P:Ojsft_types.P) =
           in
           iter 0 [] l
 
-        method insert_file path =
+        method insert_file path mime =
           let parent = Ojs_path.parent path in
           let basename = Ojs_path.basename path in
           if show_files then
@@ -358,7 +365,7 @@ module Make(P:Ojsft_types.P) =
       let span_id = div_id^"text" in
       let span = doc##createElement (Js.string span_id) in
       span##setAttribute (Js.string "id", Js.string (div_id^"text"));
-      self#set_onclick span div_id path;
+      if mime_is_text mime then self#set_onclick span div_id path;
 
       let tn = {
           tn_id = div_id ;
@@ -477,9 +484,9 @@ module Make(P:Ojsft_types.P) =
               self#insert_dir path ;
               List.iter (insert path) l
 
-          | `File s ->
+          | `File (s, mime) ->
               let path = Ojs_path.append path [s] in
-              self#insert_file path
+              self#insert_file path mime
           in
           List.iter (insert Ojs_path.empty) tree_files
 
@@ -509,7 +516,7 @@ module Make(P:Ojsft_types.P) =
           try
             (match msg with
              | P.STree l -> self#build_from_tree l
-             | P.SAdd_file path -> self#handle_add_file path
+             | P.SAdd_file (path, mime) -> self#handle_add_file path mime
              | P.SAdd_dir path -> self#handle_add_dir path
              | P.SError msg -> self#display_error msg
              | P.SDelete path -> self#handle_delete path

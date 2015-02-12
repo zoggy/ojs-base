@@ -31,9 +31,11 @@
 (** All paths should relative to root directory. *)
 type path = Ojs_path.t [@@deriving yojson]
 
+type mime_type = string [@@deriving yojson]
+
 type file_tree = [
   | `Dir of string * file_tree list
-  | `File of string
+  | `File of string * mime_type
   ] [@@deriving yojson]
 
 module Base =
@@ -44,7 +46,7 @@ module Base =
       | SOk
       | SError of string
       | STree of file_tree list
-      | SAdd_file of path
+      | SAdd_file of path * mime_type
       | SAdd_dir of path
       | SDelete of path
       [@@deriving yojson]

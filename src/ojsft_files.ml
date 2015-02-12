@@ -54,7 +54,7 @@ let file_trees_of_dir ?(filepred=fun _ -> true) root_dir =
     let entries = List.sort String.compare entries in
     let (dirs, files) = List.partition is_dir entries in
     let dir s = `Dir (base s, iter s) in
-    let file s = `File (base s) in
+    let file s = `File (base s, Magic_mime.lookup s) in
     (List.map dir dirs) @ (List.map file files)
   in
   iter root_dir

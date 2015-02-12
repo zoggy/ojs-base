@@ -73,8 +73,9 @@ class filetree
             self#before_add_file norm ;
             Ojs_misc.file_of_string ~file contents ;
             self#after_add_file norm ;
+            let mime = Magic_mime.lookup file in
             reply_msg P.SOk >>=
-            fun () -> broadcast (P.SAdd_file path)
+            fun () -> broadcast (P.SAdd_file (path, mime))
 
       method handle_add_dir reply_msg path =
         let norm = Ojs_path.normalize path in
@@ -130,7 +131,10 @@ class filetree
                 if Sys.is_directory file2 then
                   broadcast (P.SAdd_dir path2)
                 else
-                  broadcast (P.SAdd_file path2)
+                  ( 
+                   let mime = Magic_mime.lookup file2 in
+                   broadcast (P.SAdd_file (path2, mime))
+                  )
             with Sys_error msg ->
                 let msg = Printf.sprintf "Could not rename %S to %S: %s"
                   (Ojs_path.to_string path1) (Ojs_path.to_string path2) msg
