@@ -36,6 +36,13 @@ type session = {
 
 module PMap = Ojs_path.Map
 
+let mk_button label =
+  let doc = Dom_html.document in
+  let b = doc##createElement(Js.string "button") in
+  let text = doc##createTextNode(Js.string label) in
+  Dom.appendChild b text ;
+  b
+
 module Make(P:Ojsed_types.P) =
   struct
     class editor call (send : P.client_msg -> unit Lwt.t)
@@ -45,15 +52,15 @@ module Make(P:Ojsed_types.P) =
     let _ = editor##setKeyboardHandler(Js.string "ace/keyboard/emacs") in
     let bar = Ojs_js.node_by_id bar_id in
     let doc = Dom_html.document in
-    let button = doc##createElement(Js.string "button") in
-    let text = doc##createTextNode(Js.string "Save") in
+    let btn_save =  mk_button "Save" in
+    let btn_reload = mk_button "Reload" in
     let filename_id = ed_id ^ "__filename" in
     let fname = doc##createElement(Js.string "span") in
     let _ =
       fname##setAttribute (Js.string "id", Js.string filename_id) ;
       fname##setAttribute (Js.string "class", Js.string "filename") ;
-      Dom.appendChild bar button ;
-      Dom.appendChild button text ;
+      Dom.appendChild bar btn_save ;
+      Dom.appendChild bar btn_reload ;
       Dom.appendChild bar fname
     in
     object(self)
@@ -118,7 +125,7 @@ module Make(P:Ojsed_types.P) =
         let on_ok () =
           match PMap.find path sessions with
           | exception Not_found -> ()
-          | sess -> 
+          | sess ->
             let b = sess.sess_changed in
             if b then
               begin
@@ -167,6 +174,41 @@ module Make(P:Ojsed_types.P) =
         (*log("mode to set: "^(Js.to_string mode));*)
         sess.sess_ace##setMode(mode)
 
+      method load_from_server path =
+        let cb = function
+        | P.SFile_contents (path, contents) ->
+            begin
+              let s = self#get_session path in
+              s.sess_ace##setValue (Js.string contents);
+              s.sess_changed <- false ;
+              self#display_filename ~changed: false path ;
+              Lwt.return_unit
+            end
+        | _ -> Lwt.return_unit
+        in
+        call (P.Get_file_contents path) cb
+
+      method reload_file path =
+        let do_it =
+          match PMap.find path sessions with
+          | exception Not_found -> true
+          | sess ->
+            not sess.sess_changed ||
+             (
+              let msg = Printf.sprintf
+               "%s is modified and not saved.\nDo you really want to reload file from server ?"
+                (Ojs_path.to_string path)
+              in
+              Js.to_bool (Dom_html.window##confirm(Js.string msg))
+             )
+        in
+        if do_it then self#load_from_server path else Lwt.return_unit
+
+      method reload =
+        match current_file with
+        | None -> Lwt.return_unit
+        | Some p -> self#reload_file p
+
       method handle_message (msg : 'srv) =
         try
           (match msg with
@@ -183,7 +225,8 @@ module Make(P:Ojsed_types.P) =
             Js._false
 
       initializer
-        Ojs_js.set_onclick button (fun _ -> self#save);
+        Ojs_js.set_onclick btn_save (fun _ -> self#save);
+        Ojs_js.set_onclick btn_reload (fun _ -> self#reload);
     end
 
     class editors
