@@ -72,23 +72,16 @@ let lists = new Mylist.elists call send (new Mylist.elist)
 let on_deselect ti path =
   Ojs_js.log (Printf.sprintf "Node %S deselected" (Ojs_path.to_string path))
 
-let on_select ti path =
+let on_select editor ti path =
   Ojs_js.log (Printf.sprintf "Node %S selected" (Ojs_path.to_string path));
-  ignore(call (Example_types.ED.pack_client_msg "ed" (Example_types.ED.Get_file_contents path))
-   (function msg ->
-     match Example_types.ED.unpack_server_msg msg with
-    | Some (id, msg) ->
-        ignore(editors#handle_message (Example_types.ED.SEditor (id, msg)));
-        Lwt.return_unit
-    | None -> Lwt.return_unit))
-
+  ignore(editor#edit_file path)
 
 let onopen ws =
   ref_send := (fun msg -> Ojs_js.send_msg ws (wsdata_of_msg msg); Lwt.return_unit);
   let tree = trees#setup_filetree ~msg_id: "ojs-msg" "ft" in
-  tree#set_on_select on_select;
-  tree#set_on_deselect on_deselect;
-  ignore(editors#setup_editor ~msg_id: "ojs-msg" ~bar_id: "bar" "ed");
+  let editor = editors#setup_editor ~msg_id: "ojs-msg" ~bar_id: "bar" "ed" in
+  tree#set_on_select (on_select editor);
+  tree#set_on_deselect on_deselect ;
   ignore(lists#setup_list ~msg_id: "ojs-msg" "elist")
 
 let onmessage ws msg =

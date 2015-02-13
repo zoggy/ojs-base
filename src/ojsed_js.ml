@@ -30,8 +30,9 @@ open Ojs_js
 let (>>=) = Lwt.(>>=)
 
 type session = {
-  sess_ace : Ojs_ace.editSession Js.t ;
-  mutable sess_changed : bool ;
+    sess_file : Ojs_path.t ;
+    sess_ace : Ojs_ace.editSession Js.t ;
+    mutable sess_changed : bool ;
 }
 
 module PMap = Ojs_path.Map
@@ -64,43 +65,31 @@ module Make(P:Ojsed_types.P) =
       Dom.appendChild bar fname
     in
     object(self)
-      val mutable current_file = (None : Ojsed_types.path option)
+      val mutable current = (None : session option)
       val mutable sessions = (PMap.empty : session PMap.t)
 
       method id = ed_id
       method msg_id = msg_id
 
-      method on_changed path changed =
-        match current_file with
-        | Some fname when fname = path -> self#display_filename ~changed fname
+      method on_changed sess =
+        match current with
+        | Some s when s.sess_file = sess.sess_file ->
+            self#display_filename s
         | _ -> ()
 
-      method get_session ?contents filename =
-        try PMap.find filename sessions
-        with Not_found ->
-            let sess_ace = Ojs_ace.newEditSession
-              (match contents with None -> "" | Some s -> s) ""
-            in
-            sess_ace##setUndoManager(Ojs_ace.newUndoManager());
-            let doc = sess_ace##getDocument() in
-            let s = { sess_ace ; sess_changed = false } in
-            doc##on(Js.string "change",
-             fun _ ->
-               if not s.sess_changed then
-                 begin s.sess_changed <- true; self#on_changed filename true end
-            );
-            sessions <- PMap.add filename s sessions;
-            s
+      method get_session file =
+        try Some (PMap.find file sessions)
+        with Not_found -> None
 
       method display_error msg = Ojsmsg_js.display_text_error msg_id msg
       method display_message msg = Ojsmsg_js.display_text_message msg_id msg
 
-      method display_filename ?(changed=false) fname =
+      method display_filename s =
         let node = Ojs_js.node_by_id filename_id in
         Ojs_js.clear_children node ;
         let fname = Printf.sprintf "%s%s"
-          (if changed then "*" else "")
-          (Ojs_path.to_string fname)
+          (if s.sess_changed then "*" else "")
+            (Ojs_path.to_string s.sess_file)
         in
         let t = Dom_html.document##createTextNode (Js.string fname) in
         Dom.appendChild node t
@@ -121,99 +110,106 @@ module Make(P:Ojsed_types.P) =
              )
           )
 
-      method call_save path contents =
+      method save_file sess =
         let on_ok () =
-          match PMap.find path sessions with
-          | exception Not_found -> ()
-          | sess ->
-            let b = sess.sess_changed in
-            if b then
-              begin
-                sess.sess_changed <- false ;
-                self#on_changed path false
-              end
+          let b = sess.sess_changed in
+          if b then
+            begin
+              sess.sess_changed <- false ;
+              self#on_changed sess
+            end
         in
-        self#simple_call ~on_ok (P.Save_file (path, contents))
+        let contents = Js.to_string (sess.sess_ace##getValue()) in
+        self#simple_call ~on_ok (P.Save_file (sess.sess_file, contents))
 
       method save =
-        match current_file with
+        match current with
           None -> Lwt.return_unit
-        | Some file ->
-            let contents = Js.to_string (editor##getValue()) in
-            self#call_save file contents
+        | Some sess -> self#save_file sess
 
-      method save_file path =
-        try
-          let s = PMap.find path sessions in
-          let contents = Js.to_string (s.sess_ace##getValue()) in
-          self#call_save path contents
-        with Not_found ->
-            Lwt.return_unit
+      method changed_sessions =
+        PMap.fold
+          (fun _ s acc -> if s.sess_changed then s :: acc else acc)
+          sessions []
 
       method changed_files =
-        PMap.fold (fun path s acc ->
-           if s.sess_changed then path :: acc else acc)
-           sessions []
+        PMap.fold
+          (fun path s acc -> if s.sess_changed then path :: acc else acc)
+          sessions []
 
       method save_changed_files =
-        match self#changed_files with
+        match self#changed_sessions with
         | [] -> Lwt.return_unit
         | l -> Lwt_list.iter_p self#save_file l
 
-      method edit_file ?contents path =
-        let sess = self#get_session ?contents path in
-        editor##setSession(sess.sess_ace);
-        current_file <- Some path ;
-        self#display_filename path ;
-        let mode =
-          let mode =
-            Ojs_ace.modeList##getModeForPath(Js.string (Ojs_path.to_string path))
-          in
-          mode##mode
-        in
-        (*log("mode to set: "^(Js.to_string mode));*)
-        sess.sess_ace##setMode(mode)
-
-      method load_from_server path =
+      method load_from_server s =
         let cb = function
-        | P.SFile_contents (path, contents) ->
+        | P.SFile_contents (file, contents) when s.sess_file = file ->
             begin
-              let s = self#get_session path in
               s.sess_ace##setValue (Js.string contents);
               s.sess_changed <- false ;
-              self#display_filename ~changed: false path ;
+              self#on_changed s ;
               Lwt.return_unit
             end
         | _ -> Lwt.return_unit
         in
-        call (P.Get_file_contents path) cb
+        call (P.Get_file_contents s.sess_file) cb
 
-      method reload_file path =
+      method reload_file sess =
         let do_it =
-          match PMap.find path sessions with
-          | exception Not_found -> true
-          | sess ->
-            not sess.sess_changed ||
-             (
-              let msg = Printf.sprintf
+          not sess.sess_changed ||
+            (
+             let msg = Printf.sprintf
                "%s is modified and not saved.\nDo you really want to reload file from server ?"
-                (Ojs_path.to_string path)
-              in
-              Js.to_bool (Dom_html.window##confirm(Js.string msg))
-             )
+                 (Ojs_path.to_string sess.sess_file)
+             in
+             Js.to_bool (Dom_html.window##confirm(Js.string msg))
+            )
         in
-        if do_it then self#load_from_server path else Lwt.return_unit
+        if do_it then self#load_from_server sess else Lwt.return_unit
 
       method reload =
-        match current_file with
+        match current with
         | None -> Lwt.return_unit
-        | Some p -> self#reload_file p
+        | Some sess -> self#reload_file sess
+
+      method new_session file =
+        let sess_ace = Ojs_ace.newEditSession "" "" in
+        sess_ace##setUndoManager(Ojs_ace.newUndoManager());
+        let doc = sess_ace##getDocument() in
+        let sess = { sess_ace ; sess_changed = false ; sess_file = file } in
+        let mode =
+          let mode =
+            Ojs_ace.modeList##getModeForPath(Js.string (Ojs_path.to_string file))
+          in
+          mode##mode
+        in
+        (*log("mode to set: "^(Js.to_string mode));*)
+        sess_ace##setMode(mode);
+        doc##on(Js.string "change",
+         fun _ ->
+           if not sess.sess_changed then
+             begin sess.sess_changed <- true; self#on_changed sess end
+        );
+        sessions <- PMap.add file sess sessions;
+        sess
+
+      method edit_file path =
+        (match self#get_session path with
+        | Some sess -> Lwt.return sess
+        | None ->
+            let s = self#new_session path in
+            self#load_from_server s >>= fun _ -> Lwt.return s
+        ) >>= fun sess ->
+          (
+           editor##setSession(sess.sess_ace);
+           current <- Some sess ;
+           Lwt.return (self#on_changed sess)
+          )
 
       method handle_message (msg : 'srv) =
         try
           (match msg with
-           | P.SFile_contents (path, contents) ->
-               self#edit_file ~contents path
            | P.SOk msg -> self#display_message msg
            | P.SError msg -> self#display_error msg
            | _ -> failwith "Unhandled message received from server"
