@@ -47,6 +47,7 @@ class type editSession =
     method setValue : js_string t -> unit meth
     method getDocument : document t meth
     method setMode : js_string t -> unit meth
+    method setReadOnly : bool t -> unit meth
     method setUndoManager : undoManager t -> unit meth
     method setUseWrapMode : bool t -> unit meth
     method setUseWorker : bool t -> unit meth

@@ -29,8 +29,11 @@
 open Ojs_js
 let (>>=) = Lwt.(>>=)
 
+type mime_type = string
+
 type session = {
     sess_file : Ojs_path.t ;
+    sess_mime : mime_type ;
     sess_ace : Ojs_ace.editSession Js.t ;
     mutable sess_changed : bool ;
 }
@@ -43,6 +46,15 @@ let mk_button label =
   let text = doc##createTextNode(Js.string label) in
   Dom.appendChild b text ;
   b
+
+let is_editable_from_mime =
+  let text = "text/" in
+  let len_text = String.length text in
+  function
+  | "application/octet-stream" -> true
+  | mime ->
+      String.length mime >= len_text &&
+      String.sub mime 0 len_text = text
 
 module Make(P:Ojsed_types.P) =
   struct
@@ -157,7 +169,10 @@ module Make(P:Ojsed_types.P) =
             end
         | _ -> Lwt.return_unit
         in
-        call (P.Get_file_contents s.sess_file) cb
+        if self#is_editable_from_mime s.sess_mime then
+          call (P.Get_file_contents s.sess_file) cb
+        else
+          Lwt.return_unit
 
       method reload_file sess =
         let do_it =
@@ -177,13 +192,17 @@ module Make(P:Ojsed_types.P) =
         | None -> Lwt.return_unit
         | Some sess -> self#reload_file sess
 
-      method new_session file =
+      method new_session ?(mime="text/") file =
         let sess_ace = Ojs_ace.newEditSession "" "" in
         sess_ace##setUndoManager(Ojs_ace.newUndoManager());
         sess_ace##setUseWrapMode(Js.bool true);
         sess_ace##setUseWorker(Js.bool false);
         let doc = sess_ace##getDocument() in
-        let sess = { sess_ace ; sess_changed = false ; sess_file = file } in
+        let sess = {
+            sess_ace ; sess_mime = mime ;
+            sess_changed = false ; sess_file = file ;
+          }
+        in
         let mode =
           let mode =
             Ojs_ace.modeList##getModeForPath(Js.string (Ojs_path.to_string file))
@@ -198,13 +217,17 @@ module Make(P:Ojsed_types.P) =
              begin sess.sess_changed <- true; self#on_changed sess end
         );
         sessions <- PMap.add file sess sessions;
+        if not (self#is_editable_from_mime mime) then
+          sess_ace##setReadOnly(Js.bool true);
         sess
 
-      method edit_file path =
+      method is_editable_from_mime = is_editable_from_mime
+
+      method edit_file ?mime path =
         (match self#get_session path with
         | Some sess -> Lwt.return sess
         | None ->
-            let s = self#new_session path in
+            let s = self#new_session ?mime path in
             self#load_from_server s >>= fun _ -> Lwt.return s
         ) >>= fun sess ->
           (

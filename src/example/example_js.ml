@@ -72,9 +72,11 @@ let lists = new Mylist.elists call send (new Mylist.elist)
 let on_deselect ti path =
   Ojs_js.log (Printf.sprintf "Node %S deselected" (Ojs_path.to_string path))
 
-let on_select editor ti path =
+let on_select (editor : ED.editor) ti kind path =
   Ojs_js.log (Printf.sprintf "Node %S selected" (Ojs_path.to_string path));
-  ignore(editor#edit_file path)
+  match kind with
+    `Dir -> ()
+  | `File mime -> ignore(editor#edit_file ~mime path)
 
 let onopen ws =
   ref_send := (fun msg -> Ojs_js.send_msg ws (wsdata_of_msg msg); Lwt.return_unit);

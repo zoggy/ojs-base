@@ -132,13 +132,6 @@ let expand_buttons ?(start=`Collapsed) base_id subs subs_id =
 
   (span_exp, span_col)
 
-let mime_is_text =
-  let text = "text/" in 
-  let len_text = String.length text in
-  fun mime -> 
-    String.length mime >= len_text &&
-    String.sub mime 0 len_text = text
-
 module Make(P:Ojsft_types.P) =
   struct
     class tree call (send : P.client_msg -> unit Lwt.t) ~msg_id id =
@@ -146,7 +139,7 @@ module Make(P:Ojsft_types.P) =
         val mutable selected = (None :  (id * Ojs_path.t) option )
         val mutable filetree = ([] : tree_node list)
 
-        val mutable on_select  :'self -> Ojs_path.t -> unit = fun _ _ -> ()
+        val mutable on_select  :'self -> [`Dir | `File of string] -> Ojs_path.t -> unit = fun _ _ _ -> ()
         val mutable on_deselect : 'self -> Ojs_path.t -> unit = fun  _ _ -> ()
         val mutable show_files = true
 
@@ -181,7 +174,7 @@ module Make(P:Ojsft_types.P) =
           selected <- None ;
           self#on_deselect self path
 
-        method set_selected div_id path =
+        method set_selected div_id kind path =
           (
            try
              let span_id = (SMap.find div_id !tree_nodes).tn_span_id in
@@ -189,15 +182,15 @@ module Make(P:Ojsft_types.P) =
            with Not_found -> ()
           );
           selected <- Some (div_id, path) ;
-          self#on_select self path
+          self#on_select self kind path
 
-        method set_onclick (node : Dom_html.element Js.t) div_id fname =
+        method set_onclick (node : Dom_html.element Js.t) div_id kind fname =
           let f _ =
             match selected with
-            | None ->  self#set_selected div_id fname
+            | None ->  self#set_selected div_id kind fname
             | Some (old_id,l) when id <> div_id ->
                 self#set_unselected old_id l ;
-                self#set_selected div_id fname
+                self#set_selected div_id kind fname
             | _ -> ()
           in
           set_onclick node f
@@ -365,7 +358,7 @@ module Make(P:Ojsft_types.P) =
       let span_id = div_id^"text" in
       let span = doc##createElement (Js.string span_id) in
       span##setAttribute (Js.string "id", Js.string (div_id^"text"));
-      if mime_is_text mime then self#set_onclick span div_id path;
+      self#set_onclick span div_id (`File mime) path ;
 
       let tn = {
           tn_id = div_id ;
@@ -425,7 +418,7 @@ module Make(P:Ojsft_types.P) =
       let span_id = div_id^"text" in
       let span = doc##createElement (Js.string "span") in
       span##setAttribute (Js.string "id", Js.string span_id);
-      self#set_onclick span div_id path ;
+      self#set_onclick span div_id `Dir path ;
 
       let subs_id = div_id^"subs" in
       let div_subs = doc##createElement (Js.string "div") in
