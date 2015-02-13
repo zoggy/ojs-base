@@ -48,6 +48,8 @@ class type editSession =
     method getDocument : document t meth
     method setMode : js_string t -> unit meth
     method setUndoManager : undoManager t -> unit meth
+    method setUseWrapMode : bool t -> unit meth
+    method setUseWorker : bool t -> unit meth
   end
 
 let newEditSession s mode =
@@ -58,6 +60,12 @@ let createEditSession s mode =
   (Unsafe.new_obj (Unsafe.variable "ace.EditSession")
     [| Unsafe.inject (Js.string s) ; Unsafe.inject (Js.string mode) |] : editSession Js.t)
 
+class type renderer =
+  object
+    method setShowGutter : bool t -> unit meth
+    method hScrollBarAlwaysVisible : bool t prop
+    method vScrollBarAlwaysVisible : bool t prop
+  end
 class type editor =
   object
     method setSession : editSession t -> unit meth
@@ -65,6 +73,8 @@ class type editor =
     method getValue : js_string t meth
     method setFontSize : js_string t -> unit meth
     method setKeyboardHandler : js_string t -> unit meth
+    method setShowFoldWidgets : bool t -> unit meth
+    method renderer  : renderer t prop
   end
 
 class type mode =

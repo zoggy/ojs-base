@@ -50,6 +50,10 @@ module Make(P:Ojsed_types.P) =
       ~bar_id ~msg_id ed_id =
     let editor = Ojs_ace.ace##edit (Js.string ed_id) in
     let _ = editor##setFontSize(Js.string "14px") in
+    let rend = editor##renderer in
+    let () = rend##setShowGutter(Js.bool true) in
+    let () = rend##hScrollBarAlwaysVisible <- (Js.bool false) in
+    let () = rend##vScrollBarAlwaysVisible <- (Js.bool false) in
     let _ = editor##setKeyboardHandler(Js.string "ace/keyboard/emacs") in
     let bar = Ojs_js.node_by_id bar_id in
     let doc = Dom_html.document in
@@ -176,6 +180,8 @@ module Make(P:Ojsed_types.P) =
       method new_session file =
         let sess_ace = Ojs_ace.newEditSession "" "" in
         sess_ace##setUndoManager(Ojs_ace.newUndoManager());
+        sess_ace##setUseWrapMode(Js.bool true);
+        sess_ace##setUseWorker(Js.bool false);
         let doc = sess_ace##getDocument() in
         let sess = { sess_ace ; sess_changed = false ; sess_file = file } in
         let mode =
