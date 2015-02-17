@@ -29,6 +29,7 @@
 (** *)
 
 open Ojs_server
+open Lwt.Infix
 
 module Make(P:Ojsft_types.P) =
   struct
