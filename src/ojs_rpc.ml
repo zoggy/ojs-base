@@ -44,6 +44,15 @@ let gensym =
 module type B =
   sig
     include Ojs_types.App_msg
+
+    type app_server_msg +=
+      | SCall of call_id * app_server_msg
+      | SReturn of call_id * app_server_msg
+
+    type app_client_msg +=
+      | Call of call_id * app_client_msg
+      | Return of call_id * app_client_msg
+
     val pack_server_call : call_id -> app_server_msg -> app_server_msg
     val pack_server_return : call_id -> app_server_msg -> app_server_msg
     val pack_client_call : call_id -> app_client_msg -> app_client_msg
@@ -120,6 +129,7 @@ module type S =
     val call :
        t -> app_server_msg -> (app_client_msg -> 'a Lwt.t) -> 'a Lwt.t
     val return : t -> call_id -> app_server_msg -> unit Lwt.t
+    val on_return : t -> call_id -> app_client_msg -> unit
   end
 
 module Make_server (P:B) = struct
