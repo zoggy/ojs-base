@@ -26,22 +26,21 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-(** *)
+(** Types of filetree edition. *)
 
-type path = Ojs_path.t [@@deriving yojson]
+(** All paths should relative to root directory. *)
+type path = Ojs_path.t
 
-type mime_type = string [@@deriving yojson]
+type mime_type = string
 
-type file_tree = [
-  | `Dir of string * file_tree list
-  | `File of string * mime_type
-  ] [@@deriving yojson]
+type file_tree =
+    [ `Dir of string * file_tree list | `File of string * mime_type ]
 
 module type B =
   sig
     type server_msg = .. [@@deriving yojson]
     type server_msg +=
-      | SOk
+        SOk
       | SError of string
       | STree of file_tree list
       | SAdd_file of path * mime_type
@@ -50,35 +49,14 @@ module type B =
 
     type client_msg = .. [@@deriving yojson]
     type client_msg +=
-      | Get_tree
-      | Add_file of path * string (* path * (contents in base 64) *)
+        Get_tree
+      | Add_file of path * string
       | Add_dir of path
       | Delete of path
       | Rename of path * path
   end
-
-module Base : B =
-  struct
-    type server_msg = .. [@@deriving yojson]
-    type server_msg +=
-      | SOk
-      | SError of string
-      | STree of file_tree list
-      | SAdd_file of path * mime_type
-      | SAdd_dir of path
-      | SDelete of path
-      [@@deriving yojson]
-
-    type client_msg = .. [@@deriving yojson]
-    type client_msg +=
-      | Get_tree
-      | Add_file of path * string (* path * (contents in base 64) *)
-      | Add_dir of path
-      | Delete of path
-      | Rename of path * path
-      [@@deriving yojson]
-  end
-module Make_base() = Base
+module Base : B
+module Make_base : functor () -> B
 
 module type P =
   sig
@@ -87,25 +65,11 @@ module type P =
 
     val pack_server_msg : string -> server_msg -> app_server_msg
     val unpack_server_msg : app_server_msg -> (string * server_msg) option
-
     val pack_client_msg : string -> client_msg -> app_client_msg
     val unpack_client_msg : app_client_msg -> (string * client_msg) option
   end
 
-module Default_P(App:Ojs_types.App_msg) =
-  struct
-    type app_server_msg = App.app_server_msg = .. [@@deriving yojson]
-    type app_client_msg = App.app_client_msg = .. [@@deriving yojson]
-
-    include (Make_base())
-
-    type app_server_msg += SFiletree of string * server_msg [@@deriving yojson]
-    type app_client_msg += Filetree of string * client_msg [@@deriving yojson]
-
-    let pack_server_msg id msg = SFiletree (id, msg)
-    let unpack_server_msg = function SFiletree (id,msg) -> Some (id,msg) | _ -> None
-
-    let pack_client_msg id msg = Filetree (id, msg)
-    let unpack_client_msg = function Filetree (id,msg) -> Some (id,msg) | _ -> None
-  end
-  
+module Default_P :
+  functor (App : Ojs_types.App_msg) -> P
+     with type app_server_msg = App.app_server_msg
+      and type app_client_msg = App.app_client_msg
