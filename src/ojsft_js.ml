@@ -132,8 +132,92 @@ let expand_buttons ?(start=`Collapsed) base_id subs subs_id =
 
   (span_exp, span_col)
 
+module type S =
+  sig
+    module P : Ojsft_types.P
+    class tree :
+      (P.client_msg -> (P.server_msg -> unit Lwt.t) -> unit Lwt.t) ->
+        (P.client_msg -> unit Lwt.t) ->
+        msg_id:string ->
+        Ojs_js.SMap.key ->
+        object ('a)
+          val mutable filetree : tree_node list
+          val mutable on_deselect : 'a -> Ojsft_types.path -> unit
+          val mutable on_select :
+            'a ->
+              [ `Dir | `File of Ojsft_types.mime_type ] ->
+              Ojsft_types.path -> unit
+          val mutable selected : (Ojs_js.id * Ojsft_types.path) option
+          val mutable show_files : bool
+          method add_dir : Ojsft_types.path -> string -> unit Lwt.t
+          method add_file :
+            [ `Dir | `File ] -> Ojsft_types.path -> File.file Js.t -> unit
+          method build_from_tree : Ojsft_types.file_tree list -> unit
+          method compare_tn : tree_node -> tree_node -> int
+          method delete : Ojsft_types.path -> unit Lwt.t
+          method display_error : string -> unit
+          method handle_add_dir : Ojsft_types.path -> unit
+          method handle_add_file :
+            Ojsft_types.path -> Ojsft_types.mime_type -> unit
+          method handle_delete : Ojsft_types.path -> unit
+          method handle_drag_drop :
+            [ `Dir | `File ] ->
+              Ojsft_types.path -> Dom_html.element Js.t -> unit
+          method handle_message : P.server_msg -> bool Js.t
+          method id : Ojs_js.SMap.key
+          method insert_dir : Ojsft_types.path -> unit
+          method insert_file :
+            Ojsft_types.path -> Ojsft_types.mime_type -> unit
+          method insert_tn :
+            Ojs_js.id ->
+              tree_node -> Dom.node Js.t -> tree_node list -> tree_node list
+          method msg_id : string
+          method on_deselect : 'a -> Ojsft_types.path -> unit
+          method on_select :
+            'a ->
+              [ `Dir | `File of Ojsft_types.mime_type ] ->
+              Ojsft_types.path -> unit
+          method prompt_add_dir : Ojsft_types.path -> unit Lwt.t
+          method prompt_delete : Ojsft_types.path -> unit Lwt.t
+          method set_on_deselect : ('a -> Ojsft_types.path -> unit) -> unit
+          method set_on_select :
+            ('a ->
+             [ `Dir | `File of Ojsft_types.mime_type ] ->
+               Ojsft_types.path -> unit) ->
+              unit
+          method set_onclick :
+            Dom_html.element Js.t ->
+              Ojs_js.SMap.key ->
+              [ `Dir | `File of Ojsft_types.mime_type ] ->
+              Ojsft_types.path -> unit
+          method set_selected :
+            Ojs_js.SMap.key ->
+              [ `Dir | `File of Ojsft_types.mime_type ] ->
+              Ojsft_types.path -> unit
+          method set_show_files : bool -> unit
+          method set_unselected : Ojs_js.SMap.key -> Ojsft_types.path -> unit
+          method simple_call : P.client_msg -> unit Lwt.t
+          method tree_node_by_path : Ojsft_types.path -> tree_node
+          method update_tree : unit Lwt.t
+        end
+
+    class trees :
+      (P.app_client_msg -> (P.app_server_msg -> unit Lwt.t) -> unit Lwt.t) ->
+        (P.app_client_msg -> unit Lwt.t) ->
+        ((P.client_msg -> (P.server_msg -> unit Lwt.t) -> unit Lwt.t) ->
+         (P.client_msg -> unit Lwt.t) -> msg_id:string -> string -> tree) ->
+        object
+          val mutable trees : tree Ojs_js.SMap.t
+          method get_msg_id : Ojs_js.SMap.key -> string
+          method get_tree : Ojs_js.SMap.key -> tree
+          method handle_message : P.app_server_msg -> bool Js.t
+          method setup_filetree : msg_id:string -> Ojs_js.SMap.key -> tree
+        end
+  end
+
 module Make(P:Ojsft_types.P) =
   struct
+    module P = P
     class tree call (send : P.client_msg -> unit Lwt.t) ~msg_id id =
       object(self:'self)
         val mutable selected = (None :  (id * Ojs_path.t) option )
