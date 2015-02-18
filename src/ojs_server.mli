@@ -47,26 +47,7 @@ val handle_messages :
 
 module type P =
   sig
-    type app_server_msg = .. [@@deriving yojson]
-    type app_client_msg = .. [@@deriving yojson]
-
-    type app_server_msg +=
-      | SCall of Ojs_rpc.call_id * app_server_msg
-      | SReturn of Ojs_rpc.call_id * app_server_msg
-
-    type app_client_msg +=
-      | Call of Ojs_rpc.call_id * app_client_msg
-      | Return of Ojs_rpc.call_id * app_client_msg
-
-    val pack_server_call :
-      Ojs_rpc.call_id -> app_server_msg -> app_server_msg
-    val pack_server_return :
-      Ojs_rpc.call_id -> app_server_msg -> app_server_msg
-    val pack_client_call :
-      Ojs_rpc.call_id -> app_client_msg -> app_client_msg
-    val pack_client_return :
-      Ojs_rpc.call_id -> app_client_msg -> app_client_msg
-
+    include Ojs_rpc.B
     val msg_of_wsdata : string -> app_client_msg option
     val wsdata_of_msg : app_server_msg -> string
   end
