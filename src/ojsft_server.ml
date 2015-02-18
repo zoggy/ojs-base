@@ -31,9 +31,68 @@
 open Ojs_server
 open Lwt.Infix
 
+module type S =
+  sig
+    module P : Ojsft_types.P
+    val access_forbidden : Ojs_path.t -> P.server_msg
+    val creation_forbidden : Ojs_path.t -> P.server_msg
+    val deletion_forbidden : Ojs_path.t -> P.server_msg
+    val renaming_forbidden : Ojs_path.t -> Ojs_path.t -> P.server_msg
+    class filetree :
+      (P.server_msg -> (P.client_msg -> unit Lwt.t) -> unit Lwt.t) ->
+        (P.server_msg -> unit Lwt.t) ->
+        id:string ->
+        Ojs_path.t ->
+        object
+          val mutable file_filter : Ojs_path.t -> bool
+          method after_add_file : Ojs_path.t -> unit
+          method after_get_tree :
+            Ojsft_types.file_tree list -> Ojsft_types.file_tree list
+          method before_add_file : Ojs_path.t -> unit
+          method can_add_dir : string -> bool
+          method can_add_file : string -> bool
+          method can_delete : string -> bool
+          method can_rename : string -> string -> bool
+          method handle_add_dir :
+            (P.server_msg -> unit Lwt.t) -> Ojsft_types.path -> unit Lwt.t
+          method handle_add_file :
+            (P.server_msg -> unit Lwt.t) ->
+            Ojsft_types.path -> string -> unit Lwt.t
+          method handle_call :
+            (P.server_msg -> unit Lwt.t) -> P.client_msg -> unit Lwt.t
+          method handle_delete :
+            (P.server_msg -> unit Lwt.t) -> Ojsft_types.path -> unit Lwt.t
+          method handle_message :
+            (P.server_msg -> unit Lwt.t) -> P.client_msg -> unit Lwt.t
+          method handle_rename :
+            (P.server_msg -> unit Lwt.t) ->
+            Ojsft_types.path -> Ojsft_types.path -> unit Lwt.t
+          method id : string
+          method root : Ojs_path.t
+          method set_file_filter : (Ojs_path.t -> bool) -> unit
+        end
+      class filetrees :
+        (P.app_server_msg -> (P.app_client_msg -> unit Lwt.t) -> unit Lwt.t) ->
+        (P.app_server_msg -> unit Lwt.t) ->
+        ((P.server_msg -> (P.client_msg -> unit Lwt.t) -> unit Lwt.t) ->
+         (P.server_msg -> unit Lwt.t) -> id:string -> Ojs_path.t -> filetree) ->
+        object
+          val mutable filetrees : filetree Ojs_server.SMap.t
+          method add_filetree :
+            id:Ojs_server.SMap.key -> Ojs_path.t -> filetree
+          method filetree : Ojs_server.SMap.key -> filetree
+          method handle_call :
+            (P.app_server_msg -> unit Lwt.t) ->
+            P.app_client_msg -> unit Lwt.t
+          method handle_message :
+            (P.app_server_msg -> unit Lwt.t) ->
+            P.app_client_msg -> unit Lwt.t
+        end
+    end
+
 module Make(P:Ojsft_types.P) =
   struct
-
+    module P = P
 let access_forbidden path =
   P.SError (Printf.sprintf "Forbidden access to %S" (Ojs_path.to_string path))
 let creation_forbidden path =
@@ -132,7 +191,7 @@ class filetree
                 if Sys.is_directory file2 then
                   broadcast (P.SAdd_dir path2)
                 else
-                  ( 
+                  (
                    let mime = Magic_mime.lookup file2 in
                    broadcast (P.SAdd_file (path2, mime))
                   )
