@@ -32,6 +32,7 @@ open Ojs_server
 
 module type S = sig
     module P : Ojsed_types.P
+    val access_forbidden : Ojs_path.t -> P.server_msg
     class editor :
       (P.server_msg -> (P.client_msg -> unit Lwt.t) -> unit Lwt.t) ->
         (P.server_msg -> unit Lwt.t) ->
