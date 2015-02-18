@@ -92,7 +92,14 @@ module type P =
     val unpack_client_msg : app_client_msg -> (string * client_msg) option
   end
 
-module Default_P(App:Ojs_types.App_msg) =
+module type Default_P =
+  sig
+    include P
+    type app_server_msg += SFiletree of string * server_msg
+    type app_client_msg += Filetree of string * client_msg
+  end
+
+module Default(App:Ojs_types.App_msg) =
   struct
     type app_server_msg = App.app_server_msg = .. [@@deriving yojson]
     type app_client_msg = App.app_client_msg = .. [@@deriving yojson]

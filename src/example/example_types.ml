@@ -53,8 +53,8 @@ module PList =
     let unpack_client_msg = function Mylist (id, msg) -> Some (id, msg) | _ -> None
   end
 
-module FT = Ojsft_types.Default_P(App_msg)
-module ED = Ojsed_types.Default_P(App_msg)
+module FT = Ojsft_types.Default(App_msg)
+module ED = Ojsed_types.Default(App_msg)
 
 let server_msg_to_yojson = App_msg.app_server_msg_to_yojson
 let server_msg_of_yojson = App_msg.app_server_msg_of_yojson

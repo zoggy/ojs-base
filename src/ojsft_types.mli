@@ -69,14 +69,14 @@ module type P =
     val unpack_client_msg : app_client_msg -> (string * client_msg) option
   end
 
-module Default_P :
-  functor (App : Ojs_types.App_msg) ->
-    sig
-      include P
-        with type app_server_msg = App.app_server_msg
-         and type app_client_msg = App.app_client_msg
+module type Default_P =
+  sig
+    include P
+    type app_server_msg += SFiletree of string * server_msg
+    type app_client_msg += Filetree of string * client_msg
+  end
 
-      type app_server_msg += SFiletree of string * server_msg
-      type app_client_msg += Filetree of string * client_msg
-    end
+module Default : functor (App : Ojs_types.App_msg) -> Default_P
+  with type app_server_msg = App.app_server_msg
+   and type app_client_msg = App.app_client_msg
 

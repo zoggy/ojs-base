@@ -407,13 +407,11 @@ distclean: clean
 	$(OCAMLFIND) ocamldep `ls ojs*.mli ojs_*.ml example/*.ml | grep -v _js.ml`  > .depend
 #-package js_of_ocaml.syntax -syntax camlp4o
 
-ojsft_server.cmo: ojs_path.cmi ojsft_types.cmi
-ojsft_server.cmx: ojs_path.cmi ojs_path.cmx ojsft_types.cmi ojsft_types.cmx
-ojsft_js.cmo: ojs_path.cmi ojsft_types.cmi
+ojsft_js.cmi: ojsft_types.cmi
+ojsft_js.cmo: ojsft_types.cmi ojsft_js.ml
 
-ojsed_server.cmo: ojs_path.cmi ojsed_types.cmi
-ojsed_server.cmx: ojs_path.cmi ojs_path.cmx ojsed_types.cmi ojsed_types.cmx
-ojsed_js.cmo: ojs_path.cmi ojsed_types.cmi
+ojsed_js.cmi: ojsed_types.cmi
+ojsed_js.cmo: ojsed_types.cmi ojsed_js.ml
 
 ojs_tmpl.cm*: templates/*.xml
 
