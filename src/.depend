@@ -8,6 +8,7 @@ example/example_types.cmx : ojsl_types.cmx ojsft_types.cmx ojsed_types.cmx \
     ojs_types.cmx
 ojs_ace.cmo :
 ojs_ace.cmx :
+ojs_js.cmi :
 ojs_misc.cmo : ojs_misc.cmi
 ojs_misc.cmx : ojs_misc.cmi
 ojs_misc.cmi :
@@ -27,9 +28,11 @@ ojs_types.cmo : ojs_types.cmi
 ojs_types.cmx : ojs_types.cmi
 ojs_types.cmi :
 ojsed_files.cmi :
+ojsed_js.cmi : ojsed_types.cmi ojs_path.cmi ojs_js.cmi ojs_ace.cmo
 ojsed_server.cmi : ojsed_types.cmi ojs_server.cmi ojs_path.cmi
 ojsed_types.cmi : ojs_types.cmi ojs_path.cmi
 ojsft_files.cmi : ojs_path.cmi
 ojsft_find.cmi :
+ojsft_js.cmi : ojsft_types.cmi ojs_path.cmi ojs_js.cmi
 ojsft_server.cmi : ojsft_types.cmi ojs_server.cmi ojs_path.cmi
 ojsft_types.cmi : ojs_types.cmi ojs_path.cmi

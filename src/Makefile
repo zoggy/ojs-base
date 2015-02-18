@@ -404,8 +404,8 @@ distclean: clean
 .PHONY: clean depend
 
 .depend depend:
-	$(OCAMLFIND) ocamldep `ls ojs*.mli ojs_*.ml example/*.ml | grep -v _js.ml`  > .depend
-#-package js_of_ocaml.syntax -syntax camlp4o
+	$(OCAMLFIND) ocamldep \
+	`ls ojs*.mli ojs_*.ml example/*.ml | grep -v -E '_js.ml$$' `  > .depend
 
 ojsft_js.cmi: ojsft_types.cmi
 ojsft_js.cmo: ojsft_types.cmi ojsft_js.ml
