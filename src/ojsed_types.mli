@@ -28,7 +28,7 @@
 
 (** Types for editor. *)
 
-(** All paths should relative to root directory. *)
+(** All paths should be relative to root directory. *)
 type path = Ojs_path.t
 
 module type B =
