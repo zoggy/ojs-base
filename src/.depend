@@ -1,51 +1,35 @@
-example/example.cmo : ojsl_server.cmo ojsft_server.cmo ojsed_server.cmo \
+example/example.cmo : ojsl_server.cmo ojsft_server.cmi ojsed_server.cmi \
     ojs_server.cmi ojs_rpc.cmi ojs_path.cmi ojs_misc.cmi
 example/example.cmx : ojsl_server.cmx ojsft_server.cmx ojsed_server.cmx \
     ojs_server.cmx ojs_rpc.cmx ojs_path.cmx ojs_misc.cmx
-example/example_js.cmo : ojsl_js.cmo ojsft_js.cmo ojsed_js.cmo ojs_rpc.cmi \
-    ojs_path.cmi ojs_js.cmo
-example/example_js.cmx : ojsl_js.cmx ojsft_js.cmx ojsed_js.cmx ojs_rpc.cmx \
-    ojs_path.cmx ojs_js.cmx
+example/example_types.cmo : ojsl_types.cmo ojsft_types.cmi ojsed_types.cmi \
+    ojs_types.cmi
+example/example_types.cmx : ojsl_types.cmx ojsft_types.cmx ojsed_types.cmx \
+    ojs_types.cmx
 ojs_ace.cmo :
 ojs_ace.cmx :
-ojs_js.cmo :
-ojs_js.cmx :
 ojs_misc.cmo : ojs_misc.cmi
 ojs_misc.cmx : ojs_misc.cmi
 ojs_misc.cmi :
-ojs_rpc.cmo : ojs_rpc.cmi
-ojs_rpc.cmx : ojs_rpc.cmi
-ojs_rpc.cmi : ojs_types.cmo
+ojs_path.cmo : ojs_misc.cmi ojs_path.cmi
+ojs_path.cmx : ojs_misc.cmx ojs_path.cmi
+ojs_path.cmi :
+ojs_rpc.cmo : ojs_types.cmi ojs_rpc.cmi
+ojs_rpc.cmx : ojs_types.cmx ojs_rpc.cmi
+ojs_rpc.cmi : ojs_types.cmi
 ojs_server.cmo : ojs_rpc.cmi ojs_server.cmi
 ojs_server.cmx : ojs_rpc.cmx ojs_server.cmi
 ojs_server.cmi : ojs_rpc.cmi
 ojs_tmpl.cmo : ojs_tmpl.cmi
 ojs_tmpl.cmx : ojs_tmpl.cmi
 ojs_tmpl.cmi :
-ojsed_files.cmo :
-ojsed_files.cmx :
-ojsed_js.cmo : ojsmsg_js.cmo ojsed_types.cmi ojs_path.cmi ojs_js.cmo \
-    ojs_ace.cmo
-ojsed_js.cmx : ojsmsg_js.cmx ojsed_types.cmx ojs_path.cmx ojs_js.cmx \
-    ojs_ace.cmx
-ojsed_server.cmo : ojsed_types.cmi ojsed_files.cmo ojs_server.cmi \
-    ojs_path.cmi
-ojsed_server.cmx : ojsed_types.cmx ojsed_files.cmx ojs_server.cmx \
-    ojs_path.cmx
-ojsft_files.cmo : ojsft_find.cmi ojs_path.cmi
-ojsft_files.cmx : ojsft_find.cmx ojs_path.cmx
-ojsft_find.cmo : ojsft_find.cmi
-ojsft_find.cmx : ojsft_find.cmi
+ojs_types.cmo : ojs_types.cmi
+ojs_types.cmx : ojs_types.cmi
+ojs_types.cmi :
+ojsed_files.cmi :
+ojsed_server.cmi : ojsed_types.cmi ojs_server.cmi ojs_path.cmi
+ojsed_types.cmi : ojs_types.cmi ojs_path.cmi
+ojsft_files.cmi : ojs_path.cmi
 ojsft_find.cmi :
-ojsft_js.cmo : ojsmsg_js.cmo ojsft_types.cmi ojs_path.cmi ojs_js.cmo
-ojsft_js.cmx : ojsmsg_js.cmx ojsft_types.cmx ojs_path.cmx ojs_js.cmx
-ojsft_server.cmo : ojsft_types.cmi ojsft_files.cmo ojs_server.cmi \
-    ojs_path.cmi ojs_misc.cmi
-ojsft_server.cmx : ojsft_types.cmx ojsft_files.cmx ojs_server.cmx \
-    ojs_path.cmx ojs_misc.cmx
-ojsl_js.cmo : ojsmsg_js.cmo ojsl_types.cmo ojs_js.cmo
-ojsl_js.cmx : ojsmsg_js.cmx ojsl_types.cmx ojs_js.cmx
-ojsl_server.cmo : ojsl_types.cmo ojs_server.cmi
-ojsl_server.cmx : ojsl_types.cmx ojs_server.cmx
-ojsmsg_js.cmo : ojs_js.cmo
-ojsmsg_js.cmx : ojs_js.cmx
+ojsft_server.cmi : ojsft_types.cmi ojs_server.cmi ojs_path.cmi
+ojsft_types.cmi : ojs_types.cmi ojs_path.cmi

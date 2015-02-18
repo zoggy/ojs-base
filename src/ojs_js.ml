@@ -26,6 +26,8 @@
 (*                                                                               *)
 (*********************************************************************************)
 
+(** *)
+
 module SMap = Map.Make(String)
 let (+=) map (key, v) = map := SMap.add key v !map
 let (-=) map key = map := SMap.remove key !map
@@ -46,8 +48,7 @@ let mk_msg_of_wsdata server_msg_of_yojson =
 
 let class_ s = "ojs-"^s
 
-let setup_ws url msg_of_data data_of_msg
-  ~onopen ~onmessage =
+let setup_ws url msg_of_data ~onopen ~onmessage =
     let on_message ws _ event =
       try
       log "message received on ws";
@@ -74,7 +75,7 @@ let setup_ws url msg_of_data data_of_msg
         None
 ;;
 
-let send_msg ws data = ws##send (Js.string data)
+let send_msg (ws : WebSockets.webSocket Js.t) data = ws##send (Js.string data)
 
 let clear_children node =
   let children = node##childNodes in
@@ -128,17 +129,16 @@ let node_unset_class node cl =
 let node_set_class node cl =
   node##classList##add(Js.string cl)
 
-let unset_class span_id cl =
+let unset_class ~id cl =
   try
-    let node = node_by_id span_id in
+    let node = node_by_id id in
     node_unset_class node cl
   with
     Failure msg -> log msg
 
-let set_class span_id cl =
+let set_class ~id cl =
   try
-    let node = node_by_id span_id in
+    let node = node_by_id id in
     node_set_class node cl
   with
     Failure msg -> log msg
-

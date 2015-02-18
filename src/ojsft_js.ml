@@ -119,15 +119,15 @@ let expand_buttons ?(start=`Collapsed) base_id subs subs_id =
   Dom.appendChild span_col t_col;
   Ojs_js.set_onclick span_exp
     (fun e ->
-       Ojs_js.set_class id_exp collapsed_class ;
-       Ojs_js.unset_class id_col collapsed_class ;
-       Ojs_js.unset_class subs_id collapsed_class
+       Ojs_js.set_class ~id: id_exp collapsed_class ;
+       Ojs_js.unset_class ~id: id_col collapsed_class ;
+       Ojs_js.unset_class ~id: subs_id collapsed_class
     );
   Ojs_js.set_onclick span_col
     (fun e ->
-       Ojs_js.set_class id_col collapsed_class ;
-       Ojs_js.unset_class id_exp collapsed_class ;
-       Ojs_js.set_class subs_id collapsed_class
+       Ojs_js.set_class ~id: id_col collapsed_class ;
+       Ojs_js.unset_class ~id: id_exp collapsed_class ;
+       Ojs_js.set_class ~id: subs_id collapsed_class
     );
 
   (span_exp, span_col)
@@ -168,7 +168,7 @@ module Make(P:Ojsft_types.P) =
           (
            try
              let span_id = (SMap.find div_id !tree_nodes).tn_span_id in
-             Ojs_js.unset_class span_id "selected" ;
+             Ojs_js.unset_class ~id: span_id "selected" ;
            with Not_found -> ()
           );
           selected <- None ;
@@ -178,7 +178,7 @@ module Make(P:Ojsft_types.P) =
           (
            try
              let span_id = (SMap.find div_id !tree_nodes).tn_span_id in
-             Ojs_js.set_class span_id "selected" ;
+             Ojs_js.set_class ~id: span_id "selected" ;
            with Not_found -> ()
           );
           selected <- Some (div_id, path) ;
