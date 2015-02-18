@@ -58,8 +58,60 @@ let is_editable_from_mime =
       String.length mime >= len_text &&
       String.sub mime 0 len_text = text
 
+
+module type S =
+  sig
+    module P : Ojsed_types.P
+    class editor :
+      (P.client_msg -> (P.server_msg -> unit Lwt.t) -> unit Lwt.t) ->
+        (P.client_msg -> unit Lwt.t) ->
+        bar_id:string ->
+        msg_id:string ->
+        string ->
+        object
+          val mutable current : session option
+          val mutable sessions : session PMap.t
+          method changed_files : PMap.key list
+          method changed_sessions : session list
+          method display_error : string -> unit
+          method display_filename : session -> unit
+          method display_message : string -> unit
+          method edit_file : ?mime:mime_type -> PMap.key -> unit Lwt.t
+          method get_session : PMap.key -> session option
+          method handle_message : P.server_msg -> bool Js.t
+          method id : string
+          method is_editable_from_mime : mime_type -> bool
+          method load_from_server : session -> unit Lwt.t
+          method msg_id : string
+          method new_session : ?mime:mime_type -> PMap.key -> session
+          method on_changed : session -> unit
+          method reload : unit Lwt.t
+          method reload_file : session -> unit Lwt.t
+          method save : unit Lwt.t
+          method save_changed_files : unit Lwt.t
+          method save_file : session -> unit Lwt.t
+          method simple_call :
+            ?on_ok:(unit -> unit) -> P.client_msg -> unit Lwt.t
+        end
+      class editors :
+        (P.app_client_msg -> (P.app_server_msg -> unit Lwt.t) -> unit Lwt.t) ->
+        (P.app_client_msg -> unit Lwt.t) ->
+        ((P.client_msg -> (P.server_msg -> unit Lwt.t) -> unit Lwt.t) ->
+         (P.client_msg -> unit Lwt.t) ->
+         bar_id:string -> msg_id:string -> string -> editor) ->
+        object
+          val mutable editors : editor Ojs_js.SMap.t
+          method get_editor : Ojs_js.SMap.key -> editor
+          method get_msg_id : Ojs_js.SMap.key -> string
+          method handle_message : P.app_server_msg -> bool Js.t
+          method setup_editor :
+            bar_id:string -> msg_id:string -> Ojs_js.SMap.key -> editor
+        end
+    end
+
 module Make(P:Ojsed_types.P) =
   struct
+    module P = P
     class editor call (send : P.client_msg -> unit Lwt.t)
       ~bar_id ~msg_id ed_id =
     let editor = Ojs_ace.ace##edit (Js.string ed_id) in

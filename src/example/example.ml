@@ -148,8 +148,15 @@ let handle_con root uri (stream, push) =
 
 let server sockaddr = Websocket.establish_server sockaddr handle_con
 
+let sockaddr_of_dns node service =
+  let open Lwt_unix in
+  (getaddrinfo node service [AI_FAMILY(PF_INET); AI_SOCKTYPE(SOCK_STREAM)] >>= function
+  | h::t -> Lwt.return h
+  | []   -> Lwt.fail Not_found)
+  >>= fun ai -> Lwt.return ai.ai_addr
+
 let run_server host port =
-  Lwt_io_ext.sockaddr_of_dns host (string_of_int port) >>= fun sa ->
+  sockaddr_of_dns host (string_of_int port) >>= fun sa ->
     Lwt.return (server sa) >>= fun _ -> wait_forever ()
 
 let _ = Lwt_unix.run (run_server "0.0.0.0" 8080)

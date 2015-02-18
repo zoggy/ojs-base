@@ -95,6 +95,5 @@ let onmessage ws msg =
 
 
 let _ = Ojs_js.setup_ws "ws://localhost:8080"
-  msg_of_wsdata wsdata_of_msg
-  ~onopen ~onmessage
+  msg_of_wsdata ~onopen ~onmessage
 
