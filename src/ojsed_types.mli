@@ -26,34 +26,20 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-(** Types of filetree edition. *)
+(** Types for editor. *)
 
 (** All paths should relative to root directory. *)
 type path = Ojs_path.t
-
-type mime_type = string
-
-type file_tree =
-    [ `Dir of string * file_tree list | `File of string * mime_type ]
 
 module type B =
   sig
     type server_msg = .. [@@deriving yojson]
     type server_msg +=
-        SOk
-      | SError of string
-      | STree of file_tree list
-      | SAdd_file of path * mime_type
-      | SAdd_dir of path
-      | SDelete of path
-
-    type client_msg = .. [@@deriving yojson]
-    type client_msg +=
-        Get_tree
-      | Add_file of path * string
-      | Add_dir of path
-      | Delete of path
-      | Rename of path * path
+        SError of string
+      | SOk of string
+      | SFile_contents of path * string
+    type client_msg = ..  [@@deriving yojson]
+    type client_msg += Get_file_contents of path | Save_file of path * string
   end
 
 module Make_base : functor () -> B
@@ -72,11 +58,11 @@ module type P =
 module Default_P :
   functor (App : Ojs_types.App_msg) ->
     sig
-      include P
-        with type app_server_msg = App.app_server_msg
-         and type app_client_msg = App.app_client_msg
+      include P with
+        type app_server_msg = App.app_server_msg
+        and type app_client_msg = App.app_client_msg
 
-      type app_server_msg += SFiletree of string * server_msg
-      type app_client_msg += Filetree of string * client_msg
-    end
+        type app_server_msg += SEditor of string * server_msg
+        type app_client_msg += Editor of string * client_msg
+   end
 

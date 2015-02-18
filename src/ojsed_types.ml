@@ -26,12 +26,22 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-(** Type for editor. *)
+(** *)
 
-(** All paths should relative to root directory. *)
 type path = Ojs_path.t [@@deriving yojson]
 
-module Base =
+module type B =
+  sig
+    type server_msg = .. [@@deriving yojson]
+    type server_msg +=
+        SError of string
+      | SOk of string
+      | SFile_contents of path * string
+    type client_msg = ..  [@@deriving yojson]
+    type client_msg += Get_file_contents of path | Save_file of path * string
+  end
+
+module Base : B =
   struct
     type server_msg = .. [@@deriving yojson]
     type server_msg +=
@@ -47,14 +57,12 @@ module Base =
       [@@deriving yojson]
   end
 
-module Make_base() = struct include Base end
+module Make_base() = Base
 
 module type P =
   sig
-    type app_server_msg = .. [@@deriving yojson]
-    type app_client_msg = .. [@@deriving yojson]
-
-    include (module type of Base)
+    include Ojs_types.App_msg
+    include B
 
     val pack_server_msg : string -> server_msg -> app_server_msg
     val unpack_server_msg : app_server_msg -> (string * server_msg) option
