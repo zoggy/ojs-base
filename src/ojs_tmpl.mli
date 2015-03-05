@@ -29,12 +29,13 @@
 (** Some templates to create HTML pages. *)
 
 val script_js :
-  ?env:unit Xtmpl.env -> src:string -> ?msg:string -> unit -> Xtmpl.tree list
+  ?env:unit Xtmpl.env -> ?msg:string -> src:string -> unit -> Xtmpl.tree list
 
 val html_page :
   ?env:unit Xtmpl.env ->
-  page_title:string ->
-  ?headers:Xtmpl.tree list -> body:Xtmpl.tree list -> unit -> Xtmpl.tree list
+  body:Xtmpl.tree list ->
+  ?headers:Xtmpl.tree list ->
+  page_title:string -> unit -> Xtmpl.tree list
 
 (** Create a [<link href="<url>" rel="stylesheet" type="text/css"/>] node. *)
 val link_css : string -> Xtmpl.tree
