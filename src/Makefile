@@ -44,7 +44,7 @@ MKDIR=mkdir -p
 
 LIB=ojs-base.cmxa
 LIB_A=$(LIB:.cmxa=.a)
-LIB_CMXS=$(LIB:.cmxs)
+LIB_CMXS=$(LIB:.cmxa=.cmxs)
 LIB_BYTE=$(LIB:.cmxa=.cma)
 
 LIB_CMXFILES= \
