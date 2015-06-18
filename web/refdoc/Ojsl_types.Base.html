@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<ocamldoc with-contents="true">
+<title>Ojs-base : Ojsl_types.Base</title><contents><div class="ocamldoc-page">
+<div class="navbar">&#160;<a class="up" href="Ojsl_types.html" title="Ojsl_types">Up</a>
+&#160;<a class="post" href="Ojsl_types.Make_base.html" title="Ojsl_types.Make_base">Next</a>
+</div>
+<h1>Module <a href="type_Ojsl_types.Base.html">Ojsl_types.Base</a></h1>
+
+<pre><span class="keyword">module</span> Base: <code class="code">sig</code> <a href="Ojsl_types.Base.html">..</a> <code class="code">end</code></pre><hr width="100%"/>
+
+<pre><span id="TYPEserver_msg"><span class="keyword">type</span> <code class="type">'a</code> server_msg</span> = ..</pre>
+
+
+<pre><span class="keyword">module</span> <a href="Ojsl_types.Base.M_server_msg_to_yojson.html">M_server_msg_to_yojson</a>: <code class="code">sig</code> <a href="Ojsl_types.Base.M_server_msg_to_yojson.html">..</a> <code class="code">end</code></pre>
+<pre><span class="keyword">module</span> <a href="Ojsl_types.Base.M_server_msg_of_yojson.html">M_server_msg_of_yojson</a>: <code class="code">sig</code> <a href="Ojsl_types.Base.M_server_msg_of_yojson.html">..</a> <code class="code">end</code></pre>
+<pre><span id="VALserver_msg_to_yojson"><span class="keyword">val</span> server_msg_to_yojson</span> : <code class="type">('a -&gt; Yojson.Safe.json) -&gt; 'a <a href="Ojsl_types.Base.html#TYPEserver_msg">server_msg</a> -&gt; Yojson.Safe.json</code></pre>
+<pre><span id="VALserver_msg_of_yojson"><span class="keyword">val</span> server_msg_of_yojson</span> : <code class="type">(Yojson.Safe.json -&gt; [ `Error of string | `Ok of 'a ]) -&gt;<br/>       Yojson.Safe.json -&gt;<br/>       [ `Error of string | `Ok of 'a <a href="Ojsl_types.Base.html#TYPEserver_msg">server_msg</a> ]</code></pre><pre><code><span class="keyword">type</span> <code class="type">'a</code> <a href="Ojsl_types.Base.html#TYPEserver_msg">server_msg</a> += </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONSOk">SOk</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONSError">SError</span> <span class="keyword">of</span> <code class="type">string</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONSAdd">SAdd</span> <span class="keyword">of</span> <code class="type">'a</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONSDelete">SDelete</span> <span class="keyword">of</span> <code class="type">'a</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONSList">SList</span> <span class="keyword">of</span> <code class="type">'a list</code></code></td>
+
+</tr></table>
+
+
+
+<pre><span id="TYPEclient_msg"><span class="keyword">type</span> <code class="type">'a</code> client_msg</span> = ..</pre>
+
+
+<pre><span class="keyword">module</span> <a href="Ojsl_types.Base.M_client_msg_to_yojson.html">M_client_msg_to_yojson</a>: <code class="code">sig</code> <a href="Ojsl_types.Base.M_client_msg_to_yojson.html">..</a> <code class="code">end</code></pre>
+<pre><span class="keyword">module</span> <a href="Ojsl_types.Base.M_client_msg_of_yojson.html">M_client_msg_of_yojson</a>: <code class="code">sig</code> <a href="Ojsl_types.Base.M_client_msg_of_yojson.html">..</a> <code class="code">end</code></pre>
+<pre><span id="VALclient_msg_to_yojson"><span class="keyword">val</span> client_msg_to_yojson</span> : <code class="type">('a -&gt; Yojson.Safe.json) -&gt; 'a <a href="Ojsl_types.Base.html#TYPEclient_msg">client_msg</a> -&gt; Yojson.Safe.json</code></pre>
+<pre><span id="VALclient_msg_of_yojson"><span class="keyword">val</span> client_msg_of_yojson</span> : <code class="type">(Yojson.Safe.json -&gt; [ `Error of string | `Ok of 'a ]) -&gt;<br/>       Yojson.Safe.json -&gt;<br/>       [ `Error of string | `Ok of 'a <a href="Ojsl_types.Base.html#TYPEclient_msg">client_msg</a> ]</code></pre><pre><code><span class="keyword">type</span> <code class="type">'a</code> <a href="Ojsl_types.Base.html#TYPEclient_msg">client_msg</a> += </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONGet">Get</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONAdd">Add</span> <span class="keyword">of</span> <code class="type">'a</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONDelete">Delete</span> <span class="keyword">of</span> <code class="type">'a</code></code></td>
+
+</tr></table>
+
+
+</div></contents></ocamldoc>

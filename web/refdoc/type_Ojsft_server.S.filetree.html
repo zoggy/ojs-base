@@ -1,0 +1,32 @@
+<ocamldoc with-contents="true"><title>Ojs-base : Ojsft_server.S.filetree</title><contents><div class="ocamldoc-page">
+<code class="code">(<span class="constructor">P</span>.server_msg&#160;<span class="keywordsign">-&gt;</span>&#160;(<span class="constructor">P</span>.client_msg&#160;<span class="keywordsign">-&gt;</span>&#160;unit&#160;<span class="constructor">Lwt</span>.t)&#160;<span class="keywordsign">-&gt;</span>&#160;unit&#160;<span class="constructor">Lwt</span>.t)&#160;<span class="keywordsign">-&gt;</span><br/>
+(<span class="constructor">P</span>.server_msg&#160;<span class="keywordsign">-&gt;</span>&#160;unit&#160;<span class="constructor">Lwt</span>.t)&#160;<span class="keywordsign">-&gt;</span><br/>
+id:string&#160;<span class="keywordsign">-&gt;</span><br/>
+<span class="constructor">Ojs_path</span>.t&#160;<span class="keywordsign">-&gt;</span><br/>
+<span class="keyword">object</span><br/>
+&#160;&#160;<span class="keyword">val</span>&#160;<span class="keyword">mutable</span>&#160;file_filter&#160;:&#160;<span class="constructor">Ojs_path</span>.t&#160;<span class="keywordsign">-&gt;</span>&#160;bool<br/>
+&#160;&#160;<span class="keyword">method</span>&#160;after_add_file&#160;:&#160;<span class="constructor">Ojs_path</span>.t&#160;<span class="keywordsign">-&gt;</span>&#160;unit<br/>
+&#160;&#160;<span class="keyword">method</span>&#160;after_get_tree&#160;:<br/>
+&#160;&#160;&#160;&#160;<span class="constructor">Ojsft_types</span>.file_tree&#160;list&#160;<span class="keywordsign">-&gt;</span>&#160;<span class="constructor">Ojsft_types</span>.file_tree&#160;list<br/>
+&#160;&#160;<span class="keyword">method</span>&#160;before_add_file&#160;:&#160;<span class="constructor">Ojs_path</span>.t&#160;<span class="keywordsign">-&gt;</span>&#160;unit<br/>
+&#160;&#160;<span class="keyword">method</span>&#160;can_add_dir&#160;:&#160;string&#160;<span class="keywordsign">-&gt;</span>&#160;bool<br/>
+&#160;&#160;<span class="keyword">method</span>&#160;can_add_file&#160;:&#160;string&#160;<span class="keywordsign">-&gt;</span>&#160;bool<br/>
+&#160;&#160;<span class="keyword">method</span>&#160;can_delete&#160;:&#160;string&#160;<span class="keywordsign">-&gt;</span>&#160;bool<br/>
+&#160;&#160;<span class="keyword">method</span>&#160;can_rename&#160;:&#160;string&#160;<span class="keywordsign">-&gt;</span>&#160;string&#160;<span class="keywordsign">-&gt;</span>&#160;bool<br/>
+&#160;&#160;<span class="keyword">method</span>&#160;handle_add_dir&#160;:<br/>
+&#160;&#160;&#160;&#160;(<span class="constructor">P</span>.server_msg&#160;<span class="keywordsign">-&gt;</span>&#160;unit&#160;<span class="constructor">Lwt</span>.t)&#160;<span class="keywordsign">-&gt;</span>&#160;<span class="constructor">Ojsft_types</span>.path&#160;<span class="keywordsign">-&gt;</span>&#160;unit&#160;<span class="constructor">Lwt</span>.t<br/>
+&#160;&#160;<span class="keyword">method</span>&#160;handle_add_file&#160;:<br/>
+&#160;&#160;&#160;&#160;(<span class="constructor">P</span>.server_msg&#160;<span class="keywordsign">-&gt;</span>&#160;unit&#160;<span class="constructor">Lwt</span>.t)&#160;<span class="keywordsign">-&gt;</span>&#160;<span class="constructor">Ojsft_types</span>.path&#160;<span class="keywordsign">-&gt;</span>&#160;string&#160;<span class="keywordsign">-&gt;</span>&#160;unit&#160;<span class="constructor">Lwt</span>.t<br/>
+&#160;&#160;<span class="keyword">method</span>&#160;handle_call&#160;:<br/>
+&#160;&#160;&#160;&#160;(<span class="constructor">P</span>.server_msg&#160;<span class="keywordsign">-&gt;</span>&#160;unit&#160;<span class="constructor">Lwt</span>.t)&#160;<span class="keywordsign">-&gt;</span>&#160;<span class="constructor">P</span>.client_msg&#160;<span class="keywordsign">-&gt;</span>&#160;unit&#160;<span class="constructor">Lwt</span>.t<br/>
+&#160;&#160;<span class="keyword">method</span>&#160;handle_delete&#160;:<br/>
+&#160;&#160;&#160;&#160;(<span class="constructor">P</span>.server_msg&#160;<span class="keywordsign">-&gt;</span>&#160;unit&#160;<span class="constructor">Lwt</span>.t)&#160;<span class="keywordsign">-&gt;</span>&#160;<span class="constructor">Ojsft_types</span>.path&#160;<span class="keywordsign">-&gt;</span>&#160;unit&#160;<span class="constructor">Lwt</span>.t<br/>
+&#160;&#160;<span class="keyword">method</span>&#160;handle_message&#160;:<br/>
+&#160;&#160;&#160;&#160;(<span class="constructor">P</span>.server_msg&#160;<span class="keywordsign">-&gt;</span>&#160;unit&#160;<span class="constructor">Lwt</span>.t)&#160;<span class="keywordsign">-&gt;</span>&#160;<span class="constructor">P</span>.client_msg&#160;<span class="keywordsign">-&gt;</span>&#160;unit&#160;<span class="constructor">Lwt</span>.t<br/>
+&#160;&#160;<span class="keyword">method</span>&#160;handle_rename&#160;:<br/>
+&#160;&#160;&#160;&#160;(<span class="constructor">P</span>.server_msg&#160;<span class="keywordsign">-&gt;</span>&#160;unit&#160;<span class="constructor">Lwt</span>.t)&#160;<span class="keywordsign">-&gt;</span><br/>
+&#160;&#160;&#160;&#160;<span class="constructor">Ojsft_types</span>.path&#160;<span class="keywordsign">-&gt;</span>&#160;<span class="constructor">Ojsft_types</span>.path&#160;<span class="keywordsign">-&gt;</span>&#160;unit&#160;<span class="constructor">Lwt</span>.t<br/>
+&#160;&#160;<span class="keyword">method</span>&#160;id&#160;:&#160;string<br/>
+&#160;&#160;<span class="keyword">method</span>&#160;root&#160;:&#160;<span class="constructor">Ojs_path</span>.t<br/>
+&#160;&#160;<span class="keyword">method</span>&#160;set_file_filter&#160;:&#160;(<span class="constructor">Ojs_path</span>.t&#160;<span class="keywordsign">-&gt;</span>&#160;bool)&#160;<span class="keywordsign">-&gt;</span>&#160;unit<br/>
+<span class="keyword">end</span></code></div></contents></ocamldoc>

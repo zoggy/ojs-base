@@ -1,0 +1,19 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<ocamldoc with-contents="true">
+<title>Ojs-base : Ojsed_types.P</title><contents><div class="ocamldoc-page">
+<div class="navbar"><a class="pre" href="Ojsed_types.B.html" title="Ojsed_types.B">Previous</a>
+&#160;<a class="up" href="Ojsed_types.html" title="Ojsed_types">Up</a>
+&#160;<a class="post" href="Ojsed_types.Default_P.html" title="Ojsed_types.Default_P">Next</a>
+</div>
+<h1>Module type <a href="type_Ojsed_types.P.html">Ojsed_types.P</a></h1>
+
+<pre><span class="keyword">module type</span> P = <code class="code">sig</code> <a href="Ojsed_types.P.html">..</a> <code class="code">end</code></pre><hr width="100%"/>
+
+<pre><span class="keyword">include</span> <a href="Ojs_types.App_msg.html">Ojs_types.App_msg</a></pre>
+
+<pre><span class="keyword">include</span> <a href="Ojsed_types.B.html">Ojsed_types.B</a></pre>
+
+<pre><span id="VALpack_server_msg"><span class="keyword">val</span> pack_server_msg</span> : <code class="type">string -&gt; server_msg -&gt; app_server_msg</code></pre>
+<pre><span id="VALunpack_server_msg"><span class="keyword">val</span> unpack_server_msg</span> : <code class="type">app_server_msg -&gt; (string * server_msg) option</code></pre>
+<pre><span id="VALpack_client_msg"><span class="keyword">val</span> pack_client_msg</span> : <code class="type">string -&gt; client_msg -&gt; app_client_msg</code></pre>
+<pre><span id="VALunpack_client_msg"><span class="keyword">val</span> unpack_client_msg</span> : <code class="type">app_client_msg -&gt; (string * client_msg) option</code></pre></div></contents></ocamldoc>

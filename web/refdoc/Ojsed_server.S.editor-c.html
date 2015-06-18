@@ -1,0 +1,18 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<ocamldoc with-contents="true">
+<title>Ojs-base : Ojsed_server.S.editor</title><contents><div class="ocamldoc-page">
+<div class="navbar">&#160;<a class="up" href="Ojsed_server.S.html" title="Ojsed_server.S">Up</a>
+&#160;<a class="post" href="Ojsed_server.S.editors-c.html" title="Ojsed_server.S.editors">Next</a>
+</div>
+<h1>Class <a href="type_Ojsed_server.S.editor.html">Ojsed_server.S.editor</a></h1>
+
+<pre><span name="TYPEeditor"><span class="keyword">class</span> editor</span> : <code class="type">(P.server_msg -&gt; (P.client_msg -&gt; unit Lwt.t) -&gt; unit Lwt.t) -&gt; (P.server_msg -&gt; unit Lwt.t) -&gt; id:string -&gt; <a href="Ojs_path.html#TYPEt">Ojs_path.t</a> -&gt; </code><code class="code">object</code> <a href="Ojsed_server.S.editor-c.html">..</a> <code class="code">end</code></pre><hr width="100%"/>
+
+<pre><span id="METHODcan_read_file"><span class="keyword">method</span> can_read_file</span> : <code class="type">string -&gt; bool</code></pre>
+<pre><span id="METHODcan_write_file"><span class="keyword">method</span> can_write_file</span> : <code class="type">string -&gt; bool</code></pre>
+<pre><span id="METHODhandle_call"><span class="keyword">method</span> handle_call</span> : <code class="type">(P.server_msg -&gt; unit Lwt.t) -&gt; P.client_msg -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODhandle_get_file_contents"><span class="keyword">method</span> handle_get_file_contents</span> : <code class="type">(P.server_msg -&gt; unit Lwt.t) -&gt; <a href="Ojsed_types.html#TYPEpath">Ojsed_types.path</a> -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODhandle_message"><span class="keyword">method</span> handle_message</span> : <code class="type">(P.server_msg -&gt; unit Lwt.t) -&gt; P.client_msg -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODhandle_save_file"><span class="keyword">method</span> handle_save_file</span> : <code class="type">(P.server_msg -&gt; unit Lwt.t) -&gt; <a href="Ojsed_types.html#TYPEpath">Ojsed_types.path</a> -&gt; string -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODid"><span class="keyword">method</span> id</span> : <code class="type">string</code></pre>
+<pre><span id="METHODroot"><span class="keyword">method</span> root</span> : <code class="type"><a href="Ojs_path.html#TYPEt">Ojs_path.t</a></code></pre></div></contents></ocamldoc>

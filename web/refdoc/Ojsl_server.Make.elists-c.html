@@ -1,0 +1,15 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<ocamldoc with-contents="true">
+<title>Ojs-base : Ojsl_server.Make.elists</title><contents><div class="ocamldoc-page">
+<div class="navbar"><a class="pre" href="Ojsl_server.Make.elist-c.html" title="Ojsl_server.Make.elist">Previous</a>
+&#160;<a class="up" href="Ojsl_server.Make.html" title="Ojsl_server.Make">Up</a>
+&#160;</div>
+<h1>Class <a href="type_Ojsl_server.Make.elists.html">Ojsl_server.Make.elists</a></h1>
+
+<pre><span name="TYPEelists"><span class="keyword">class</span> elists</span> : <code class="type">(P.app_server_msg -&gt; (P.app_client_msg -&gt; unit Lwt.t) -&gt; 'a) -&gt; (P.app_server_msg -&gt; 'b) -&gt; ((P.elt P.server_msg -&gt; (P.elt P.client_msg -&gt; unit Lwt.t) -&gt; 'a) -&gt;<br/>       (P.elt P.server_msg -&gt; 'b) -&gt;<br/>       id:Ojs_server.SMap.key -&gt; P.elt list -&gt; P.elt <a href="Ojsl_server.Make.elist-c.html">elist</a>) -&gt; </code><code class="code">object</code> <a href="Ojsl_server.Make.elists-c.html">..</a> <code class="code">end</code></pre><hr width="100%"/>
+
+<pre><span id="ATTlists"><span class="keyword">val</span> <span class="keyword">mutable</span> lists</span> : <code class="type">P.elt <a href="Ojsl_server.Make.elist-c.html">elist</a> Ojs_server.SMap.t</code></pre>
+<pre><span id="METHODlist"><span class="keyword">method</span> list</span> : <code class="type">Ojs_server.SMap.key -&gt; P.elt <a href="Ojsl_server.Make.elist-c.html">elist</a></code></pre>
+<pre><span id="METHODadd_list"><span class="keyword">method</span> add_list</span> : <code class="type">id:Ojs_server.SMap.key -&gt; P.elt list -&gt; P.elt <a href="Ojsl_server.Make.elist-c.html">elist</a></code></pre>
+<pre><span id="METHODhandle_message"><span class="keyword">method</span> handle_message</span> : <code class="type">(P.app_server_msg -&gt; unit Lwt.t) -&gt; P.app_client_msg -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODhandle_call"><span class="keyword">method</span> handle_call</span> : <code class="type">(P.app_server_msg -&gt; unit Lwt.t) -&gt; P.app_client_msg -&gt; unit Lwt.t</code></pre></div></contents></ocamldoc>

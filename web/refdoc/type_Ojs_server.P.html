@@ -1,0 +1,51 @@
+<ocamldoc with-contents="true"><title>Ojs-base : Ojs_server.P</title><contents><div class="ocamldoc-page">
+<code class="code"><span class="keyword">sig</span><br/>
+&#160;&#160;<span class="keyword">type</span>&#160;app_server_msg&#160;=&#160;..<br/>
+&#160;&#160;<span class="keyword">module</span>&#160;<span class="constructor">M_app_server_msg_to_yojson</span>&#160;:<br/>
+&#160;&#160;&#160;&#160;<span class="keyword">sig</span><br/>
+&#160;&#160;&#160;&#160;&#160;&#160;<span class="keyword">type</span>&#160;t_to_yojson&#160;=&#160;{&#160;<span class="keyword">mutable</span>&#160;f&#160;:&#160;app_server_msg&#160;<span class="keywordsign">-&gt;</span>&#160;<span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;&#160;}<br/>
+&#160;&#160;&#160;&#160;&#160;&#160;<span class="keyword">val</span>&#160;f&#160;:&#160;t_to_yojson<br/>
+&#160;&#160;&#160;&#160;<span class="keyword">end</span><br/>
+&#160;&#160;<span class="keyword">val</span>&#160;app_server_msg_to_yojson&#160;:&#160;app_server_msg&#160;<span class="keywordsign">-&gt;</span>&#160;<span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json<br/>
+&#160;&#160;<span class="keyword">module</span>&#160;<span class="constructor">M_app_server_msg_of_yojson</span>&#160;:<br/>
+&#160;&#160;&#160;&#160;<span class="keyword">sig</span><br/>
+&#160;&#160;&#160;&#160;&#160;&#160;<span class="keyword">type</span>&#160;t_of_yojson&#160;=&#160;{<br/>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span class="keyword">mutable</span>&#160;f&#160;:<br/>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json&#160;<span class="keywordsign">-&gt;</span>&#160;[&#160;<span class="keywordsign">`</span><span class="constructor">Error</span>&#160;<span class="keyword">of</span>&#160;string&#160;<span class="keywordsign">|</span>&#160;<span class="keywordsign">`</span><span class="constructor">Ok</span>&#160;<span class="keyword">of</span>&#160;app_server_msg&#160;];<br/>
+&#160;&#160;&#160;&#160;&#160;&#160;}<br/>
+&#160;&#160;&#160;&#160;&#160;&#160;<span class="keyword">val</span>&#160;f&#160;:&#160;t_of_yojson<br/>
+&#160;&#160;&#160;&#160;<span class="keyword">end</span><br/>
+&#160;&#160;<span class="keyword">val</span>&#160;app_server_msg_of_yojson&#160;:<br/>
+&#160;&#160;&#160;&#160;<span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json&#160;<span class="keywordsign">-&gt;</span>&#160;[&#160;<span class="keywordsign">`</span><span class="constructor">Error</span>&#160;<span class="keyword">of</span>&#160;string&#160;<span class="keywordsign">|</span>&#160;<span class="keywordsign">`</span><span class="constructor">Ok</span>&#160;<span class="keyword">of</span>&#160;app_server_msg&#160;]<br/>
+&#160;&#160;<span class="keyword">type</span>&#160;app_client_msg&#160;=&#160;..<br/>
+&#160;&#160;<span class="keyword">module</span>&#160;<span class="constructor">M_app_client_msg_to_yojson</span>&#160;:<br/>
+&#160;&#160;&#160;&#160;<span class="keyword">sig</span><br/>
+&#160;&#160;&#160;&#160;&#160;&#160;<span class="keyword">type</span>&#160;t_to_yojson&#160;=&#160;{&#160;<span class="keyword">mutable</span>&#160;f&#160;:&#160;app_client_msg&#160;<span class="keywordsign">-&gt;</span>&#160;<span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;&#160;}<br/>
+&#160;&#160;&#160;&#160;&#160;&#160;<span class="keyword">val</span>&#160;f&#160;:&#160;t_to_yojson<br/>
+&#160;&#160;&#160;&#160;<span class="keyword">end</span><br/>
+&#160;&#160;<span class="keyword">val</span>&#160;app_client_msg_to_yojson&#160;:&#160;app_client_msg&#160;<span class="keywordsign">-&gt;</span>&#160;<span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json<br/>
+&#160;&#160;<span class="keyword">module</span>&#160;<span class="constructor">M_app_client_msg_of_yojson</span>&#160;:<br/>
+&#160;&#160;&#160;&#160;<span class="keyword">sig</span><br/>
+&#160;&#160;&#160;&#160;&#160;&#160;<span class="keyword">type</span>&#160;t_of_yojson&#160;=&#160;{<br/>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span class="keyword">mutable</span>&#160;f&#160;:<br/>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json&#160;<span class="keywordsign">-&gt;</span>&#160;[&#160;<span class="keywordsign">`</span><span class="constructor">Error</span>&#160;<span class="keyword">of</span>&#160;string&#160;<span class="keywordsign">|</span>&#160;<span class="keywordsign">`</span><span class="constructor">Ok</span>&#160;<span class="keyword">of</span>&#160;app_client_msg&#160;];<br/>
+&#160;&#160;&#160;&#160;&#160;&#160;}<br/>
+&#160;&#160;&#160;&#160;&#160;&#160;<span class="keyword">val</span>&#160;f&#160;:&#160;t_of_yojson<br/>
+&#160;&#160;&#160;&#160;<span class="keyword">end</span><br/>
+&#160;&#160;<span class="keyword">val</span>&#160;app_client_msg_of_yojson&#160;:<br/>
+&#160;&#160;&#160;&#160;<span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json&#160;<span class="keywordsign">-&gt;</span>&#160;[&#160;<span class="keywordsign">`</span><span class="constructor">Error</span>&#160;<span class="keyword">of</span>&#160;string&#160;<span class="keywordsign">|</span>&#160;<span class="keywordsign">`</span><span class="constructor">Ok</span>&#160;<span class="keyword">of</span>&#160;app_client_msg&#160;]<br/>
+&#160;&#160;<span class="keyword">type</span>&#160;app_server_msg&#160;+=<br/>
+&#160;&#160;&#160;&#160;&#160;&#160;<span class="constructor">SCall</span>&#160;<span class="keyword">of</span>&#160;<span class="constructor">Ojs_rpc</span>.call_id&#160;*&#160;app_server_msg<br/>
+&#160;&#160;&#160;&#160;<span class="keywordsign">|</span>&#160;<span class="constructor">SReturn</span>&#160;<span class="keyword">of</span>&#160;<span class="constructor">Ojs_rpc</span>.call_id&#160;*&#160;app_server_msg<br/>
+&#160;&#160;<span class="keyword">type</span>&#160;app_client_msg&#160;+=<br/>
+&#160;&#160;&#160;&#160;&#160;&#160;<span class="constructor">Call</span>&#160;<span class="keyword">of</span>&#160;<span class="constructor">Ojs_rpc</span>.call_id&#160;*&#160;app_client_msg<br/>
+&#160;&#160;&#160;&#160;<span class="keywordsign">|</span>&#160;<span class="constructor">Return</span>&#160;<span class="keyword">of</span>&#160;<span class="constructor">Ojs_rpc</span>.call_id&#160;*&#160;app_client_msg<br/>
+&#160;&#160;<span class="keyword">val</span>&#160;pack_server_call&#160;:&#160;<span class="constructor">Ojs_rpc</span>.call_id&#160;<span class="keywordsign">-&gt;</span>&#160;app_server_msg&#160;<span class="keywordsign">-&gt;</span>&#160;app_server_msg<br/>
+&#160;&#160;<span class="keyword">val</span>&#160;pack_server_return&#160;:<br/>
+&#160;&#160;&#160;&#160;<span class="constructor">Ojs_rpc</span>.call_id&#160;<span class="keywordsign">-&gt;</span>&#160;app_server_msg&#160;<span class="keywordsign">-&gt;</span>&#160;app_server_msg<br/>
+&#160;&#160;<span class="keyword">val</span>&#160;pack_client_call&#160;:&#160;<span class="constructor">Ojs_rpc</span>.call_id&#160;<span class="keywordsign">-&gt;</span>&#160;app_client_msg&#160;<span class="keywordsign">-&gt;</span>&#160;app_client_msg<br/>
+&#160;&#160;<span class="keyword">val</span>&#160;pack_client_return&#160;:<br/>
+&#160;&#160;&#160;&#160;<span class="constructor">Ojs_rpc</span>.call_id&#160;<span class="keywordsign">-&gt;</span>&#160;app_client_msg&#160;<span class="keywordsign">-&gt;</span>&#160;app_client_msg<br/>
+&#160;&#160;<span class="keyword">val</span>&#160;msg_of_wsdata&#160;:&#160;string&#160;<span class="keywordsign">-&gt;</span>&#160;app_client_msg&#160;option<br/>
+&#160;&#160;<span class="keyword">val</span>&#160;wsdata_of_msg&#160;:&#160;app_server_msg&#160;<span class="keywordsign">-&gt;</span>&#160;string<br/>
+<span class="keyword">end</span></code></div></contents></ocamldoc>

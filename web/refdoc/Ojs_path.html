@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<ocamldoc with-contents="true">
+<title>Ojs-base : Ojs_path</title><contents><div class="ocamldoc-page">
+<div class="navbar"><a class="pre" href="Ojs_misc.html" title="Ojs_misc">Previous</a>
+&#160;<a class="up" href="index.html" title="Index">Up</a>
+&#160;<a class="post" href="Ojs_rpc.html" title="Ojs_rpc">Next</a>
+</div>
+<h1>Module <a href="type_Ojs_path.html">Ojs_path</a></h1>
+
+<pre><span class="keyword">module</span> Ojs_path: <code class="code">sig</code> <a href="Ojs_path.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Handling file paths.<br/>
+</div>
+<hr width="100%"/>
+
+<pre><span id="TYPEt"><span class="keyword">type</span> t</span> </pre>
+
+
+<pre><span id="VALto_yojson"><span class="keyword">val</span> to_yojson</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; Yojson.Safe.json</code></pre>
+<pre><span id="VALof_yojson"><span class="keyword">val</span> of_yojson</span> : <code class="type">Yojson.Safe.json -&gt; [ `Error of string | `Ok of <a href="Ojs_path.html#TYPEt">t</a> ]</code></pre>
+<pre><span class="keyword">module</span> <a href="Ojs_path.Map.html">Map</a>: <code class="type">Map.S</code><code class="type">  with type key = t</code></pre>
+<pre><span class="keyword">module</span> <a href="Ojs_path.Set.html">Set</a>: <code class="type">Set.S</code><code class="type">  with type elt = t</code></pre>
+<pre><span id="VALdir_sep"><span class="keyword">val</span> dir_sep</span> : <code class="type">char</code></pre>
+<pre><span id="VALempty"><span class="keyword">val</span> empty</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a></code></pre>
+<pre><span id="VALroot"><span class="keyword">val</span> root</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a></code></pre>
+<pre><span id="VALis_absolute"><span class="keyword">val</span> is_absolute</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; bool</code></pre>
+<pre><span id="VALpath"><span class="keyword">val</span> path</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; string list</code></pre>
+<pre><span id="VALof_string"><span class="keyword">val</span> of_string</span> : <code class="type">string -&gt; <a href="Ojs_path.html#TYPEt">t</a></code></pre>
+<pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; string</code></pre>
+<pre><span id="VALbasename"><span class="keyword">val</span> basename</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; string</code></pre><div class="info ">
+<b>Raises</b> <code>Invalid_argument</code> is the path is empty.<br/>
+</div>
+
+<pre><span id="VALparent"><span class="keyword">val</span> parent</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; <a href="Ojs_path.html#TYPEt">t</a></code></pre>
+<pre><span id="VALappend"><span class="keyword">val</span> append</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; string list -&gt; <a href="Ojs_path.html#TYPEt">t</a></code></pre>
+<pre><span id="VALappend_path"><span class="keyword">val</span> append_path</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; <a href="Ojs_path.html#TYPEt">t</a> -&gt; <a href="Ojs_path.html#TYPEt">t</a></code></pre>
+<pre><span id="VALis_prefix"><span class="keyword">val</span> is_prefix</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; <a href="Ojs_path.html#TYPEt">t</a> -&gt; bool</code></pre>
+<pre><span id="VALnormalize"><span class="keyword">val</span> normalize</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; <a href="Ojs_path.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">normalize path</code> returns <code class="code">path</code> where <code class="code">Filename.parent_dir_name</code>
+  and <code class="code">Filename.current_dir_name</code> have been handled so they don't appear anymore.
+  Note that <code class="code">/..</code> becomes <code class="code">/</code> (i.e. no error in case there are too many separators).<br/>
+</div>
+</div></contents></ocamldoc>
