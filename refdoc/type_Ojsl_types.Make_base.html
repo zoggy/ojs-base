@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>Ojs-base : Ojs-base : Ojsl_types.Make_base</title>
+<link href="https://zoggy.github.io/ojs-base/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="page">
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container">
+
+
+  <div class="nav-collapse">
+    <ul class="nav">
+    <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
+    <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
+
+  </ul>
+  <div class="nav pull-right">  </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<div id="header">
+  
+  
+  
+</div>
+
+
+
+<div class="ocamldoc-page">
+<code class="code"><span class="keyword">functor</span> () <span class="keywordsign">-&gt;</span><br/>
+  <span class="keyword">sig</span><br/>
+    <span class="keyword">type</span> <span class="keywordsign">'</span>a server_msg = <span class="keywordsign">'</span>a <span class="constructor">Base</span>.server_msg = ..<br/>
+    <span class="keyword">module</span> <span class="constructor">M_server_msg_to_yojson</span> = <span class="constructor">Base</span>.<span class="constructor">M_server_msg_to_yojson</span><br/>
+    <span class="keyword">module</span> <span class="constructor">M_server_msg_of_yojson</span> = <span class="constructor">Base</span>.<span class="constructor">M_server_msg_of_yojson</span><br/>
+    <span class="keyword">val</span> server_msg_to_yojson :<br/>
+      (<span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json<br/>
+    <span class="keyword">val</span> server_msg_of_yojson :<br/>
+      (<span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span> [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> <span class="keywordsign">'</span>a ]) <span class="keywordsign">-&gt;</span><br/>
+      <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span> [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> <span class="keywordsign">'</span>a server_msg ]<br/>
+    <span class="keyword">type</span> <span class="keywordsign">'</span>a server_msg +=<br/>
+        <span class="constructor">SOk</span><br/>
+      <span class="keywordsign">|</span> <span class="constructor">SError</span> <span class="keyword">of</span> string<br/>
+      <span class="keywordsign">|</span> <span class="constructor">SAdd</span> <span class="keyword">of</span> <span class="keywordsign">'</span>a<br/>
+      <span class="keywordsign">|</span> <span class="constructor">SDelete</span> <span class="keyword">of</span> <span class="keywordsign">'</span>a<br/>
+      <span class="keywordsign">|</span> <span class="constructor">SList</span> <span class="keyword">of</span> <span class="keywordsign">'</span>a list<br/>
+    <span class="keyword">type</span> <span class="keywordsign">'</span>a client_msg = <span class="keywordsign">'</span>a <span class="constructor">Base</span>.client_msg = ..<br/>
+    <span class="keyword">module</span> <span class="constructor">M_client_msg_to_yojson</span> = <span class="constructor">Base</span>.<span class="constructor">M_client_msg_to_yojson</span><br/>
+    <span class="keyword">module</span> <span class="constructor">M_client_msg_of_yojson</span> = <span class="constructor">Base</span>.<span class="constructor">M_client_msg_of_yojson</span><br/>
+    <span class="keyword">val</span> client_msg_to_yojson :<br/>
+      (<span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json<br/>
+    <span class="keyword">val</span> client_msg_of_yojson :<br/>
+      (<span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span> [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> <span class="keywordsign">'</span>a ]) <span class="keywordsign">-&gt;</span><br/>
+      <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span> [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> <span class="keywordsign">'</span>a client_msg ]<br/>
+    <span class="keyword">type</span> <span class="keywordsign">'</span>a client_msg += <span class="constructor">Get</span> <span class="keywordsign">|</span> <span class="constructor">Add</span> <span class="keyword">of</span> <span class="keywordsign">'</span>a <span class="keywordsign">|</span> <span class="constructor">Delete</span> <span class="keyword">of</span> <span class="keywordsign">'</span>a<br/>
+    <br/>
+  <span class="keyword">end</span></code></div>
+
+
+
+
+
+
+
+
+</div> 
+</body>
+</html>

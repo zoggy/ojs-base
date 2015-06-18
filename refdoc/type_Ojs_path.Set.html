@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>Ojs-base : Ojs-base : Ojs_path.Set</title>
+<link href="https://zoggy.github.io/ojs-base/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="page">
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container">
+
+
+  <div class="nav-collapse">
+    <ul class="nav">
+    <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
+    <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
+
+  </ul>
+  <div class="nav pull-right">  </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<div id="header">
+  
+  
+  
+</div>
+
+
+
+<div class="ocamldoc-page">
+<code class="code"><span class="keyword">sig</span><br/>
+  <span class="keyword">type</span> elt = t<br/>
+  <span class="keyword">type</span> t<br/>
+  <span class="keyword">val</span> empty : t<br/>
+  <span class="keyword">val</span> is_empty : t <span class="keywordsign">-&gt;</span> bool<br/>
+  <span class="keyword">val</span> mem : elt <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> bool<br/>
+  <span class="keyword">val</span> add : elt <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> t<br/>
+  <span class="keyword">val</span> singleton : elt <span class="keywordsign">-&gt;</span> t<br/>
+  <span class="keyword">val</span> remove : elt <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> t<br/>
+  <span class="keyword">val</span> union : t <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> t<br/>
+  <span class="keyword">val</span> inter : t <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> t<br/>
+  <span class="keyword">val</span> diff : t <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> t<br/>
+  <span class="keyword">val</span> compare : t <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> int<br/>
+  <span class="keyword">val</span> equal : t <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> bool<br/>
+  <span class="keyword">val</span> subset : t <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> bool<br/>
+  <span class="keyword">val</span> iter : (elt <span class="keywordsign">-&gt;</span> unit) <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> unit<br/>
+  <span class="keyword">val</span> fold : (elt <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a) <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a<br/>
+  <span class="keyword">val</span> for_all : (elt <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> bool<br/>
+  <span class="keyword">val</span> exists : (elt <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> bool<br/>
+  <span class="keyword">val</span> filter : (elt <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> t<br/>
+  <span class="keyword">val</span> partition : (elt <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> t * t<br/>
+  <span class="keyword">val</span> cardinal : t <span class="keywordsign">-&gt;</span> int<br/>
+  <span class="keyword">val</span> elements : t <span class="keywordsign">-&gt;</span> elt list<br/>
+  <span class="keyword">val</span> min_elt : t <span class="keywordsign">-&gt;</span> elt<br/>
+  <span class="keyword">val</span> max_elt : t <span class="keywordsign">-&gt;</span> elt<br/>
+  <span class="keyword">val</span> choose : t <span class="keywordsign">-&gt;</span> elt<br/>
+  <span class="keyword">val</span> split : elt <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> t * bool * t<br/>
+  <span class="keyword">val</span> find : elt <span class="keywordsign">-&gt;</span> t <span class="keywordsign">-&gt;</span> elt<br/>
+  <span class="keyword">val</span> of_list : elt list <span class="keywordsign">-&gt;</span> t<br/>
+<span class="keyword">end</span></code></div>
+
+
+
+
+
+
+
+
+</div> 
+</body>
+</html>

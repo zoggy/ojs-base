@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>Ojs-base : Ojs-base : Ojsft_server.S.filetree</title>
+<link href="https://zoggy.github.io/ojs-base/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="page">
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container">
+
+
+  <div class="nav-collapse">
+    <ul class="nav">
+    <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
+    <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
+
+  </ul>
+  <div class="nav pull-right">  </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<div id="header">
+  
+  
+  
+</div>
+
+
+
+<div class="ocamldoc-page">
+<div class="navbar"> <a class="up" href="Ojsft_server.S.html" title="Ojsft_server.S">Up</a>
+ <a class="post" href="Ojsft_server.S.filetrees-c.html" title="Ojsft_server.S.filetrees">Next</a>
+</div>
+<h1>Class <a href="type_Ojsft_server.S.filetree.html">Ojsft_server.S.filetree</a></h1>
+
+<pre><span name="TYPEfiletree"><span class="keyword">class</span> filetree</span> : <code class="type">(P.server_msg -&gt; (P.client_msg -&gt; unit Lwt.t) -&gt; unit Lwt.t) -&gt; (P.server_msg -&gt; unit Lwt.t) -&gt; id:string -&gt; <a href="Ojs_path.html#TYPEt">Ojs_path.t</a> -&gt; </code><code class="code">object</code> <a href="Ojsft_server.S.filetree-c.html">..</a> <code class="code">end</code></pre><hr width="100%"/>
+
+<pre><span id="ATTfile_filter"><span class="keyword">val</span> <span class="keyword">mutable</span> file_filter</span> : <code class="type"><a href="Ojs_path.html#TYPEt">Ojs_path.t</a> -&gt; bool</code></pre>
+<pre><span id="METHODafter_add_file"><span class="keyword">method</span> after_add_file</span> : <code class="type"><a href="Ojs_path.html#TYPEt">Ojs_path.t</a> -&gt; unit</code></pre>
+<pre><span id="METHODafter_get_tree"><span class="keyword">method</span> after_get_tree</span> : <code class="type"><a href="Ojsft_types.html#TYPEfile_tree">Ojsft_types.file_tree</a> list -&gt; <a href="Ojsft_types.html#TYPEfile_tree">Ojsft_types.file_tree</a> list</code></pre>
+<pre><span id="METHODbefore_add_file"><span class="keyword">method</span> before_add_file</span> : <code class="type"><a href="Ojs_path.html#TYPEt">Ojs_path.t</a> -&gt; unit</code></pre>
+<pre><span id="METHODcan_add_dir"><span class="keyword">method</span> can_add_dir</span> : <code class="type">string -&gt; bool</code></pre>
+<pre><span id="METHODcan_add_file"><span class="keyword">method</span> can_add_file</span> : <code class="type">string -&gt; bool</code></pre>
+<pre><span id="METHODcan_delete"><span class="keyword">method</span> can_delete</span> : <code class="type">string -&gt; bool</code></pre>
+<pre><span id="METHODcan_rename"><span class="keyword">method</span> can_rename</span> : <code class="type">string -&gt; string -&gt; bool</code></pre>
+<pre><span id="METHODhandle_add_dir"><span class="keyword">method</span> handle_add_dir</span> : <code class="type">(P.server_msg -&gt; unit Lwt.t) -&gt; <a href="Ojsft_types.html#TYPEpath">Ojsft_types.path</a> -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODhandle_add_file"><span class="keyword">method</span> handle_add_file</span> : <code class="type">(P.server_msg -&gt; unit Lwt.t) -&gt; <a href="Ojsft_types.html#TYPEpath">Ojsft_types.path</a> -&gt; string -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODhandle_call"><span class="keyword">method</span> handle_call</span> : <code class="type">(P.server_msg -&gt; unit Lwt.t) -&gt; P.client_msg -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODhandle_delete"><span class="keyword">method</span> handle_delete</span> : <code class="type">(P.server_msg -&gt; unit Lwt.t) -&gt; <a href="Ojsft_types.html#TYPEpath">Ojsft_types.path</a> -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODhandle_message"><span class="keyword">method</span> handle_message</span> : <code class="type">(P.server_msg -&gt; unit Lwt.t) -&gt; P.client_msg -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODhandle_rename"><span class="keyword">method</span> handle_rename</span> : <code class="type">(P.server_msg -&gt; unit Lwt.t) -&gt;<br/>       <a href="Ojsft_types.html#TYPEpath">Ojsft_types.path</a> -&gt; <a href="Ojsft_types.html#TYPEpath">Ojsft_types.path</a> -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODid"><span class="keyword">method</span> id</span> : <code class="type">string</code></pre>
+<pre><span id="METHODroot"><span class="keyword">method</span> root</span> : <code class="type"><a href="Ojs_path.html#TYPEt">Ojs_path.t</a></code></pre>
+<pre><span id="METHODset_file_filter"><span class="keyword">method</span> set_file_filter</span> : <code class="type">(<a href="Ojs_path.html#TYPEt">Ojs_path.t</a> -&gt; bool) -&gt; unit</code></pre></div>
+
+
+
+
+
+
+
+
+</div> 
+</body>
+</html>

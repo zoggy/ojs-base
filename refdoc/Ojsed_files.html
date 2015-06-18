@@ -34,18 +34,33 @@
 
 
 <div class="ocamldoc-page">
-<div class="navbar"><a class="pre" href="Ojs_server.html" title="Ojs_server">Previous</a>
+<div class="navbar"><a class="pre" href="Ojs_ace.html" title="Ojs_ace">Previous</a>
  <a class="up" href="index.html" title="Index">Up</a>
  <a class="post" href="Ojsed_server.html" title="Ojsed_server">Next</a>
 </div>
 <h1>Module <a href="type_Ojsed_files.html">Ojsed_files</a></h1>
 
 <pre><span class="keyword">module</span> Ojsed_files: <code class="code">sig</code> <a href="Ojsed_files.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Utilities for editor, server side<br/>
 </div>
 <hr width="100%"/>
 
-<pre><span id="VALstring_of_file"><span class="keyword">val</span> string_of_file</span> : <code class="type">string -&gt; string</code></pre>
-<pre><span id="VALfile_of_string"><span class="keyword">val</span> file_of_string</span> : <code class="type">file:string -&gt; string -&gt; unit</code></pre></div>
+<pre><span id="VALstring_of_file"><span class="keyword">val</span> string_of_file</span> : <code class="type">string -&gt; string</code></pre><div class="info">
+<code class="code">string_of_file filename</code> returns the content of <code class="code">filename</code>
+   in the form of one string.<br/>
+<b>Author(s):</b> Maxence Guesdon<br/>
+<b>Version:</b> 1.1<br/>
+<b>Raises</b> <code>Sys_error</code> if the file could not be opened.<br/>
+</div>
+
+<pre><span id="VALfile_of_string"><span class="keyword">val</span> file_of_string</span> : <code class="type">file:string -&gt; string -&gt; unit</code></pre><div class="info">
+<code class="code">file_of_string ~file str</code> creates a file named
+   <code class="code">filename</code> whose content is <code class="code">str</code>.<br/>
+<b>Author(s):</b> Fabrice Lefessant<br/>
+<b>Version:</b> 1.1<br/>
+<b>Raises</b> <code>Sys_error</code> if the file could not be opened.<br/>
+</div>
+</div>
 
 
 

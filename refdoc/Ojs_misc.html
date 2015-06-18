@@ -34,20 +34,44 @@
 
 
 <div class="ocamldoc-page">
-<div class="navbar"><a class="pre" href="Ojs_ace.html" title="Ojs_ace">Previous</a>
+<div class="navbar"><a class="pre" href="Ojsl_types.html" title="Ojsl_types">Previous</a>
  <a class="up" href="index.html" title="Index">Up</a>
- <a class="post" href="Ojs_server.html" title="Ojs_server">Next</a>
+ <a class="post" href="Ojs_path.html" title="Ojs_path">Next</a>
 </div>
 <h1>Module <a href="type_Ojs_misc.html">Ojs_misc</a></h1>
 
 <pre><span class="keyword">module</span> Ojs_misc: <code class="code">sig</code> <a href="Ojs_misc.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Utilities.<br/>
 </div>
 <hr width="100%"/>
 
-<pre><span id="VALsplit_string"><span class="keyword">val</span> split_string</span> : <code class="type">?keep_empty:bool -&gt; string -&gt; char list -&gt; string list</code></pre>
-<pre><span id="VALis_prefix"><span class="keyword">val</span> is_prefix</span> : <code class="type">string -&gt; string -&gt; bool</code></pre>
-<pre><span id="VALnormalize_filename"><span class="keyword">val</span> normalize_filename</span> : <code class="type">string -&gt; string</code></pre>
-<pre><span id="VALfilename_extension"><span class="keyword">val</span> filename_extension</span> : <code class="type">string -&gt; string</code></pre></div>
+<pre><span id="VALsplit_string"><span class="keyword">val</span> split_string</span> : <code class="type">?keep_empty:bool -&gt; string -&gt; char list -&gt; string list</code></pre><div class="info">
+Separate the given string according to the given list of characters.<br/>
+<b>Author(s):</b> Maxence Guesdon<br/>
+<b>Version:</b> 1.2<br/>
+</div>
+<div class="param_info"><code class="code">keep_empty</code> : is <code class="code">false</code> by default. If set to <code class="code">true</code>,
+   the empty strings between separators are kept.</div>
+
+<pre><span id="VALis_prefix"><span class="keyword">val</span> is_prefix</span> : <code class="type">string -&gt; string -&gt; bool</code></pre><div class="info">
+<code class="code">is_prefix pattern s</code> returns true if string <code class="code">s</code> begins with <code class="code">pattern</code>.<br/>
+<b>Author(s):</b> Maxence Guesdon<br/>
+<b>Version:</b> 1.0<br/>
+</div>
+
+<pre><span id="VALfile_of_string"><span class="keyword">val</span> file_of_string</span> : <code class="type">file:string -&gt; string -&gt; unit</code></pre><div class="info">
+<code class="code">file_of_string ~file str</code> creates a file named
+   <code class="code">filename</code> whose content is <code class="code">str</code>.<br/>
+<b>Author(s):</b> Fabrice Lefessant<br/>
+<b>Version:</b> 1.1<br/>
+<b>Raises</b> <code>Sys_error</code> if the file could not be opened.<br/>
+</div>
+
+<pre><span id="VALfilename_extension"><span class="keyword">val</span> filename_extension</span> : <code class="type">string -&gt; string</code></pre><div class="info">
+<code class="code">filename_extension fname</code> returns extension of <code class="code">fname</code> (i.e. the string after
+  the last dot), or an empty string if there is no dot.<br/>
+</div>
+</div>
 
 
 

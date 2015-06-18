@@ -34,7 +34,13 @@
 
 
 <div class="ocamldoc-page">
-<code class="code"><span class="keyword">sig</span>  <span class="keyword">end</span></code></div>
+<code class="code"><span class="keyword">sig</span><br/>
+  <span class="keyword">val</span> is_dir : string <span class="keywordsign">-&gt;</span> bool<br/>
+  <span class="keyword">val</span> file_trees_of_dir :<br/>
+    ?filepred:(<span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span><br/>
+    <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span><br/>
+    ([&gt; <span class="keywordsign">`</span><span class="constructor">Dir</span> <span class="keyword">of</span> string * <span class="keywordsign">'</span>a <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">File</span> <span class="keyword">of</span> string * string ] list <span class="keyword">as</span> <span class="keywordsign">'</span>a)<br/>
+<span class="keyword">end</span></code></div>
 
 
 

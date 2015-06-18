@@ -41,12 +41,12 @@
 <h1>Module <a href="type_Ojsft_files.html">Ojsft_files</a></h1>
 
 <pre><span class="keyword">module</span> Ojsft_files: <code class="code">sig</code> <a href="Ojsft_files.html">..</a> <code class="code">end</code></pre><div class="info module top">
+File utilities for filetree, server side<br/>
 </div>
 <hr width="100%"/>
 
-<pre><span class="keyword">module</span> <a href="Ojsft_files.Find.html">Find</a>: <code class="type"><a href="Ojsft_find.html">Ojsft_find</a></code></pre>
 <pre><span id="VALis_dir"><span class="keyword">val</span> is_dir</span> : <code class="type">string -&gt; bool</code></pre>
-<pre><span id="VALfile_trees_of_dir"><span class="keyword">val</span> file_trees_of_dir</span> : <code class="type">?filepred:(string -&gt; bool) -&gt;<br/>       String.t -&gt; ([&gt; `Dir of string * 'a | `File of string ] list as 'a)</code></pre></div>
+<pre><span id="VALfile_trees_of_dir"><span class="keyword">val</span> file_trees_of_dir</span> : <code class="type">?filepred:(<a href="Ojs_path.html#TYPEt">Ojs_path.t</a> -&gt; bool) -&gt;<br/>       <a href="Ojs_path.html#TYPEt">Ojs_path.t</a> -&gt;<br/>       ([&gt; `Dir of string * 'a | `File of string * string ] list as 'a)</code></pre></div>
 
 
 

@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>Ojs-base : Ojs-base : Ojs_tmpl</title>
+<link href="https://zoggy.github.io/ojs-base/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="page">
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container">
+
+
+  <div class="nav-collapse">
+    <ul class="nav">
+    <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
+    <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
+
+  </ul>
+  <div class="nav pull-right">  </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<div id="header">
+  
+  
+  
+</div>
+
+
+
+<div class="ocamldoc-page">
+<div class="navbar"><a class="pre" href="Ojs_server.html" title="Ojs_server">Previous</a>
+ <a class="up" href="index.html" title="Index">Up</a>
+ <a class="post" href="Ojs_types.html" title="Ojs_types">Next</a>
+</div>
+<h1>Module <a href="type_Ojs_tmpl.html">Ojs_tmpl</a></h1>
+
+<pre><span class="keyword">module</span> Ojs_tmpl: <code class="code">sig</code> <a href="Ojs_tmpl.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Some templates to create HTML pages.<br/>
+</div>
+<hr width="100%"/>
+
+<pre><span id="VALscript_js"><span class="keyword">val</span> script_js</span> : <code class="type">?env:unit Xtmpl.env -&gt; ?msg:string -&gt; src:string -&gt; unit -&gt; Xtmpl.tree list</code></pre>
+<pre><span id="VALhtml_page"><span class="keyword">val</span> html_page</span> : <code class="type">?env:unit Xtmpl.env -&gt;<br/>       body:Xtmpl.tree list -&gt;<br/>       ?headers:Xtmpl.tree list -&gt; page_title:string -&gt; unit -&gt; Xtmpl.tree list</code></pre>
+<pre><span id="VALlink_css"><span class="keyword">val</span> link_css</span> : <code class="type">string -&gt; Xtmpl.tree</code></pre><div class="info">
+Create a <code class="code">&lt;link href=&quot;&lt;url&gt;&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/&gt;</code> node.<br/>
+</div>
+</div>
+
+
+
+
+
+
+
+
+</div> 
+</body>
+</html>

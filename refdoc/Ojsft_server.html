@@ -41,15 +41,16 @@
 <h1>Module <a href="type_Ojsft_server.html">Ojsft_server</a></h1>
 
 <pre><span class="keyword">module</span> Ojsft_server: <code class="code">sig</code> <a href="Ojsft_server.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Server side of filetree<br/>
 </div>
 <hr width="100%"/>
 
-<pre><span id="VALwsdata_of_msg"><span class="keyword">val</span> wsdata_of_msg</span> : <code class="type">[&lt; `Filetree_msg of<br/>            string *<br/>            [&lt; `Add_dir of string<br/>             | `Add_file of string<br/>             | `Del_dir of string<br/>             | `Del_file of string<br/>             | `Error of string<br/>             | `Rename of string * string<br/>             | `Tree of ([&lt; `Dir of string * 'a list | `File of string ] as 'a) list ] ] -&gt;<br/>       string</code></pre>
-<pre><span id="VALmsg_of_wsdata"><span class="keyword">val</span> msg_of_wsdata</span> : <code class="type">string -&gt;<br/>       [&gt; `Filetree_msg of<br/>            string *<br/>            [&gt; `Add_dir of string<br/>             | `Add_file of string * string<br/>             | `Del_dir of string<br/>             | `Del_file of string<br/>             | `Get_tree<br/>             | `Rename of string * string ] ]<br/>       option</code></pre>
-<pre><span id="VALsend_msg"><span class="keyword">val</span> send_msg</span> : <code class="type">([&gt; `Filetree_msg of 'a * 'b ] -&gt; 'c) -&gt; 'a -&gt; 'b -&gt; 'c</code></pre>
-<pre><span id="VALhandle_client_msg"><span class="keyword">val</span> handle_client_msg</span> : <code class="type">?filepred:(string -&gt; bool) -&gt;<br/>       String.t -&gt;<br/>       'a -&gt;<br/>       [&gt; `Get_tree ] -&gt;<br/>       'a * [&gt; `Tree of [&gt; `Dir of string * 'b | `File of string ] list as 'b ] list</code></pre>
-<pre><span id="VALsend_messages"><span class="keyword">val</span> send_messages</span> : <code class="type">([&gt; `Filetree_msg of 'a * 'b ] -&gt; unit Lwt.t) -&gt; 'a * 'b list -&gt; unit Lwt.t</code></pre>
-<pre><span id="VALhandle_message"><span class="keyword">val</span> handle_message</span> : <code class="type">?filepred:(string -&gt; bool) -&gt;<br/>       String.t -&gt;<br/>       ([&gt; `Filetree_msg of<br/>             'a *<br/>             [&gt; `Error of string<br/>              | `Tree of [&gt; `Dir of string * 'b | `File of string ] list as 'b ] ] -&gt;<br/>        unit Lwt.t) -&gt;<br/>       [&lt; `Filetree_msg of 'a * [&gt; `Get_tree ] ] -&gt; unit Lwt.t</code></pre></div>
+<pre><span class="keyword">module type</span> <a href="Ojsft_server.S.html">S</a> = <code class="code">sig</code> <a href="Ojsft_server.S.html">..</a> <code class="code">end</code></pre>
+<pre><span class="keyword">module</span> <a href="Ojsft_server.Make.html">Make</a>: <div class="sig_block"><code class="code">functor (</code><code class="code">P</code><code class="code"> : </code><code class="type"><a href="Ojsft_types.P.html">Ojsft_types.P</a></code><code class="code">) -&gt; </code><code class="type"><a href="Ojsft_server.S.html">S</a></code><code class="type"> 
+  with type P.server_msg = P.server_msg
+   and type P.client_msg = P.client_msg
+   and type P.app_server_msg = P.app_server_msg
+   and type P.app_client_msg = P.app_client_msg</code></div></pre></div>
 
 
 

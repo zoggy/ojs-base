@@ -41,28 +41,23 @@
 <h1>Module <a href="type_Ojsed_types.html">Ojsed_types</a></h1>
 
 <pre><span class="keyword">module</span> Ojsed_types: <code class="code">sig</code> <a href="Ojsed_types.html">..</a> <code class="code">end</code></pre><div class="info module top">
-Type for editor.<br/>
+Types for editor.<br/>
 </div>
 <hr width="100%"/>
 
-<pre><span id="TYPEpath"><span class="keyword">type</span> path</span> = <code class="type">string</code> </pre>
+<pre><span id="TYPEpath"><span class="keyword">type</span> path</span> = <code class="type"><a href="Ojs_path.html#TYPEt">Ojs_path.t</a></code> </pre>
 <div class="info">
-All paths should relative to root directory.<br/>
+All paths should be relative to root directory.<br/>
 </div>
 
 
-<pre><span id="VALpath_to_yojson"><span class="keyword">val</span> path_to_yojson</span> : <code class="type">string -&gt; Yojson.Safe.json</code></pre>
-<pre><span id="VALpath_of_yojson"><span class="keyword">val</span> path_of_yojson</span> : <code class="type">Yojson.Safe.json -&gt; [&gt; `Error of string | `Ok of string ]</code></pre>
-<pre><span id="TYPEserver_msg"><span class="keyword">type</span> server_msg</span> = <code class="type">[ `Editor_msg of<br/>           string *<br/>           [ `Error of string<br/>           | `File_contents of <a href="Ojsed_types.html#TYPEpath">path</a> * string<br/>           | `Ok of string ] ]</code> </pre>
-
-
-<pre><span id="VALserver_msg_to_yojson"><span class="keyword">val</span> server_msg_to_yojson</span> : <code class="type">[&lt; `Editor_msg of<br/>            string *<br/>            [&lt; `Error of string | `File_contents of string * string | `Ok of string ] ] -&gt;<br/>       Yojson.Safe.json</code></pre>
-<pre><span id="VALserver_msg_of_yojson"><span class="keyword">val</span> server_msg_of_yojson</span> : <code class="type">Yojson.Safe.json -&gt;<br/>       [&gt; `Error of string<br/>        | `Ok of<br/>            [&gt; `Editor_msg of<br/>                 string *<br/>                 [&gt; `Error of string<br/>                  | `File_contents of string * string<br/>                  | `Ok of string ] ] ]</code></pre>
-<pre><span id="TYPEclient_msg"><span class="keyword">type</span> client_msg</span> = <code class="type">[ `Editor_msg of<br/>           string *<br/>           [ `Get_file_contents of <a href="Ojsed_types.html#TYPEpath">path</a><br/>           | `Save_file of <a href="Ojsed_types.html#TYPEpath">path</a> * string ] ]</code> </pre>
-
-
-<pre><span id="VALclient_msg_to_yojson"><span class="keyword">val</span> client_msg_to_yojson</span> : <code class="type">[&lt; `Editor_msg of<br/>            string *<br/>            [&lt; `Get_file_contents of string | `Save_file of string * string ] ] -&gt;<br/>       Yojson.Safe.json</code></pre>
-<pre><span id="VALclient_msg_of_yojson"><span class="keyword">val</span> client_msg_of_yojson</span> : <code class="type">Yojson.Safe.json -&gt;<br/>       [&gt; `Error of string<br/>        | `Ok of<br/>            [&gt; `Editor_msg of<br/>                 string *<br/>                 [&gt; `Get_file_contents of string | `Save_file of string * string ] ] ]</code></pre></div>
+<pre><span class="keyword">module type</span> <a href="Ojsed_types.B.html">B</a> = <code class="code">sig</code> <a href="Ojsed_types.B.html">..</a> <code class="code">end</code></pre>
+<pre><span class="keyword">module</span> <a href="Ojsed_types.Make_base.html">Make_base</a>: <div class="sig_block"><code class="code">functor (</code><code class="code">*</code><code class="code"> : </code><code class="code">sig</code><div class="sig_block"></div><code class="code">end</code><code class="code">) -&gt; </code><code class="type"><a href="Ojsed_types.B.html">B</a></code><code class="type"> </code></div></pre>
+<pre><span class="keyword">module type</span> <a href="Ojsed_types.P.html">P</a> = <code class="code">sig</code> <a href="Ojsed_types.P.html">..</a> <code class="code">end</code></pre>
+<pre><span class="keyword">module type</span> <a href="Ojsed_types.Default_P.html">Default_P</a> = <code class="code">sig</code> <a href="Ojsed_types.Default_P.html">..</a> <code class="code">end</code></pre>
+<pre><span class="keyword">module</span> <a href="Ojsed_types.Default.html">Default</a>: <div class="sig_block"><code class="code">functor (</code><code class="code">App</code><code class="code"> : </code><code class="type"><a href="Ojs_types.App_msg.html">Ojs_types.App_msg</a></code><code class="code">) -&gt; </code><code class="type"><a href="Ojsed_types.Default_P.html">Default_P</a></code><code class="type"> 
+  with type app_server_msg = App.app_server_msg
+   and type app_client_msg = App.app_client_msg</code></div></pre></div>
 
 
 

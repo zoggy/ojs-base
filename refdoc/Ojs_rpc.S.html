@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>Ojs-base : Ojs-base : Ojs_rpc.S</title>
+<link href="https://zoggy.github.io/ojs-base/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="page">
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container">
+
+
+  <div class="nav-collapse">
+    <ul class="nav">
+    <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
+    <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
+
+  </ul>
+  <div class="nav pull-right">  </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<div id="header">
+  
+  
+  
+</div>
+
+
+
+<div class="ocamldoc-page">
+<div class="navbar"><a class="pre" href="Ojs_rpc.B.html" title="Ojs_rpc.B">Previous</a>
+ <a class="up" href="Ojs_rpc.html" title="Ojs_rpc">Up</a>
+ </div>
+<h1>Module type <a href="type_Ojs_rpc.S.html">Ojs_rpc.S</a></h1>
+
+<pre><span class="keyword">module type</span> S = <code class="code">sig</code> <a href="Ojs_rpc.S.html">..</a> <code class="code">end</code></pre><hr width="100%"/>
+
+<pre><span id="TYPEapp_server_msg"><span class="keyword">type</span> app_server_msg</span> </pre>
+
+
+<pre><span id="TYPEapp_client_msg"><span class="keyword">type</span> app_client_msg</span> </pre>
+
+
+<pre><span id="TYPEt"><span class="keyword">type</span> t</span> </pre>
+
+
+<pre><span id="VALrpc_handler"><span class="keyword">val</span> rpc_handler</span> : <code class="type">(<a href="Ojs_rpc.S.html#TYPEapp_server_msg">app_server_msg</a> -&gt; unit Lwt.t) -&gt; <a href="Ojs_rpc.S.html#TYPEt">t</a></code></pre>
+<pre><span id="VALcall"><span class="keyword">val</span> call</span> : <code class="type"><a href="Ojs_rpc.S.html#TYPEt">t</a> -&gt;<br/>       <a href="Ojs_rpc.S.html#TYPEapp_server_msg">app_server_msg</a> -&gt;<br/>       (<a href="Ojs_rpc.S.html#TYPEapp_client_msg">app_client_msg</a> -&gt; 'a Lwt.t) -&gt; 'a Lwt.t</code></pre>
+<pre><span id="VALreturn"><span class="keyword">val</span> return</span> : <code class="type"><a href="Ojs_rpc.S.html#TYPEt">t</a> -&gt; <a href="Ojs_rpc.html#TYPEcall_id">Ojs_rpc.call_id</a> -&gt; <a href="Ojs_rpc.S.html#TYPEapp_server_msg">app_server_msg</a> -&gt; unit Lwt.t</code></pre>
+<pre><span id="VALon_return"><span class="keyword">val</span> on_return</span> : <code class="type"><a href="Ojs_rpc.S.html#TYPEt">t</a> -&gt; <a href="Ojs_rpc.html#TYPEcall_id">Ojs_rpc.call_id</a> -&gt; <a href="Ojs_rpc.S.html#TYPEapp_client_msg">app_client_msg</a> -&gt; unit</code></pre></div>
+
+
+
+
+
+
+
+
+</div> 
+</body>
+</html>

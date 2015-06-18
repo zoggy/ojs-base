@@ -36,7 +36,7 @@
 <div class="ocamldoc-page">
 <div class="navbar"><a class="pre" href="Ojsft_server.html" title="Ojsft_server">Previous</a>
  <a class="up" href="index.html" title="Index">Up</a>
- <a class="post" href="Ojs_js.html" title="Ojs_js">Next</a>
+ <a class="post" href="Ojsl_server.html" title="Ojsl_server">Next</a>
 </div>
 <h1>Module <a href="type_Ojsft_types.html">Ojsft_types</a></h1>
 
@@ -45,29 +45,25 @@ Types of filetree edition.<br/>
 </div>
 <hr width="100%"/>
 
-<pre><span id="TYPEpath"><span class="keyword">type</span> path</span> = <code class="type">string</code> </pre>
+<pre><span id="TYPEpath"><span class="keyword">type</span> path</span> = <code class="type"><a href="Ojs_path.html#TYPEt">Ojs_path.t</a></code> </pre>
 <div class="info">
-All paths should relative to root directory.<br/>
+All paths should be relative to root directory.<br/>
 </div>
 
 
-<pre><span id="VALpath_to_yojson"><span class="keyword">val</span> path_to_yojson</span> : <code class="type">string -&gt; Yojson.Safe.json</code></pre>
-<pre><span id="VALpath_of_yojson"><span class="keyword">val</span> path_of_yojson</span> : <code class="type">Yojson.Safe.json -&gt; [&gt; `Error of string | `Ok of string ]</code></pre>
-<pre><span id="TYPEfile_tree"><span class="keyword">type</span> file_tree</span> = <code class="type">[ `Dir of <a href="Ojsft_types.html#TYPEpath">path</a> * <a href="Ojsft_types.html#TYPEfile_tree">file_tree</a> list<br/>       | `File of <a href="Ojsft_types.html#TYPEpath">path</a> ]</code> </pre>
+<pre><span id="TYPEmime_type"><span class="keyword">type</span> mime_type</span> = <code class="type">string</code> </pre>
 
 
-<pre><span id="VALfile_tree_to_yojson"><span class="keyword">val</span> file_tree_to_yojson</span> : <code class="type">([&lt; `Dir of string * 'a list | `File of string ] as 'a) -&gt; Yojson.Safe.json</code></pre>
-<pre><span id="VALfile_tree_of_yojson"><span class="keyword">val</span> file_tree_of_yojson</span> : <code class="type">Yojson.Safe.json -&gt;<br/>       [ `Error of string<br/>       | `Ok of [&gt; `Dir of string * 'a list | `File of string ] as 'a ]</code></pre>
-<pre><span id="TYPEserver_msg"><span class="keyword">type</span> server_msg</span> = <code class="type">[ `Filetree_msg of<br/>           string *<br/>           [ `Add_dir of <a href="Ojsft_types.html#TYPEpath">path</a><br/>           | `Add_file of <a href="Ojsft_types.html#TYPEpath">path</a><br/>           | `Del_dir of <a href="Ojsft_types.html#TYPEpath">path</a><br/>           | `Del_file of <a href="Ojsft_types.html#TYPEpath">path</a><br/>           | `Error of string<br/>           | `Rename of <a href="Ojsft_types.html#TYPEpath">path</a> * <a href="Ojsft_types.html#TYPEpath">path</a><br/>           | `Tree of <a href="Ojsft_types.html#TYPEfile_tree">file_tree</a> list ] ]</code> </pre>
+<pre><span id="TYPEfile_tree"><span class="keyword">type</span> file_tree</span> = <code class="type">file_tree</code> </pre>
 
 
-<pre><span id="VALserver_msg_to_yojson"><span class="keyword">val</span> server_msg_to_yojson</span> : <code class="type">[&lt; `Filetree_msg of<br/>            string *<br/>            [&lt; `Add_dir of string<br/>             | `Add_file of string<br/>             | `Del_dir of string<br/>             | `Del_file of string<br/>             | `Error of string<br/>             | `Rename of string * string<br/>             | `Tree of ([&lt; `Dir of string * 'a list | `File of string ] as 'a) list ] ] -&gt;<br/>       Yojson.Safe.json</code></pre>
-<pre><span id="VALserver_msg_of_yojson"><span class="keyword">val</span> server_msg_of_yojson</span> : <code class="type">Yojson.Safe.json -&gt;<br/>       [&gt; `Error of string<br/>        | `Ok of<br/>            [&gt; `Filetree_msg of<br/>                 string *<br/>                 [&gt; `Add_dir of string<br/>                  | `Add_file of string<br/>                  | `Del_dir of string<br/>                  | `Del_file of string<br/>                  | `Error of string<br/>                  | `Rename of string * string<br/>                  | `Tree of<br/>                      ([&gt; `Dir of string * 'a list | `File of string ] as 'a) list ] ] ]</code></pre>
-<pre><span id="TYPEclient_msg"><span class="keyword">type</span> client_msg</span> = <code class="type">[ `Filetree_msg of<br/>           string *<br/>           [ `Add_dir of <a href="Ojsft_types.html#TYPEpath">path</a><br/>           | `Add_file of <a href="Ojsft_types.html#TYPEpath">path</a> * string<br/>           | `Del_dir of <a href="Ojsft_types.html#TYPEpath">path</a><br/>           | `Del_file of <a href="Ojsft_types.html#TYPEpath">path</a><br/>           | `Get_tree<br/>           | `Rename of <a href="Ojsft_types.html#TYPEpath">path</a> * <a href="Ojsft_types.html#TYPEpath">path</a> ] ]</code> </pre>
-
-
-<pre><span id="VALclient_msg_to_yojson"><span class="keyword">val</span> client_msg_to_yojson</span> : <code class="type">[&lt; `Filetree_msg of<br/>            string *<br/>            [&lt; `Add_dir of string<br/>             | `Add_file of string * string<br/>             | `Del_dir of string<br/>             | `Del_file of string<br/>             | `Get_tree<br/>             | `Rename of string * string ] ] -&gt;<br/>       Yojson.Safe.json</code></pre>
-<pre><span id="VALclient_msg_of_yojson"><span class="keyword">val</span> client_msg_of_yojson</span> : <code class="type">Yojson.Safe.json -&gt;<br/>       [&gt; `Error of string<br/>        | `Ok of<br/>            [&gt; `Filetree_msg of<br/>                 string *<br/>                 [&gt; `Add_dir of string<br/>                  | `Add_file of string * string<br/>                  | `Del_dir of string<br/>                  | `Del_file of string<br/>                  | `Get_tree<br/>                  | `Rename of string * string ] ] ]</code></pre></div>
+<pre><span class="keyword">module type</span> <a href="Ojsft_types.B.html">B</a> = <code class="code">sig</code> <a href="Ojsft_types.B.html">..</a> <code class="code">end</code></pre>
+<pre><span class="keyword">module</span> <a href="Ojsft_types.Make_base.html">Make_base</a>: <div class="sig_block"><code class="code">functor (</code><code class="code">*</code><code class="code"> : </code><code class="code">sig</code><div class="sig_block"></div><code class="code">end</code><code class="code">) -&gt; </code><code class="type"><a href="Ojsft_types.B.html">B</a></code><code class="type"> </code></div></pre>
+<pre><span class="keyword">module type</span> <a href="Ojsft_types.P.html">P</a> = <code class="code">sig</code> <a href="Ojsft_types.P.html">..</a> <code class="code">end</code></pre>
+<pre><span class="keyword">module type</span> <a href="Ojsft_types.Default_P.html">Default_P</a> = <code class="code">sig</code> <a href="Ojsft_types.Default_P.html">..</a> <code class="code">end</code></pre>
+<pre><span class="keyword">module</span> <a href="Ojsft_types.Default.html">Default</a>: <div class="sig_block"><code class="code">functor (</code><code class="code">App</code><code class="code"> : </code><code class="type"><a href="Ojs_types.App_msg.html">Ojs_types.App_msg</a></code><code class="code">) -&gt; </code><code class="type"><a href="Ojsft_types.Default_P.html">Default_P</a></code><code class="type"> 
+  with type app_server_msg = App.app_server_msg
+   and type app_client_msg = App.app_client_msg</code></div></pre></div>
 
 
 

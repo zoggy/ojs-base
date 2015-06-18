@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>Ojs-base : Ojs-base : Ojsed_server.S.editors</title>
+<link href="https://zoggy.github.io/ojs-base/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="page">
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container">
+
+
+  <div class="nav-collapse">
+    <ul class="nav">
+    <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
+    <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
+
+  </ul>
+  <div class="nav pull-right">  </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<div id="header">
+  
+  
+  
+</div>
+
+
+
+<div class="ocamldoc-page">
+<div class="navbar"><a class="pre" href="Ojsed_server.S.editor-c.html" title="Ojsed_server.S.editor">Previous</a>
+ <a class="up" href="Ojsed_server.S.html" title="Ojsed_server.S">Up</a>
+ </div>
+<h1>Class <a href="type_Ojsed_server.S.editors.html">Ojsed_server.S.editors</a></h1>
+
+<pre><span name="TYPEeditors"><span class="keyword">class</span> editors</span> : <code class="type">(P.app_server_msg -&gt; (P.app_client_msg -&gt; unit Lwt.t) -&gt; unit Lwt.t) -&gt; (P.app_server_msg -&gt; unit Lwt.t) -&gt; ((P.server_msg -&gt; (P.client_msg -&gt; unit Lwt.t) -&gt; unit Lwt.t) -&gt;<br/>       (P.server_msg -&gt; unit Lwt.t) -&gt;<br/>       id:string -&gt; <a href="Ojs_path.html#TYPEt">Ojs_path.t</a> -&gt; <a href="Ojsed_server.S.editor-c.html">editor</a>) -&gt; </code><code class="code">object</code> <a href="Ojsed_server.S.editors-c.html">..</a> <code class="code">end</code></pre><hr width="100%"/>
+
+<pre><span id="ATTeditors"><span class="keyword">val</span> <span class="keyword">mutable</span> editors</span> : <code class="type"><a href="Ojsed_server.S.editor-c.html">editor</a> Ojs_server.SMap.t</code></pre>
+<pre><span id="METHODadd_editor"><span class="keyword">method</span> add_editor</span> : <code class="type">id:Ojs_server.SMap.key -&gt; <a href="Ojs_path.html#TYPEt">Ojs_path.t</a> -&gt; <a href="Ojsed_server.S.editor-c.html">editor</a></code></pre>
+<pre><span id="METHODeditor"><span class="keyword">method</span> editor</span> : <code class="type">Ojs_server.SMap.key -&gt; <a href="Ojsed_server.S.editor-c.html">editor</a></code></pre>
+<pre><span id="METHODhandle_call"><span class="keyword">method</span> handle_call</span> : <code class="type">(P.app_server_msg -&gt; unit Lwt.t) -&gt; P.app_client_msg -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODhandle_message"><span class="keyword">method</span> handle_message</span> : <code class="type">(P.app_server_msg -&gt; unit Lwt.t) -&gt; P.app_client_msg -&gt; unit Lwt.t</code></pre></div>
+
+
+
+
+
+
+
+
+</div> 
+</body>
+</html>

@@ -41,20 +41,16 @@
 <h1>Module <a href="type_Ojsed_server.html">Ojsed_server</a></h1>
 
 <pre><span class="keyword">module</span> Ojsed_server: <code class="code">sig</code> <a href="Ojsed_server.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Server side of editor<br/>
 </div>
 <hr width="100%"/>
 
-<pre><span id="TYPEaccess"><span class="keyword">type</span> access</span> = <code class="type">[ `RO | `RW ]</code> </pre>
-
-
-<pre><span id="VALwsdata_of_msg"><span class="keyword">val</span> wsdata_of_msg</span> : <code class="type">[&lt; `Editor_msg of<br/>            string *<br/>            [&lt; `Error of string | `File_contents of string * string | `Ok of string ] ] -&gt;<br/>       string</code></pre>
-<pre><span id="VALmsg_of_wsdata"><span class="keyword">val</span> msg_of_wsdata</span> : <code class="type">string -&gt;<br/>       [&gt; `Editor_msg of<br/>            string *<br/>            [&gt; `Get_file_contents of string | `Save_file of string * string ] ]<br/>       option</code></pre>
-<pre><span id="VALsend_msg"><span class="keyword">val</span> send_msg</span> : <code class="type">([&gt; `Editor_msg of 'a * 'b ] -&gt; 'c) -&gt; 'a -&gt; 'b -&gt; 'c</code></pre>
-<pre><span id="VALaccess_rights"><span class="keyword">val</span> access_rights</span> : <code class="type">?rights:(string -&gt; ([&gt; `RW ] as 'a) option) -&gt;<br/>       string -&gt; string -&gt; string * 'a option</code></pre>
-<pre><span id="VALaccess_forbidden"><span class="keyword">val</span> access_forbidden</span> : <code class="type">string -&gt; [&gt; `Error of string ]</code></pre>
-<pre><span id="VALhandle_client_msg"><span class="keyword">val</span> handle_client_msg</span> : <code class="type">?rights:(string -&gt; [&lt; `RO | `RW &gt; `RW ] option) -&gt;<br/>       string -&gt;<br/>       'a -&gt;<br/>       [&gt; `Get_file_contents of string | `Save_file of string * string ] -&gt;<br/>       'a *<br/>       [&gt; `Error of string | `File_contents of string * string | `Ok of string ]<br/>       list</code></pre>
-<pre><span id="VALsend_messages"><span class="keyword">val</span> send_messages</span> : <code class="type">([&gt; `Editor_msg of 'a * 'b ] -&gt; unit Lwt.t) -&gt; 'a * 'b list -&gt; unit Lwt.t</code></pre>
-<pre><span id="VALhandle_message"><span class="keyword">val</span> handle_message</span> : <code class="type">?rights:(string -&gt; [&lt; `RO | `RW &gt; `RW ] option) -&gt;<br/>       string -&gt;<br/>       ([&gt; `Editor_msg of<br/>             'a *<br/>             [&gt; `Error of string | `File_contents of string * string | `Ok of string ] ] -&gt;<br/>        unit Lwt.t) -&gt;<br/>       [&lt; `Editor_msg of<br/>            'a * [&gt; `Get_file_contents of string | `Save_file of string * string ] ] -&gt;<br/>       unit Lwt.t</code></pre></div>
+<pre><span class="keyword">module type</span> <a href="Ojsed_server.S.html">S</a> = <code class="code">sig</code> <a href="Ojsed_server.S.html">..</a> <code class="code">end</code></pre>
+<pre><span class="keyword">module</span> <a href="Ojsed_server.Make.html">Make</a>: <div class="sig_block"><code class="code">functor (</code><code class="code">P</code><code class="code"> : </code><code class="type"><a href="Ojsed_types.P.html">Ojsed_types.P</a></code><code class="code">) -&gt; </code><code class="type"><a href="Ojsed_server.S.html">S</a></code><code class="type"> 
+  with type P.server_msg = P.server_msg
+   and type P.client_msg = P.client_msg
+   and type P.app_server_msg = P.app_server_msg
+   and type P.app_client_msg = P.app_client_msg</code></div></pre></div>
 
 
 

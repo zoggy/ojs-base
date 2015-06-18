@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>Ojs-base : Ojs-base : Ojsl_server.Make.elists</title>
+<link href="https://zoggy.github.io/ojs-base/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="page">
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container">
+
+
+  <div class="nav-collapse">
+    <ul class="nav">
+    <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
+    <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
+
+  </ul>
+  <div class="nav pull-right">  </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<div id="header">
+  
+  
+  
+</div>
+
+
+
+<div class="ocamldoc-page">
+<code class="code">(<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a) <span class="keywordsign">-&gt;</span><br/>
+(<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b) <span class="keywordsign">-&gt;</span><br/>
+((<span class="constructor">P</span>.elt <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.elt <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a) <span class="keywordsign">-&gt;</span><br/>
+ (<span class="constructor">P</span>.elt <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b) <span class="keywordsign">-&gt;</span><br/>
+ id:<span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.elt list <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.elt <span class="constructor">Ojsl_server</span>.<span class="constructor">Make</span>.elist) <span class="keywordsign">-&gt;</span><br/>
+<span class="keyword">object</span><br/>
+  <span class="keyword">val</span> <span class="keyword">mutable</span> lists : <span class="constructor">P</span>.elt <span class="constructor">Ojsl_server</span>.<span class="constructor">Make</span>.elist <span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.t<br/>
+  <span class="keyword">method</span> add_list :<br/>
+    id:<span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.elt list <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.elt <span class="constructor">Ojsl_server</span>.<span class="constructor">Make</span>.elist<br/>
+  <span class="keyword">method</span> handle_call :<br/>
+    (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
+  <span class="keyword">method</span> handle_message :<br/>
+    (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
+  <span class="keyword">method</span> list : <span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.elt <span class="constructor">Ojsl_server</span>.<span class="constructor">Make</span>.elist<br/>
+<span class="keyword">end</span></code></div>
+
+
+
+
+
+
+
+
+</div> 
+</body>
+</html>

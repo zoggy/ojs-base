@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>Ojs-base : Ojs-base : Ojs_server.S.connection_group</title>
+<link href="https://zoggy.github.io/ojs-base/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="page">
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container">
+
+
+  <div class="nav-collapse">
+    <ul class="nav">
+    <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
+    <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
+
+  </ul>
+  <div class="nav pull-right">  </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<div id="header">
+  
+  
+  
+</div>
+
+
+
+<div class="ocamldoc-page">
+<div class="navbar"> <a class="up" href="Ojs_server.S.html" title="Ojs_server.S">Up</a>
+ </div>
+<h1>Class <a href="type_Ojs_server.S.connection_group.html">Ojs_server.S.connection_group</a></h1>
+
+<pre><span name="TYPEconnection_group"><span class="keyword">class</span> connection_group</span> : <code class="type"></code><code class="code">object</code> <a href="Ojs_server.S.connection_group-c.html">..</a> <code class="code">end</code></pre><hr width="100%"/>
+
+<pre><span id="ATTconnections"><span class="keyword">val</span> <span class="keyword">mutable</span> connections</span> : <code class="type">((Rpc.app_server_msg -&gt; unit Lwt.t) * Rpc.t) list</code></pre>
+<pre><span id="ATThandle_message"><span class="keyword">val</span> <span class="keyword">mutable</span> handle_message</span> : <code class="type">(Rpc.app_server_msg -&gt; unit Lwt.t) -&gt;<br/>       Rpc.t -&gt; Rpc.app_client_msg -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODadd_connection"><span class="keyword">method</span> add_connection</span> : <code class="type">Websocket.Frame.t Lwt_stream.t -&gt;<br/>       (Websocket.Frame.t option -&gt; unit) -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODbroadcall"><span class="keyword">method</span> broadcall</span> : <code class="type">Rpc.app_server_msg -&gt; (Rpc.app_client_msg -&gt; unit Lwt.t) -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODbroadcast"><span class="keyword">method</span> broadcast</span> : <code class="type">Rpc.app_server_msg -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODhandle_message"><span class="keyword">method</span> handle_message</span> : <code class="type">(Rpc.app_server_msg -&gt; unit Lwt.t) -&gt;<br/>       Rpc.t -&gt; Rpc.app_client_msg -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODremove_connection"><span class="keyword">method</span> remove_connection</span> : <code class="type">(Rpc.app_server_msg -&gt; unit Lwt.t) -&gt; unit</code></pre>
+<pre><span id="METHODset_handle_message"><span class="keyword">method</span> set_handle_message</span> : <code class="type">((Rpc.app_server_msg -&gt; unit Lwt.t) -&gt;<br/>        Rpc.t -&gt; Rpc.app_client_msg -&gt; unit Lwt.t) -&gt;<br/>       unit</code></pre></div>
+
+
+
+
+
+
+
+
+</div> 
+</body>
+</html>
