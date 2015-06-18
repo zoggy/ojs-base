@@ -115,8 +115,8 @@ let handle_message send_msg rpc msg =
 
 let () = connections#set_handle_message handle_message
 
-let handle_con uri (stream, push) =
-  connections#add_connection stream push
+let handle_con id uri id uri recv push =
+  connections#add_connection recv push
 (*
 let handle_con root uri (stream, push) =
   let root = Ojs_path.of_string root in
@@ -146,17 +146,11 @@ let handle_con root uri (stream, push) =
     handle_message stream push
 *)
 
-let server sockaddr = Websocket.establish_server sockaddr handle_con
-
-let sockaddr_of_dns node service =
-  let open Lwt_unix in
-  (getaddrinfo node service [AI_FAMILY(PF_INET); AI_SOCKTYPE(SOCK_STREAM)] >>= function
-  | h::t -> Lwt.return h
-  | []   -> Lwt.fail Not_found)
-  >>= fun ai -> Lwt.return ai.ai_addr
-
 let run_server host port =
-  sockaddr_of_dns host (string_of_int port) >>= fun sa ->
-    Lwt.return (server sa) >>= fun _ -> wait_forever ()
+  let uri = Uri.of_string (Printf.sprintf "ws://%s:%d/" host port) in
+  Resolver_lwt.resolve_uri ~uri Resolver_lwt_unix.system >>= fun endp ->
+  Conduit_lwt_unix.(endp_to_server ~ctx:default_ctx endp >>= fun server ->
+  Websocket_lwt.establish_server ~ctx:default_ctx ~mode:server handle_con)
+
 
 let _ = Lwt_unix.run (run_server "0.0.0.0" 8080)
