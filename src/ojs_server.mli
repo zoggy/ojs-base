@@ -34,16 +34,16 @@ module SMap : Map.S with type key = string
 val mk_msg_of_wsdata :
   (J.json -> [< `Error of string | `Ok of 'a ]) -> string -> 'a option
 val mk_send_msg :
-  ('a -> string) -> (Websocket_lwt.Frame.t option -> 'b) -> 'a -> 'b Lwt.t
+  ('a -> string) -> (Websocket_lwt.Frame.t -> unit Lwt.t) -> 'a -> unit Lwt.t
 val mk_msg_stream :
   (string -> 'a option) -> Websocket_lwt.Frame.t Lwt_stream.t -> 'a Lwt_stream.t
 
 val handle_messages :
   (string -> 'a option) ->
   ('b -> string) ->
-  (('b -> 'c Lwt.t) -> unit Lwt.t) ->
+  (('b -> unit Lwt.t) -> unit Lwt.t) ->
   Websocket_lwt.Frame.t Lwt_stream.t ->
-  (Websocket_lwt.Frame.t option -> 'c) -> unit Lwt.t
+  (Websocket_lwt.Frame.t -> unit Lwt.t) -> unit Lwt.t
 
 module type P =
   sig
@@ -63,7 +63,7 @@ module type S = sig
         Rpc.t -> Rpc.app_client_msg -> unit Lwt.t
       method add_connection :
         Websocket_lwt.Frame.t Lwt_stream.t ->
-        (Websocket_lwt.Frame.t option -> unit) -> unit Lwt.t
+        (Websocket_lwt.Frame.t -> unit Lwt.t) -> unit Lwt.t
       method broadcall :
         Rpc.app_server_msg ->
         (Rpc.app_client_msg -> unit Lwt.t) -> unit Lwt.t

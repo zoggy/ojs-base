@@ -94,6 +94,6 @@ let onmessage ws msg =
   | _ -> failwith "Unhandled message"
 
 
-let _ = Ojs_js.setup_ws "ws://localhost:8080"
+let _ = Ojs_js.setup_ws "ws://0.0.0.0:8080"
   msg_of_wsdata ~onopen ~onmessage
 

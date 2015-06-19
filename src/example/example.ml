@@ -115,8 +115,9 @@ let handle_message send_msg rpc msg =
 
 let () = connections#set_handle_message handle_message
 
-let handle_con id uri id uri recv push =
-  connections#add_connection recv push
+let handle_con id uri recv push =
+  let stream = Websocket_lwt.mk_frame_stream recv in
+  connections#add_connection stream push
 (*
 let handle_con root uri (stream, push) =
   let root = Ojs_path.of_string root in
@@ -146,11 +147,20 @@ let handle_con root uri (stream, push) =
     handle_message stream push
 *)
 
+
+let buffer =  Buffer.create 256
+let () = Lwt_log.render ~buffer ~template: "$(message)" ~section:
+  Websocket_lwt.section ~level:Lwt_log_core.Debug ~message:"coucou"
+
 let run_server host port =
-  let uri = Uri.of_string (Printf.sprintf "ws://%s:%d/" host port) in
+  let uri = Uri.of_string (Printf.sprintf "http://%s:%d/" host port) in
   Resolver_lwt.resolve_uri ~uri Resolver_lwt_unix.system >>= fun endp ->
-  Conduit_lwt_unix.(endp_to_server ~ctx:default_ctx endp >>= fun server ->
-  Websocket_lwt.establish_server ~ctx:default_ctx ~mode:server handle_con)
+    let ctx = Conduit_lwt_unix.default_ctx in
+    Conduit_lwt_unix.endp_to_server ~ctx endp >>= fun server ->
+  let server =
+    Websocket_lwt.establish_standard_server ~ctx ~mode:server handle_con
+  in
+  ignore @@ server ; fst @@ Lwt.wait ()
 
 
-let _ = Lwt_unix.run (run_server "0.0.0.0" 8080)
+let _ = Lwt_main.run (run_server "0.0.0.0" 8080)
