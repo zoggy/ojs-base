@@ -115,7 +115,7 @@ let handle_message send_msg rpc msg =
 
 let () = connections#set_handle_message handle_message
 
-let handle_con id uri recv push =
+let handle_con id req recv push =
   let stream = Websocket_lwt.mk_frame_stream recv in
   connections#add_connection stream push
 (*
