@@ -9,7 +9,7 @@
 
 <pre><span id="ATTconnections"><span class="keyword">val</span> <span class="keyword">mutable</span> connections</span> : <code class="type">((Rpc.app_server_msg -&gt; unit Lwt.t) * Rpc.t) list</code></pre>
 <pre><span id="ATThandle_message"><span class="keyword">val</span> <span class="keyword">mutable</span> handle_message</span> : <code class="type">(Rpc.app_server_msg -&gt; unit Lwt.t) -&gt;<br/>       Rpc.t -&gt; Rpc.app_client_msg -&gt; unit Lwt.t</code></pre>
-<pre><span id="METHODadd_connection"><span class="keyword">method</span> add_connection</span> : <code class="type">Websocket_lwt.Frame.t Lwt_stream.t -&gt;<br/>       (Websocket_lwt.Frame.t option -&gt; unit) -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODadd_connection"><span class="keyword">method</span> add_connection</span> : <code class="type">Websocket_lwt.Frame.t Lwt_stream.t -&gt;<br/>       (Websocket_lwt.Frame.t -&gt; unit Lwt.t) -&gt; unit Lwt.t</code></pre>
 <pre><span id="METHODbroadcall"><span class="keyword">method</span> broadcall</span> : <code class="type">Rpc.app_server_msg -&gt; (Rpc.app_client_msg -&gt; unit Lwt.t) -&gt; unit Lwt.t</code></pre>
 <pre><span id="METHODbroadcast"><span class="keyword">method</span> broadcast</span> : <code class="type">Rpc.app_server_msg -&gt; unit Lwt.t</code></pre>
 <pre><span id="METHODhandle_message"><span class="keyword">method</span> handle_message</span> : <code class="type">(Rpc.app_server_msg -&gt; unit Lwt.t) -&gt;<br/>       Rpc.t -&gt; Rpc.app_client_msg -&gt; unit Lwt.t</code></pre>
