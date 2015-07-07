@@ -44,8 +44,8 @@
         (<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
         <span class="constructor">Rpc</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
       <span class="keyword">method</span> add_connection :<br/>
-        <span class="constructor">Websocket</span>.<span class="constructor">Frame</span>.t <span class="constructor">Lwt_stream</span>.t <span class="keywordsign">-&gt;</span><br/>
-        (<span class="constructor">Websocket</span>.<span class="constructor">Frame</span>.t option <span class="keywordsign">-&gt;</span> unit) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
+        <span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="constructor">Lwt_stream</span>.t <span class="keywordsign">-&gt;</span><br/>
+        (<span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
       <span class="keyword">method</span> broadcall :<br/>
         <span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span><br/>
         (<span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
