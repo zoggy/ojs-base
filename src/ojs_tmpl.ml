@@ -28,14 +28,16 @@
 
 (** *)
 
+module X = Xtmpl_rewrite
+
 let script_js = [%xtmpl "templates/script_js.xml"]
 let html_page = [%xtmpl "templates/html_page.xml"]
 let link_css url =
-  let atts = Xtmpl.atts_of_list
+  let atts = X.atts_of_list
     [
-      ("","href"), [ Xtmpl.D url ] ;
-      ("","rel"), [ Xtmpl.D "stylesheet" ] ;
-      ("","type"), [ Xtmpl.D  "text/css" ] ;
+      ("","href"), [ X.cdata url ] ;
+      ("","rel"), [ X.cdata "stylesheet" ] ;
+      ("","type"), [ X.cdata  "text/css" ] ;
     ]
   in
-  Xtmpl.E(("","link"), atts, [])
+  X.node ("","link") ~atts []

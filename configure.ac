@@ -54,7 +54,7 @@ fi
 SHARE_DIR=$datadir
 
 
-PACKAGES=str,yojson,websocket.lwt,lwt.unix,lwt.ppx,js_of_ocaml,ppx_deriving_yojson,base64,magic-mime
+PACKAGES=str,yojson,websocket.lwt,lwt.unix,lwt.ppx,js_of_ocaml,ppx_deriving_yojson,base64,magic-mime,xtmpl
 
 #############################
 # substitutions to perform

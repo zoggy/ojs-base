@@ -35,6 +35,7 @@ open Parsetree
 open Longident
 
 module SMap = Map.Make(String)
+module X = Xtmpl_rewrite
 
 let lid loc s = Location.mkloc (Longident.parse s) loc
 
@@ -84,9 +85,7 @@ let file_path node exp =
 let read_template loc file =
   try
     let str = string_of_file file in
-    match Xtmpl.xml_of_string str with
-      Xtmpl.E(_,_,xmls) -> xmls
-    | _ -> assert false
+    X.from_string str
   with
     Sys_error msg -> error loc (Printf.sprintf "File %S: %s" file msg)
 
@@ -128,7 +127,7 @@ type input = {
   i_name : string ;
   i_kind : input_kind ;
   i_mltype : [ `CData | `Other of (string * string * string) (* typ, to_string, of_string *)] ;
-  i_value : Xtmpl.tree list option ;
+  i_value : X.tree list option ;
   i_mandatory : bool ;
   i_mlname : string option ;
 }
@@ -146,7 +145,7 @@ let att_mandatory = att_"mand_"
 let att_value = att_"value"
 let att_mlname = att_"name_"
 
-let get_name atts = Xtmpl.get_att_cdata atts att_name
+let get_name atts = X.get_att_cdata atts att_name
 
 let string_of_name = function ("", s) -> s | (p,s) -> p ^ ":" ^ s
 
@@ -165,7 +164,7 @@ let to_id i =
 
 let parse_ocaml_expression loc str =
   let lexbuf = Lexing.from_string str in
-  try Parser.parse_expression Lexer.token_with_comments lexbuf
+  try Parse.expression lexbuf
   with e ->
     error loc
         (Printf.sprintf "Error while parsing the following OCaml expression:\n%s\n%s"
@@ -173,7 +172,7 @@ let parse_ocaml_expression loc str =
 
 let parse_ocaml_type loc str =
   let lexbuf = Lexing.from_string str in
-  try Parser.parse_core_type Lexer.token_with_comments lexbuf
+  try Parse.core_type lexbuf
   with e ->
     error loc
         (Printf.sprintf "Error while parsing the following OCaml type:\n%s\n%s"
@@ -186,15 +185,15 @@ let input_of_atts loc i_name ?kind atts subs =
     match kind with
     | Some k -> k
     | None ->
-      match Xtmpl.get_att_cdata atts att_type with
+      match X.get_att_cdata atts att_type with
         | None -> Text
         | Some s -> input_kind_of_string loc s
   in
-  let i_mandatory = Xtmpl.get_att_cdata atts att_mandatory = Some "true" in
+  let i_mandatory = X.get_att_cdata atts att_mandatory = Some "true" in
   let i_value =
     match i_kind with
       Textarea -> Some subs
-    | _ -> Xtmpl.get_att atts att_value
+    | _ -> X.get_att atts att_value
   in
   let def_type =
     match i_kind with
@@ -218,13 +217,13 @@ let input_of_atts loc i_name ?kind atts subs =
     | Number | Range -> `Other ("int", "string_of_int", "int_of_string")
   in
   let i_mltype =
-    match Xtmpl.get_att_cdata atts att_mltype with
+    match X.get_att_cdata atts att_mltype with
       None -> def_type
     | Some "cdata" -> `CData
     | Some str ->
         match
-          Xtmpl.get_att_cdata atts att_to_string,
-          Xtmpl.get_att_cdata atts att_of_string
+          X.get_att_cdata atts att_to_string,
+          X.get_att_cdata atts att_of_string
         with
         | None, _ -> kerror loc
             "Input %S: Missing attribute %s"
@@ -235,13 +234,13 @@ let input_of_atts loc i_name ?kind atts subs =
         | Some to_s, Some of_s ->
             `Other (str, to_s, of_s)
   in
-  let i_mlname = Xtmpl.get_att_cdata atts att_mlname in
+  let i_mlname = X.get_att_cdata atts att_mlname in
   { i_name ; i_kind ; i_mltype ;
     i_value ; i_mandatory ; i_mlname ;
   }
 
 let clear_atts atts =
-  List.fold_right Xtmpl.atts_remove
+  List.fold_right X.atts_remove
     [ att_mandatory ; att_value ; att_to_string ; att_of_string ]
     atts
 
@@ -249,34 +248,35 @@ let mk_value_param i =
   let value_atts =
     let type_atts =
       match i.i_mltype with
-      | `CData -> [ att_mltype, [Xtmpl.D "cdata"] ]
+      | `CData -> [ att_mltype, [X.cdata "cdata"] ]
       | `Other (t,to_s,_) ->
-          [ att_mltype, [ Xtmpl.D t ] ;
-            att_to_xml, [ Xtmpl.D (Printf.sprintf "fun x__ -> [ Xtmpl.D ((%s) x__) ]" to_s) ] ;
+          [ att_mltype, [ X.cdata t ] ;
+            att_to_xml, [ X.cdata (Printf.sprintf "fun x__ -> [ Xtmpl_rewrite.cdata ((%s) x__) ]" to_s) ] ;
           ]
     in
-    Xtmpl.atts_of_list
-      (( att_param, [ Xtmpl.D "true" ]) ::
-       ( att_optional, [ Xtmpl.D "true"] ) ::
+    X.atts_of_list
+      (( att_param, [ X.cdata "true" ]) ::
+       ( att_optional, [ X.cdata "true"] ) ::
          type_atts @
          (match i.i_mlname with
             None -> []
-          | Some id -> [ att_mlname, [ Xtmpl.D id ] ]
+          | Some id -> [ att_mlname, [ X.cdata id ] ]
          )
       )
   in
-  Xtmpl.E (("",i.i_name), value_atts, match i.i_value with None -> [] | Some l -> l)
+  X.node ("",i.i_name) ~atts: value_atts
+    (match i.i_value with None -> [] | Some l -> l)
 
 let add_atts_of_input i atts =
   let atts =
     match i.i_kind with
     | Textarea -> atts
-    | Checkbox -> Xtmpl.atts_one ~atts att_value [ Xtmpl.D "true" ]
-    | _ -> Xtmpl.atts_one ~atts att_value [ mk_value_param i ]
+    | Checkbox -> X.atts_one ~atts att_value [ X.cdata "true" ]
+    | _ -> X.atts_one ~atts att_value [ mk_value_param i ]
   in
   let atts =
     match i.i_kind with
-      Checkbox -> Xtmpl.atts_one ~atts ("", "id") [Xtmpl.D i.i_name]
+      Checkbox -> X.atts_one ~atts ("", "id") [X.cdata i.i_name]
     | _ -> atts
   in
   atts
@@ -287,24 +287,24 @@ let xml_of_input i tag atts subs =
     match i.i_kind with
     | Textarea -> [ mk_value_param i ]
     | Checkbox ->
-        let atts = Xtmpl.atts_of_list
-          [ ("","type"), [ Xtmpl.D "text/javascript"] ]
+        let atts = X.atts_of_list
+          [ ("","type"), [ X.cdata "text/javascript"] ]
         in
         let v = mk_value_param
           { i with i_mltype = `Other ("bool", "function true -> \"true\" | false -> \"false\"", "") }
         in
         let node =
-          Xtmpl.E (("","script"), atts,
-           [ Xtmpl.D
-            (Printf.sprintf "document.getElementById('%s').checked = " i.i_name) ;
-             v ;
-             Xtmpl.D ";"
-           ])
+          X.node ("","script") ~atts
+           [ X.cdata
+              (Printf.sprintf "document.getElementById('%s').checked = " i.i_name) ;
+              v ;
+             X.cdata ";"
+           ]
         in
         [ node ]
     | _ -> []
   in
-  Xtmpl.E (tag, atts, subs)
+  X.node tag ~atts subs
 
 let map_textarea loc tag name atts subs =
   let input = input_of_atts loc name ~kind: Textarea atts subs in
@@ -328,7 +328,7 @@ let map_button loc tag name atts subs =
 
 let with_name acc tag f loc atts subs =
   match get_name atts with
-    None ->  (acc, None, Xtmpl.E (tag, atts, subs))
+    None ->  (acc, None, X.node tag ~atts subs)
   | Some name ->
     let (p, xml) = f loc tag name atts subs in
     (acc, Some p, xml)
@@ -338,48 +338,48 @@ let add_form_attributes =
     let name_method = att_"method" in
     let name_action = att_"action" in
     let atts =
-      match Xtmpl.get_att atts name_method with
+      match X.get_att atts name_method with
       | Some _ -> atts
       | None ->
-          let m_atts = Xtmpl.atts_of_list
+          let m_atts = X.atts_of_list
             [
-              att_param, [ Xtmpl.D "true" ] ;
-              att_optional, [ Xtmpl.D "true" ] ;
-              att_to_xml, [ Xtmpl.D "fun s -> [Xtmpl.D (Cohttp.Code.string_of_method s)]" ] ;
-              att_mltype, [ Xtmpl.D "Cohttp.Code.meth" ] ;
-              att_mlname, [ Xtmpl.D "meth" ] ;
+              att_param, [ X.cdata "true" ] ;
+              att_optional, [ X.cdata "true" ] ;
+              att_to_xml, [ X.cdata "fun s -> [Xtmpl_rewrite.cdata (Cohttp.Code.string_of_method s)]" ] ;
+              att_mltype, [ X.cdata "Cohttp.Code.meth" ] ;
+              att_mlname, [ X.cdata "meth" ] ;
             ]
           in
-          Xtmpl.atts_one ~atts name_method
-            [ Xtmpl.E (name_method, m_atts, [Xtmpl.D "`POST"]) ]
+          X.atts_one ~atts name_method
+            [ X.node (name_method) ~atts: m_atts [X.cdata "`POST"] ]
     in
     let atts =
-      match Xtmpl.get_att atts name_action with
+      match X.get_att atts name_action with
       | Some _ -> atts
       | None ->
-          let a_atts = Xtmpl.atts_of_list
+          let a_atts = X.atts_of_list
             [
-              att_param, [ Xtmpl.D "true" ] ;
-              att_optional, [ Xtmpl.D "true" ] ;
+              att_param, [ X.cdata "true" ] ;
+              att_optional, [ X.cdata "true" ] ;
             ]
           in
-          Xtmpl.atts_one ~atts name_action
-            [ Xtmpl.E (name_action, a_atts, []) ]
+          X.atts_one ~atts name_action
+            [ X.node name_action ~atts: a_atts [] ]
     in
     atts
   in
-  let env = Xtmpl.env_of_list
+  let env = X.env_of_list
     [ ("", "form"),
-      fun () env atts subs ->
+      fun () env ?loc atts subs ->
         let new_atts = add_atts atts in
         if new_atts = atts then
-          raise Xtmpl.No_change
+          raise X.No_change
         else
-          ((), [ Xtmpl.E (("","form"), new_atts, subs) ])
+          ((), [ X.node ("","form") ~atts: new_atts subs ])
     ]
   in
   fun tmpl ->
-    let (_, xmls) = Xtmpl.apply_to_xmls () env tmpl in
+    let (_, xmls) = X.apply_to_xmls () env tmpl in
     xmls
 
 let map_form_tmpl loc tmpl =
@@ -394,18 +394,18 @@ let map_form_tmpl loc tmpl =
     (acc, List.rev xmls)
   and iter acc xml =
     match xml with
-      Xtmpl.D _ -> (acc, xml)
-    | Xtmpl.E (("", stag) as tag, atts, subs) ->
+      X.D _ | X.C _ | X.PI _ -> (acc, xml)
+    | X.E ({ X.name = ("", stag) as name; atts ; subs} as node)->
         begin
           let (acc, i_opt, xml) =
             match stag with
-            | "textarea" -> with_name acc tag map_textarea loc atts subs
-            | "select" -> with_name acc tag map_select loc atts subs
-            | "input" -> with_name acc tag map_input loc atts subs
-            | "button" -> with_name acc tag map_button loc atts subs
+            | "textarea" -> with_name acc name map_textarea loc atts subs
+            | "select" -> with_name acc name map_select loc atts subs
+            | "input" -> with_name acc name map_input loc atts subs
+            | "button" -> with_name acc name map_button loc atts subs
             | _ ->
                 let (acc, xmls) = iter_list acc subs in
-                (acc, None, Xtmpl.E (tag, atts, xmls))
+                (acc, None, X.E { node with X.subs = xmls})
           in
           match i_opt with
             None -> (acc, xml)
@@ -417,9 +417,9 @@ let map_form_tmpl loc tmpl =
               with Not_found ->
                   (SMap.add i.i_name i acc, xml)
         end
-    | Xtmpl.E (tag, atts, subs) ->
-        let (acc, xmls) = iter_list acc subs in
-        (acc, Xtmpl.E (tag, atts, xmls))
+    | X.E node ->
+        let (acc, xmls) = iter_list acc node.X.subs in
+        (acc, X.E { node with X.subs = xmls })
   in
   iter_list SMap.empty tmpl
 
@@ -428,7 +428,7 @@ let mk_template loc tmpl =
     [ Vb.mk (Pat.var (Location.mkloc "template_" loc))
       (Exp.extension
        (Location.mkloc "xtmpl.string" loc,
-        (PStr  [(Str.eval (Exp.constant (Const_string (Xtmpl.string_of_xmls tmpl, None))))]))
+        (PStr  [(Str.eval (Exp.constant (Const_string (X.to_string tmpl, None))))]))
       )
     ]
 
@@ -457,7 +457,7 @@ let mk_type loc inputs =
   Str.type_ [ty]
 
 let mk_typ_form loc tmpl =
-  let str = Exp.constant (Const_string (Xtmpl.string_of_xmls tmpl, None)) in
+  let str = Exp.constant (Const_string (X.to_string tmpl, None)) in
   let extension =
     Typ.extension (Location.mkloc "xtmpl.string.type" loc, (PStr  [Str.eval str]))
   in
@@ -465,7 +465,7 @@ let mk_typ_form loc tmpl =
   Str.type_ [ty]
 
 let mk_typ_template loc tmpl =
-  let str = Exp.constant (Const_string (Xtmpl.string_of_xmls tmpl, None)) in
+  let str = Exp.constant (Const_string (X.to_string tmpl, None)) in
   let extension =
     Typ.extension (Location.mkloc "xtmpl.string.type" loc, (PStr  [Str.eval str]))
   in
@@ -505,7 +505,8 @@ let mk_read_form loc inputs =
         let defs = ref [] in
         let read_param__ mandatory name of_string =
           let v = get_att name in
-          defs := (("", name), fun x _ _ _ -> (x, [Xtmpl.D (match v with None -> "" | Some s -> s)])) :: !defs ;
+          defs := (("", name), fun x _ ?loc _ _ ->
+             (x, [Xtmpl_rewrite.cdata (match v with None -> "" | Some s -> s)])) :: !defs ;
           try
             match mandatory, v with
             | true, None -> failwith (name^" is mandatory")
@@ -552,7 +553,7 @@ let mk_read_form loc inputs =
   let ending =
     [%expr
       let (f : template) = fun ?env ->
-        let env = Xtmpl.env_of_list ?env !defs in
+        let env = Xtmpl_rewrite.env_of_list ?env !defs in
         [%e call_form]
       in
       match !errors with

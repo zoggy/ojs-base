@@ -1,3 +1,6 @@
+Next release:
+- use Xtmpl >= 0.13.0
+
 Release 0.3.0:
 - add features to the editor
 

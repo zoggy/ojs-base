@@ -28,14 +28,16 @@
 
 (** Some templates to create HTML pages. *)
 
+module X = Xtmpl_rewrite
+
 val script_js :
-  ?env:unit Xtmpl.env -> ?msg:string -> src:string -> unit -> Xtmpl.tree list
+  ?env:unit Xtmpl_rewrite.env -> ?msg:string -> src:string -> unit -> Xtmpl_rewrite.tree list
 
 val html_page :
-  ?env:unit Xtmpl.env ->
-  body:Xtmpl.tree list ->
-  ?headers:Xtmpl.tree list ->
-  page_title:string -> unit -> Xtmpl.tree list
+  ?env:unit Xtmpl_rewrite.env ->
+  body:Xtmpl_rewrite.tree list ->
+  ?headers:Xtmpl_rewrite.tree list ->
+  page_title:string -> unit -> Xtmpl_rewrite.tree list
 
 (** Create a [<link href="<url>" rel="stylesheet" type="text/css"/>] node. *)
-val link_css : string -> Xtmpl.tree
+val link_css : string -> Xtmpl_rewrite.tree
