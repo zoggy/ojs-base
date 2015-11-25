@@ -1,0 +1,81 @@
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>Ojs-base : Ojs-base : Ojsed_js.S.editor</title>
+<link href="https://zoggy.github.io/ojs-base/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="page">
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container">
+<!--&lt;image float="right" src="&lt;site-url/&gt;/stog-logo.svg" width="30"/&gt;-->
+
+  <div class="nav-collapse">
+    <ul class="nav">
+    <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
+    <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
+<!--
+    &lt;li class="&lt;navbar-install/&gt;"&gt;&lt;page href="/install"&gt;Installation&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-plugins/&gt;"&gt;&lt;page href="/plugins"&gt;Plugins&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-blog/&gt;"&gt;&lt;page href="/blog"&gt;Blog&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-about/&gt;"&gt;&lt;page href="about"&gt;?&lt;/page&gt;&lt;/li&gt;
+-->
+  </ul>
+  <div class="nav pull-right">  </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<div id="header">
+  
+  
+  <main_/>
+</div>
+<main_/>
+
+
+<div class="ocamldoc-page">
+<div class="navbar"> <a class="up" href="Ojsed_js.S.html" title="Ojsed_js.S">Up</a>
+ <a class="post" href="Ojsed_js.S.editors-c.html" title="Ojsed_js.S.editors">Next</a>
+</div>
+<h1>Class <a href="type_Ojsed_js.S.editor.html">Ojsed_js.S.editor</a></h1>
+
+<pre><span name="TYPEeditor"><span class="keyword">class</span> editor</span> : <code class="type">(P.client_msg -&gt; (P.server_msg -&gt; unit Lwt.t) -&gt; unit Lwt.t) -&gt; (P.client_msg -&gt; unit Lwt.t) -&gt; bar_id:string -&gt; msg_id:string -&gt; string -&gt; </code><code class="code">object</code> <a href="Ojsed_js.S.editor-c.html">..</a> <code class="code">end</code></pre><hr width="100%"/>
+
+<pre><span id="ATTcurrent"><span class="keyword">val</span> <span class="keyword">mutable</span> current</span> : <code class="type"><a href="Ojsed_js.html#TYPEsession">Ojsed_js.session</a> option</code></pre>
+<pre><span id="ATTsessions"><span class="keyword">val</span> <span class="keyword">mutable</span> sessions</span> : <code class="type"><a href="Ojsed_js.html#TYPEsession">Ojsed_js.session</a> PMap.t</code></pre>
+<pre><span id="METHODchanged_files"><span class="keyword">method</span> changed_files</span> : <code class="type">PMap.key list</code></pre>
+<pre><span id="METHODchanged_sessions"><span class="keyword">method</span> changed_sessions</span> : <code class="type"><a href="Ojsed_js.html#TYPEsession">Ojsed_js.session</a> list</code></pre>
+<pre><span id="METHODdisplay_error"><span class="keyword">method</span> display_error</span> : <code class="type">string -&gt; unit</code></pre>
+<pre><span id="METHODdisplay_filename"><span class="keyword">method</span> display_filename</span> : <code class="type"><a href="Ojsed_js.html#TYPEsession">Ojsed_js.session</a> -&gt; unit</code></pre>
+<pre><span id="METHODdisplay_message"><span class="keyword">method</span> display_message</span> : <code class="type">string -&gt; unit</code></pre>
+<pre><span id="METHODedit_file"><span class="keyword">method</span> edit_file</span> : <code class="type">?mime:<a href="Ojsed_js.html#TYPEmime_type">Ojsed_js.mime_type</a> -&gt; PMap.key -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODget_session"><span class="keyword">method</span> get_session</span> : <code class="type">PMap.key -&gt; <a href="Ojsed_js.html#TYPEsession">Ojsed_js.session</a> option</code></pre>
+<pre><span id="METHODhandle_message"><span class="keyword">method</span> handle_message</span> : <code class="type">P.server_msg -&gt; bool Js.t</code></pre>
+<pre><span id="METHODid"><span class="keyword">method</span> id</span> : <code class="type">string</code></pre>
+<pre><span id="METHODis_editable_from_mime"><span class="keyword">method</span> is_editable_from_mime</span> : <code class="type"><a href="Ojsed_js.html#TYPEmime_type">Ojsed_js.mime_type</a> -&gt; bool</code></pre>
+<pre><span id="METHODload_from_server"><span class="keyword">method</span> load_from_server</span> : <code class="type"><a href="Ojsed_js.html#TYPEsession">Ojsed_js.session</a> -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODmsg_id"><span class="keyword">method</span> msg_id</span> : <code class="type">string</code></pre>
+<pre><span id="METHODnew_session"><span class="keyword">method</span> new_session</span> : <code class="type">?mime:<a href="Ojsed_js.html#TYPEmime_type">Ojsed_js.mime_type</a> -&gt; PMap.key -&gt; <a href="Ojsed_js.html#TYPEsession">Ojsed_js.session</a></code></pre>
+<pre><span id="METHODon_changed"><span class="keyword">method</span> on_changed</span> : <code class="type"><a href="Ojsed_js.html#TYPEsession">Ojsed_js.session</a> -&gt; unit</code></pre>
+<pre><span id="METHODreload"><span class="keyword">method</span> reload</span> : <code class="type">unit Lwt.t</code></pre>
+<pre><span id="METHODreload_file"><span class="keyword">method</span> reload_file</span> : <code class="type"><a href="Ojsed_js.html#TYPEsession">Ojsed_js.session</a> -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODsave"><span class="keyword">method</span> save</span> : <code class="type">unit Lwt.t</code></pre>
+<pre><span id="METHODsave_changed_files"><span class="keyword">method</span> save_changed_files</span> : <code class="type">unit Lwt.t</code></pre>
+<pre><span id="METHODsave_file"><span class="keyword">method</span> save_file</span> : <code class="type"><a href="Ojsed_js.html#TYPEsession">Ojsed_js.session</a> -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODsimple_call"><span class="keyword">method</span> simple_call</span> : <code class="type">?on_ok:(unit -&gt; unit) -&gt; P.client_msg -&gt; unit Lwt.t</code></pre></div>
+
+
+
+
+
+<!--&lt;script type="text/javascript" src="&lt;site-url/&gt;/jquery.js"&gt;_&lt;/script&gt;-->
+<!--&lt;script type="text/javascript" src="&lt;site-url/&gt;/bootstrap-collapse.js"&gt;_&lt;/script&gt;-->
+
+</div> <!-- #page -->
+</body>
+</html>
+

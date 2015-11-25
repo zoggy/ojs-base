@@ -1,4 +1,3 @@
-<!DOCTYPE HTML>
 <html>
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
@@ -10,13 +9,18 @@
 <div class="navbar navbar-fixed-top">
 <div class="navbar-inner">
 <div class="container">
-
+<!--&lt;image float="right" src="&lt;site-url/&gt;/stog-logo.svg" width="30"/&gt;-->
 
   <div class="nav-collapse">
     <ul class="nav">
     <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
     <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
-
+<!--
+    &lt;li class="&lt;navbar-install/&gt;"&gt;&lt;page href="/install"&gt;Installation&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-plugins/&gt;"&gt;&lt;page href="/plugins"&gt;Plugins&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-blog/&gt;"&gt;&lt;page href="/blog"&gt;Blog&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-about/&gt;"&gt;&lt;page href="about"&gt;?&lt;/page&gt;&lt;/li&gt;
+-->
   </ul>
   <div class="nav pull-right">  </div>
   </div>
@@ -28,9 +32,9 @@
 <div id="header">
   
   
-  
+  <main_/>
 </div>
-
+<main_/>
 
 
 <div class="ocamldoc-page">
@@ -45,7 +49,7 @@ Utilities for editor, server side<br/>
 </div>
 <hr width="100%"/>
 
-<pre><span id="VALstring_of_file"><span class="keyword">val</span> string_of_file</span> : <code class="type">string -&gt; string</code></pre><div class="info">
+<pre><span id="VALstring_of_file"><span class="keyword">val</span> string_of_file</span> : <code class="type">string -&gt; string</code></pre><div class="info ">
 <code class="code">string_of_file filename</code> returns the content of <code class="code">filename</code>
    in the form of one string.<br/>
 <b>Author(s):</b> Maxence Guesdon<br/>
@@ -53,7 +57,7 @@ Utilities for editor, server side<br/>
 <b>Raises</b> <code>Sys_error</code> if the file could not be opened.<br/>
 </div>
 
-<pre><span id="VALfile_of_string"><span class="keyword">val</span> file_of_string</span> : <code class="type">file:string -&gt; string -&gt; unit</code></pre><div class="info">
+<pre><span id="VALfile_of_string"><span class="keyword">val</span> file_of_string</span> : <code class="type">file:string -&gt; string -&gt; unit</code></pre><div class="info ">
 <code class="code">file_of_string ~file str</code> creates a file named
    <code class="code">filename</code> whose content is <code class="code">str</code>.<br/>
 <b>Author(s):</b> Fabrice Lefessant<br/>
@@ -66,9 +70,10 @@ Utilities for editor, server side<br/>
 
 
 
+<!--&lt;script type="text/javascript" src="&lt;site-url/&gt;/jquery.js"&gt;_&lt;/script&gt;-->
+<!--&lt;script type="text/javascript" src="&lt;site-url/&gt;/bootstrap-collapse.js"&gt;_&lt;/script&gt;-->
 
-
-
-</div> 
+</div> <!-- #page -->
 </body>
 </html>
+

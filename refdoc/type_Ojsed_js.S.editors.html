@@ -1,0 +1,65 @@
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>Ojs-base : Ojs-base : Ojsed_js.S.editors</title>
+<link href="https://zoggy.github.io/ojs-base/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="page">
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container">
+<!--&lt;image float="right" src="&lt;site-url/&gt;/stog-logo.svg" width="30"/&gt;-->
+
+  <div class="nav-collapse">
+    <ul class="nav">
+    <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
+    <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
+<!--
+    &lt;li class="&lt;navbar-install/&gt;"&gt;&lt;page href="/install"&gt;Installation&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-plugins/&gt;"&gt;&lt;page href="/plugins"&gt;Plugins&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-blog/&gt;"&gt;&lt;page href="/blog"&gt;Blog&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-about/&gt;"&gt;&lt;page href="about"&gt;?&lt;/page&gt;&lt;/li&gt;
+-->
+  </ul>
+  <div class="nav pull-right">  </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<div id="header">
+  
+  
+  <main_/>
+</div>
+<main_/>
+
+
+<div class="ocamldoc-page">
+<code class="code">(<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
+(<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
+((<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
+ (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
+ bar_id:string <span class="keywordsign">-&gt;</span> msg_id:string <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor) <span class="keywordsign">-&gt;</span><br/>
+<span class="keyword">object</span><br/>
+  <span class="keyword">val</span> <span class="keyword">mutable</span> editors : <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.t<br/>
+  <span class="keyword">method</span> get_editor : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor<br/>
+  <span class="keyword">method</span> get_msg_id : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> string<br/>
+  <span class="keyword">method</span> handle_message : <span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> bool <span class="constructor">Js</span>.t<br/>
+  <span class="keyword">method</span> setup_editor :<br/>
+    bar_id:string <span class="keywordsign">-&gt;</span> msg_id:string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor<br/>
+<span class="keyword">end</span></code></div>
+
+
+
+
+
+<!--&lt;script type="text/javascript" src="&lt;site-url/&gt;/jquery.js"&gt;_&lt;/script&gt;-->
+<!--&lt;script type="text/javascript" src="&lt;site-url/&gt;/bootstrap-collapse.js"&gt;_&lt;/script&gt;-->
+
+</div> <!-- #page -->
+</body>
+</html>
+

@@ -1,4 +1,3 @@
-<!DOCTYPE HTML>
 <html>
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
@@ -10,13 +9,18 @@
 <div class="navbar navbar-fixed-top">
 <div class="navbar-inner">
 <div class="container">
-
+<!--&lt;image float="right" src="&lt;site-url/&gt;/stog-logo.svg" width="30"/&gt;-->
 
   <div class="nav-collapse">
     <ul class="nav">
     <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
     <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
-
+<!--
+    &lt;li class="&lt;navbar-install/&gt;"&gt;&lt;page href="/install"&gt;Installation&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-plugins/&gt;"&gt;&lt;page href="/plugins"&gt;Plugins&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-blog/&gt;"&gt;&lt;page href="/blog"&gt;Blog&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-about/&gt;"&gt;&lt;page href="about"&gt;?&lt;/page&gt;&lt;/li&gt;
+-->
   </ul>
   <div class="nav pull-right">  </div>
   </div>
@@ -28,19 +32,21 @@
 <div id="header">
   
   
-  
+  <main_/>
 </div>
-
+<main_/>
 
 
 <div class="ocamldoc-page">
-<div class="navbar"><a class="pre" href="Ojs_types.html" title="Ojs_types">Previous</a>
+<div class="navbar"><a class="pre" href="Ojsft_js.html" title="Ojsft_js">Previous</a>
  <a class="up" href="index.html" title="Index">Up</a>
- <a class="post" href="Ojsed_js.html" title="Ojsed_js">Next</a>
+ <a class="post" href="Ojsl_js.html" title="Ojsl_js">Next</a>
 </div>
 <h1>Module <a href="type_Ojs_js.html">Ojs_js</a></h1>
 
-<pre><span class="keyword">module</span> Ojs_js: <code class="code">sig</code> <a href="Ojs_js.html">..</a> <code class="code">end</code></pre><hr width="100%"/>
+<pre><span class="keyword">module</span> Ojs_js: <code class="code">sig</code> <a href="Ojs_js.html">..</a> <code class="code">end</code></pre><div class="info module top">
+</div>
+<hr width="100%"/>
 
 <pre><span class="keyword">module</span> <a href="Ojs_js.SMap.html">SMap</a>: <code class="type">Map.Make</code><code class="code">(</code><code class="type">String</code><code class="code">)</code></pre>
 <pre><span id="VAL(+=)"><span class="keyword">val</span> (+=)</span> : <code class="type">'a SMap.t Pervasives.ref -&gt; SMap.key * 'a -&gt; unit</code></pre>
@@ -49,26 +55,29 @@
 
 
 <pre><span id="VALlog"><span class="keyword">val</span> log</span> : <code class="type">string -&gt; unit</code></pre>
-<pre><span id="VALsetup_ws"><span class="keyword">val</span> setup_ws</span> : <code class="type">string -&gt;<br/>       (string -&gt; 'a option) -&gt;<br/>       'b -&gt;<br/>       onopen:(WebSockets.webSocket Js.t -&gt; 'c) -&gt;<br/>       onmessage:(WebSockets.webSocket Js.t -&gt; 'a -&gt; 'd) -&gt;<br/>       WebSockets.webSocket Js.t option</code></pre>
-<pre><span id="VALsend_msg"><span class="keyword">val</span> send_msg</span> : <code class="type">&lt; send : Js.js_string Js.t -&gt; 'a Js.meth; .. &gt; Js.t -&gt; string -&gt; 'a</code></pre>
+<pre><span id="VALmk_msg_of_wsdata"><span class="keyword">val</span> mk_msg_of_wsdata</span> : <code class="type">(Yojson.Safe.json -&gt; [&lt; `Error of string | `Ok of 'a ]) -&gt;<br/>       string -&gt; 'a option</code></pre>
+<pre><span id="VALclass_"><span class="keyword">val</span> class_</span> : <code class="type">string -&gt; string</code></pre>
+<pre><span id="VALsetup_ws"><span class="keyword">val</span> setup_ws</span> : <code class="type">string -&gt;<br/>       (string -&gt; 'a option) -&gt;<br/>       onopen:(WebSockets.webSocket Js.t -&gt; 'b) -&gt;<br/>       onmessage:(WebSockets.webSocket Js.t -&gt; 'a -&gt; 'c) -&gt;<br/>       WebSockets.webSocket Js.t option</code></pre>
+<pre><span id="VALsend_msg"><span class="keyword">val</span> send_msg</span> : <code class="type">WebSockets.webSocket Js.t -&gt; string -&gt; unit</code></pre>
 <pre><span id="VALclear_children"><span class="keyword">val</span> clear_children</span> : <code class="type">#Dom.node Js.t -&gt; unit</code></pre>
 <pre><span id="VALnode_by_id"><span class="keyword">val</span> node_by_id</span> : <code class="type">string -&gt; Dom_html.element Js.t</code></pre>
 <pre><span id="VALgen_id"><span class="keyword">val</span> gen_id</span> : <code class="type">unit -&gt; string</code></pre>
 <pre><span id="VALset_onclick"><span class="keyword">val</span> set_onclick</span> : <code class="type">#Dom_html.eventTarget Js.t -&gt; (Dom_html.mouseEvent Js.t -&gt; 'a) -&gt; unit</code></pre>
 <pre><span id="VALsplit_string"><span class="keyword">val</span> split_string</span> : <code class="type">?keep_empty:bool -&gt; string -&gt; char list -&gt; string list</code></pre>
 <pre><span id="VALget_classes"><span class="keyword">val</span> get_classes</span> : <code class="type">&lt; className : &lt; get : Js.js_string Js.t; .. &gt; Js.gen_prop; .. &gt; Js.t -&gt;<br/>       string list</code></pre>
-<pre><span id="VALnode_unset_class"><span class="keyword">val</span> node_unset_class</span> : <code class="type">&lt; classList : &lt; get : &lt; remove : Js.js_string Js.t -&gt; 'a Js.meth; .. &gt; Js.t;<br/>                       .. &gt;<br/>                     Js.gen_prop;<br/>         .. &gt;<br/>       Js.t -&gt; string -&gt; 'a</code></pre>
-<pre><span id="VALnode_set_class"><span class="keyword">val</span> node_set_class</span> : <code class="type">&lt; classList : &lt; get : &lt; add : Js.js_string Js.t -&gt; 'a Js.meth; .. &gt; Js.t;<br/>                       .. &gt;<br/>                     Js.gen_prop;<br/>         .. &gt;<br/>       Js.t -&gt; string -&gt; 'a</code></pre>
-<pre><span id="VALunset_class"><span class="keyword">val</span> unset_class</span> : <code class="type">string -&gt; string -&gt; unit</code></pre>
-<pre><span id="VALset_class"><span class="keyword">val</span> set_class</span> : <code class="type">string -&gt; string -&gt; unit</code></pre></div>
+<pre><span id="VALnode_unset_class"><span class="keyword">val</span> node_unset_class</span> : <code class="type">&lt; classList : &lt; get : &lt; remove : Js.js_string Js.t -&gt; 'jsoo_c11647d6 Js.meth;<br/>                               .. &gt;<br/>                             Js.t;<br/>                       .. &gt;<br/>                     Js.gen_prop;<br/>         .. &gt;<br/>       Js.t -&gt; string -&gt; 'jsoo_c11647d6</code></pre>
+<pre><span id="VALnode_set_class"><span class="keyword">val</span> node_set_class</span> : <code class="type">&lt; classList : &lt; get : &lt; add : Js.js_string Js.t -&gt; 'jsoo_48bc6136 Js.meth;<br/>                               .. &gt;<br/>                             Js.t;<br/>                       .. &gt;<br/>                     Js.gen_prop;<br/>         .. &gt;<br/>       Js.t -&gt; string -&gt; 'jsoo_48bc6136</code></pre>
+<pre><span id="VALunset_class"><span class="keyword">val</span> unset_class</span> : <code class="type">id:string -&gt; string -&gt; unit</code></pre>
+<pre><span id="VALset_class"><span class="keyword">val</span> set_class</span> : <code class="type">id:string -&gt; string -&gt; unit</code></pre></div>
 
 
 
 
 
+<!--&lt;script type="text/javascript" src="&lt;site-url/&gt;/jquery.js"&gt;_&lt;/script&gt;-->
+<!--&lt;script type="text/javascript" src="&lt;site-url/&gt;/bootstrap-collapse.js"&gt;_&lt;/script&gt;-->
 
-
-
-</div> 
+</div> <!-- #page -->
 </body>
 </html>
+

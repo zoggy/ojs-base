@@ -1,4 +1,3 @@
-<!DOCTYPE HTML>
 <html>
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
@@ -10,13 +9,18 @@
 <div class="navbar navbar-fixed-top">
 <div class="navbar-inner">
 <div class="container">
-
+<!--&lt;image float="right" src="&lt;site-url/&gt;/stog-logo.svg" width="30"/&gt;-->
 
   <div class="nav-collapse">
     <ul class="nav">
     <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
     <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
-
+<!--
+    &lt;li class="&lt;navbar-install/&gt;"&gt;&lt;page href="/install"&gt;Installation&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-plugins/&gt;"&gt;&lt;page href="/plugins"&gt;Plugins&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-blog/&gt;"&gt;&lt;page href="/blog"&gt;Blog&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-about/&gt;"&gt;&lt;page href="about"&gt;?&lt;/page&gt;&lt;/li&gt;
+-->
   </ul>
   <div class="nav pull-right">  </div>
   </div>
@@ -28,9 +32,9 @@
 <div id="header">
   
   
-  
+  <main_/>
 </div>
-
+<main_/>
 
 
 <div class="ocamldoc-page">
@@ -45,10 +49,11 @@ Some templates to create HTML pages.<br/>
 </div>
 <hr width="100%"/>
 
-<pre><span id="VALscript_js"><span class="keyword">val</span> script_js</span> : <code class="type">?env:unit Xtmpl.env -&gt; ?msg:string -&gt; src:string -&gt; unit -&gt; Xtmpl.tree list</code></pre>
-<pre><span id="VALhtml_page"><span class="keyword">val</span> html_page</span> : <code class="type">?env:unit Xtmpl.env -&gt;<br/>       body:Xtmpl.tree list -&gt;<br/>       ?headers:Xtmpl.tree list -&gt; page_title:string -&gt; unit -&gt; Xtmpl.tree list</code></pre>
-<pre><span id="VALlink_css"><span class="keyword">val</span> link_css</span> : <code class="type">string -&gt; Xtmpl.tree</code></pre><div class="info">
-Create a <code class="code">&lt;link href=&quot;&lt;url&gt;&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/&gt;</code> node.<br/>
+<pre><span class="keyword">module</span> <a href="Ojs_tmpl.X.html">X</a>: <code class="type">Xtmpl_rewrite</code></pre>
+<pre><span id="VALscript_js"><span class="keyword">val</span> script_js</span> : <code class="type">?env:unit Xtmpl_rewrite.env -&gt;<br/>       ?msg:string -&gt; src:string -&gt; unit -&gt; Xtmpl_rewrite.tree list</code></pre>
+<pre><span id="VALhtml_page"><span class="keyword">val</span> html_page</span> : <code class="type">?env:unit Xtmpl_rewrite.env -&gt;<br/>       body:Xtmpl_rewrite.tree list -&gt;<br/>       ?headers:Xtmpl_rewrite.tree list -&gt;<br/>       page_title:string -&gt; unit -&gt; Xtmpl_rewrite.tree list</code></pre>
+<pre><span id="VALlink_css"><span class="keyword">val</span> link_css</span> : <code class="type">string -&gt; Xtmpl_rewrite.tree</code></pre><div class="info ">
+Create a <code class="code">&lt;link href="&lt;url&gt;" rel="stylesheet" type="text/css"/&gt;</code> node.<br/>
 </div>
 </div>
 
@@ -56,9 +61,10 @@ Create a <code class="code">&lt;link href=&quot;&lt;url&gt;&quot; rel=&quot;styl
 
 
 
+<!--&lt;script type="text/javascript" src="&lt;site-url/&gt;/jquery.js"&gt;_&lt;/script&gt;-->
+<!--&lt;script type="text/javascript" src="&lt;site-url/&gt;/bootstrap-collapse.js"&gt;_&lt;/script&gt;-->
 
-
-
-</div> 
+</div> <!-- #page -->
 </body>
 </html>
+

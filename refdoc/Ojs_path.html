@@ -1,4 +1,3 @@
-<!DOCTYPE HTML>
 <html>
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
@@ -10,13 +9,18 @@
 <div class="navbar navbar-fixed-top">
 <div class="navbar-inner">
 <div class="container">
-
+<!--&lt;image float="right" src="&lt;site-url/&gt;/stog-logo.svg" width="30"/&gt;-->
 
   <div class="nav-collapse">
     <ul class="nav">
     <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
     <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
-
+<!--
+    &lt;li class="&lt;navbar-install/&gt;"&gt;&lt;page href="/install"&gt;Installation&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-plugins/&gt;"&gt;&lt;page href="/plugins"&gt;Plugins&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-blog/&gt;"&gt;&lt;page href="/blog"&gt;Blog&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-about/&gt;"&gt;&lt;page href="about"&gt;?&lt;/page&gt;&lt;/li&gt;
+-->
   </ul>
   <div class="nav pull-right">  </div>
   </div>
@@ -28,9 +32,9 @@
 <div id="header">
   
   
-  
+  <main_/>
 </div>
-
+<main_/>
 
 
 <div class="ocamldoc-page">
@@ -59,7 +63,7 @@ Handling file paths.<br/>
 <pre><span id="VALpath"><span class="keyword">val</span> path</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; string list</code></pre>
 <pre><span id="VALof_string"><span class="keyword">val</span> of_string</span> : <code class="type">string -&gt; <a href="Ojs_path.html#TYPEt">t</a></code></pre>
 <pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; string</code></pre>
-<pre><span id="VALbasename"><span class="keyword">val</span> basename</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; string</code></pre><div class="info">
+<pre><span id="VALbasename"><span class="keyword">val</span> basename</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; string</code></pre><div class="info ">
 <b>Raises</b> <code>Invalid_argument</code> is the path is empty.<br/>
 </div>
 
@@ -67,7 +71,7 @@ Handling file paths.<br/>
 <pre><span id="VALappend"><span class="keyword">val</span> append</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; string list -&gt; <a href="Ojs_path.html#TYPEt">t</a></code></pre>
 <pre><span id="VALappend_path"><span class="keyword">val</span> append_path</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; <a href="Ojs_path.html#TYPEt">t</a> -&gt; <a href="Ojs_path.html#TYPEt">t</a></code></pre>
 <pre><span id="VALis_prefix"><span class="keyword">val</span> is_prefix</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; <a href="Ojs_path.html#TYPEt">t</a> -&gt; bool</code></pre>
-<pre><span id="VALnormalize"><span class="keyword">val</span> normalize</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; <a href="Ojs_path.html#TYPEt">t</a></code></pre><div class="info">
+<pre><span id="VALnormalize"><span class="keyword">val</span> normalize</span> : <code class="type"><a href="Ojs_path.html#TYPEt">t</a> -&gt; <a href="Ojs_path.html#TYPEt">t</a></code></pre><div class="info ">
 <code class="code">normalize path</code> returns <code class="code">path</code> where <code class="code">Filename.parent_dir_name</code>
   and <code class="code">Filename.current_dir_name</code> have been handled so they don't appear anymore.
   Note that <code class="code">/..</code> becomes <code class="code">/</code> (i.e. no error in case there are too many separators).<br/>
@@ -78,9 +82,10 @@ Handling file paths.<br/>
 
 
 
+<!--&lt;script type="text/javascript" src="&lt;site-url/&gt;/jquery.js"&gt;_&lt;/script&gt;-->
+<!--&lt;script type="text/javascript" src="&lt;site-url/&gt;/bootstrap-collapse.js"&gt;_&lt;/script&gt;-->
 
-
-
-</div> 
+</div> <!-- #page -->
 </body>
 </html>
+

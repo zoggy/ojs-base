@@ -1,4 +1,3 @@
-<!DOCTYPE HTML>
 <html>
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
@@ -10,13 +9,18 @@
 <div class="navbar navbar-fixed-top">
 <div class="navbar-inner">
 <div class="container">
-
+<!--&lt;image float="right" src="&lt;site-url/&gt;/stog-logo.svg" width="30"/&gt;-->
 
   <div class="nav-collapse">
     <ul class="nav">
     <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
     <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
-
+<!--
+    &lt;li class="&lt;navbar-install/&gt;"&gt;&lt;page href="/install"&gt;Installation&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-plugins/&gt;"&gt;&lt;page href="/plugins"&gt;Plugins&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-blog/&gt;"&gt;&lt;page href="/blog"&gt;Blog&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-about/&gt;"&gt;&lt;page href="about"&gt;?&lt;/page&gt;&lt;/li&gt;
+-->
   </ul>
   <div class="nav pull-right">  </div>
   </div>
@@ -28,30 +32,33 @@
 <div id="header">
   
   
-  
+  <main_/>
 </div>
-
+<main_/>
 
 
 <div class="ocamldoc-page">
 <code class="code"><span class="keyword">sig</span><br/>
+  <span class="keyword">module</span> <span class="constructor">X</span> = <span class="constructor">Xtmpl_rewrite</span><br/>
   <span class="keyword">val</span> script_js :<br/>
-    ?env:unit <span class="constructor">Xtmpl</span>.env <span class="keywordsign">-&gt;</span><br/>
-    ?msg:string <span class="keywordsign">-&gt;</span> src:string <span class="keywordsign">-&gt;</span> unit <span class="keywordsign">-&gt;</span> <span class="constructor">Xtmpl</span>.tree list<br/>
+    ?env:unit <span class="constructor">Xtmpl_rewrite</span>.env <span class="keywordsign">-&gt;</span><br/>
+    ?msg:string <span class="keywordsign">-&gt;</span> src:string <span class="keywordsign">-&gt;</span> unit <span class="keywordsign">-&gt;</span> <span class="constructor">Xtmpl_rewrite</span>.tree list<br/>
   <span class="keyword">val</span> html_page :<br/>
-    ?env:unit <span class="constructor">Xtmpl</span>.env <span class="keywordsign">-&gt;</span><br/>
-    body:<span class="constructor">Xtmpl</span>.tree list <span class="keywordsign">-&gt;</span><br/>
-    ?headers:<span class="constructor">Xtmpl</span>.tree list <span class="keywordsign">-&gt;</span> page_title:string <span class="keywordsign">-&gt;</span> unit <span class="keywordsign">-&gt;</span> <span class="constructor">Xtmpl</span>.tree list<br/>
-  <span class="keyword">val</span> link_css : string <span class="keywordsign">-&gt;</span> <span class="constructor">Xtmpl</span>.tree<br/>
+    ?env:unit <span class="constructor">Xtmpl_rewrite</span>.env <span class="keywordsign">-&gt;</span><br/>
+    body:<span class="constructor">Xtmpl_rewrite</span>.tree list <span class="keywordsign">-&gt;</span><br/>
+    ?headers:<span class="constructor">Xtmpl_rewrite</span>.tree list <span class="keywordsign">-&gt;</span><br/>
+    page_title:string <span class="keywordsign">-&gt;</span> unit <span class="keywordsign">-&gt;</span> <span class="constructor">Xtmpl_rewrite</span>.tree list<br/>
+  <span class="keyword">val</span> link_css : string <span class="keywordsign">-&gt;</span> <span class="constructor">Xtmpl_rewrite</span>.tree<br/>
 <span class="keyword">end</span></code></div>
 
 
 
 
 
+<!--&lt;script type="text/javascript" src="&lt;site-url/&gt;/jquery.js"&gt;_&lt;/script&gt;-->
+<!--&lt;script type="text/javascript" src="&lt;site-url/&gt;/bootstrap-collapse.js"&gt;_&lt;/script&gt;-->
 
-
-
-</div> 
+</div> <!-- #page -->
 </body>
 </html>
+

@@ -1,0 +1,61 @@
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>Ojs-base : Ojs-base : Ojsed_js.S</title>
+<link href="https://zoggy.github.io/ojs-base/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="page">
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container">
+<!--&lt;image float="right" src="&lt;site-url/&gt;/stog-logo.svg" width="30"/&gt;-->
+
+  <div class="nav-collapse">
+    <ul class="nav">
+    <li class="&lt;navbar-home/&gt;"><a href="https://zoggy.github.io/ojs-base/index.html">Ojs-base</a></li>
+    <li class="active"><a href="https://zoggy.github.io/ojs-base/refdoc/">Documentation</a></li>
+<!--
+    &lt;li class="&lt;navbar-install/&gt;"&gt;&lt;page href="/install"&gt;Installation&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-plugins/&gt;"&gt;&lt;page href="/plugins"&gt;Plugins&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-blog/&gt;"&gt;&lt;page href="/blog"&gt;Blog&lt;/page&gt;&lt;/li&gt;
+    &lt;li class="&lt;navbar-about/&gt;"&gt;&lt;page href="about"&gt;?&lt;/page&gt;&lt;/li&gt;
+-->
+  </ul>
+  <div class="nav pull-right">  </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<div id="header">
+  
+  
+  <main_/>
+</div>
+<main_/>
+
+
+<div class="ocamldoc-page">
+<div class="navbar"> <a class="up" href="Ojsed_js.html" title="Ojsed_js">Up</a>
+ </div>
+<h1>Module type <a href="type_Ojsed_js.S.html">Ojsed_js.S</a></h1>
+
+<pre><span class="keyword">module type</span> S = <code class="code">sig</code> <a href="Ojsed_js.S.html">..</a> <code class="code">end</code></pre><hr width="100%"/>
+
+<pre><span class="keyword">module</span> <a href="Ojsed_js.S.P.html">P</a>: <code class="type"><a href="Ojsed_types.P.html">Ojsed_types.P</a></code><code class="type"> </code></pre>
+<pre><span name="TYPEeditor"><span class="keyword">class</span> <a href="Ojsed_js.S.editor-c.html">editor</a></span> : <code class="type">(P.client_msg -&gt; (P.server_msg -&gt; unit Lwt.t) -&gt; unit Lwt.t) -&gt; (P.client_msg -&gt; unit Lwt.t) -&gt; bar_id:string -&gt; msg_id:string -&gt; string -&gt; </code><code class="code">object</code> <a href="Ojsed_js.S.editor-c.html">..</a> <code class="code">end</code></pre>
+<pre><span name="TYPEeditors"><span class="keyword">class</span> <a href="Ojsed_js.S.editors-c.html">editors</a></span> : <code class="type">(P.app_client_msg -&gt; (P.app_server_msg -&gt; unit Lwt.t) -&gt; unit Lwt.t) -&gt; (P.app_client_msg -&gt; unit Lwt.t) -&gt; ((P.client_msg -&gt; (P.server_msg -&gt; unit Lwt.t) -&gt; unit Lwt.t) -&gt;<br/>       (P.client_msg -&gt; unit Lwt.t) -&gt;<br/>       bar_id:string -&gt; msg_id:string -&gt; string -&gt; <a href="Ojsed_js.S.editor-c.html">editor</a>) -&gt; </code><code class="code">object</code> <a href="Ojsed_js.S.editors-c.html">..</a> <code class="code">end</code></pre></div>
+
+
+
+
+
+<!--&lt;script type="text/javascript" src="&lt;site-url/&gt;/jquery.js"&gt;_&lt;/script&gt;-->
+<!--&lt;script type="text/javascript" src="&lt;site-url/&gt;/bootstrap-collapse.js"&gt;_&lt;/script&gt;-->
+
+</div> <!-- #page -->
+</body>
+</html>
+
