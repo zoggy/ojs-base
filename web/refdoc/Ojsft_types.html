@@ -21,7 +21,7 @@ All paths should be relative to root directory.<br/>
 <pre><span id="TYPEmime_type"><span class="keyword">type</span> mime_type</span> = <code class="type">string</code> </pre>
 
 
-<pre><span id="TYPEfile_tree"><span class="keyword">type</span> file_tree</span> = <code class="type">file_tree</code> </pre>
+<pre><span id="TYPEfile_tree"><span class="keyword">type</span> file_tree</span> = <code class="type">[ `Dir of string * <a href="Ojsft_types.html#TYPEfile_tree">file_tree</a> list<br/>       | `File of string * <a href="Ojsft_types.html#TYPEmime_type">mime_type</a> ]</code> </pre>
 
 
 <pre><span class="keyword">module type</span> <a href="Ojsft_types.B.html">B</a> = <code class="code">sig</code> <a href="Ojsft_types.B.html">..</a> <code class="code">end</code></pre>

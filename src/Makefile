@@ -355,7 +355,7 @@ dump_js.odoc:
 docstog: dump.odoc dump_js.odoc
 	$(MKDIR) ../web/refdoc
 	$(OCAMLFIND) ocamldoc 	-load dump.odoc -load dump_js.odoc \
-	-t Ojs-base -d ../web/refdoc -g odoc_stog.cmo
+	-t Ojs-base -d ../web/refdoc -i `$(OCAMLFIND) query stog` -g odoc_stog.cmo
 
 
 ##########

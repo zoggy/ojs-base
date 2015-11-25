@@ -1,0 +1,20 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<ocamldoc with-contents="true">
+<title>Ojs-base : Ojsl_js.Make.elist</title><contents><div class="ocamldoc-page">
+<div class="navbar">&#160;<a class="up" href="Ojsl_js.Make.html" title="Ojsl_js.Make">Up</a>
+&#160;<a class="post" href="Ojsl_js.Make.elists-c.html" title="Ojsl_js.Make.elists">Next</a>
+</div>
+<h1>Class <a href="type_Ojsl_js.Make.elist.html">Ojsl_js.Make.elist</a></h1>
+
+<pre><span name="TYPEelist"><span class="keyword">class</span> elist</span> : <code class="type">(Ojsl_js.P.elt Ojsl_js.P.client_msg -&gt;<br/>       (Ojsl_js.P.elt Ojsl_js.P.server_msg -&gt; unit Lwt.t) -&gt; unit Lwt.t) -&gt; 'a -&gt; msg_id:<a href="Ojs_js.html#TYPEid">Ojs_js.id</a> -&gt; <a href="Ojs_js.html#TYPEid">Ojs_js.id</a> -&gt; </code><code class="code">object</code> <a href="Ojsl_js.Make.elist-c.html">..</a> <code class="code">end</code></pre><hr width="100%"/>
+
+<pre><span id="ATTlist"><span class="keyword">val</span> <span class="keyword">mutable</span> list</span> : <code class="type">(<a href="Ojs_js.html#TYPEid">Ojs_js.id</a> * Ojsl_js.P.elt) list</code></pre>
+<pre><span id="METHODid"><span class="keyword">method</span> id</span> : <code class="type"><a href="Ojs_js.html#TYPEid">Ojs_js.id</a></code></pre>
+<pre><span id="METHODmsg_id"><span class="keyword">method</span> msg_id</span> : <code class="type"><a href="Ojs_js.html#TYPEid">Ojs_js.id</a></code></pre>
+<pre><span id="METHODdisplay_error"><span class="keyword">method</span> display_error</span> : <code class="type">string -&gt; unit</code></pre>
+<pre><span id="METHODsimple_call"><span class="keyword">method</span> simple_call</span> : <code class="type">Ojsl_js.P.elt Ojsl_js.P.client_msg -&gt; unit Lwt.t</code></pre>
+<pre><span id="METHODhandle_add"><span class="keyword">method</span> handle_add</span> : <code class="type">Ojsl_js.P.elt -&gt; unit</code></pre>
+<pre><span id="METHODhandle_delete"><span class="keyword">method</span> handle_delete</span> : <code class="type">Ojsl_js.P.elt -&gt; unit</code></pre>
+<pre><span id="METHODset_list"><span class="keyword">method</span> set_list</span> : <code class="type">Ojsl_js.P.elt list -&gt; unit</code></pre>
+<pre><span id="METHODhandle_message"><span class="keyword">method</span> handle_message</span> : <code class="type">Ojsl_js.P.elt Ojsl_js.P.server_msg -&gt; bool Js.t</code></pre>
+<pre><span id="METHODupdate_list"><span class="keyword">method</span> update_list</span> : <code class="type">unit Lwt.t</code></pre></div></contents></ocamldoc>
