@@ -230,11 +230,11 @@ $(LIBJS): $(LIB_BYTE) $(LIBJS_CMIFILES) $(LIBJS_CMOFILES)
 # PPX
 
 $(PPX): $(PPX_CMXFILES)
-	$(OCAMLFIND) ocamlopt -o $@ -package ppx_tools.metaquot,str,xmlm,xtmpl \
+	$(OCAMLFIND) ocamlopt -o $@ -package ppx_tools.metaquot,str,xtmpl \
 	$(COMPFLAGS) -linkpkg $<
 
 $(PPX_BYTE): $(PPX_CMOFILES)
-	$(OCAMLFIND) ocamlc -o $@ -package ppx_tools.metaquot,str,xmlm,xtmpl \
+	$(OCAMLFIND) ocamlc -o $@ -package ppx_tools.metaquot,str,xtmpl \
 	$(COMPFLAGS) -linkpkg $<
 
 ppx_ojs.cmx: ppx_ojs.ml
