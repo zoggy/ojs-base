@@ -32,7 +32,7 @@ module J = Yojson.Safe
 module SMap : Map.S with type key = string
 
 val mk_msg_of_wsdata :
-  (J.json -> [< `Error of string | `Ok of 'a ]) -> string -> 'a option
+  (J.json -> ('a, string) result) -> string -> 'a option
 val mk_send_msg :
   ('a -> string) -> (Websocket_lwt.Frame.t -> unit Lwt.t) -> 'a -> unit Lwt.t
 val mk_msg_stream :

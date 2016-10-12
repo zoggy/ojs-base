@@ -454,7 +454,7 @@ let mk_type loc inputs =
   in
   let fields = SMap.fold field inputs [] in
   let ty = Type.mk ~kind: (Ptype_record fields) (Location.mkloc "t" loc) in
-  Str.type_ Nonrecursive [ty]
+  Str.type_ Recursive [ty]
 
 let mk_typ_form loc tmpl =
   let str = Exp.constant (Pconst_string (X.to_string tmpl, None)) in
@@ -462,7 +462,7 @@ let mk_typ_form loc tmpl =
     Typ.extension (Location.mkloc "xtmpl.string.type" loc, (PStr  [Str.eval str]))
   in
   let ty = Type.mk ~manifest: extension (Location.mkloc "form" loc) in
-  Str.type_ Nonrecursive [ty]
+  Str.type_ Recursive [ty]
 
 let mk_typ_template loc tmpl =
   let str = Exp.constant (Pconst_string (X.to_string tmpl, None)) in
@@ -470,7 +470,7 @@ let mk_typ_template loc tmpl =
     Typ.extension (Location.mkloc "xtmpl.string.type" loc, (PStr  [Str.eval str]))
   in
   let ty = Type.mk ~manifest: extension (Location.mkloc "template" loc) in
-  Str.type_ Nonrecursive [ty]
+  Str.type_ Recursive [ty]
 
 let mk_exn loc =
   Str.exception_
