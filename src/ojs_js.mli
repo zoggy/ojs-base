@@ -44,7 +44,7 @@ val log : string -> unit
 (** Helper function to read a messsage from a websocket frame data,
   using the given (json to msg) function. *)
 val mk_msg_of_wsdata :
-  (Yojson.Safe.json -> [< `Error of string | `Ok of 'a ]) ->
+  (Yojson.Safe.json -> ('a, string) result) ->
   string -> 'a option
 
 (** Used to create ojs specific classes. [class_ str] returns ["ojs-"^str]. *)

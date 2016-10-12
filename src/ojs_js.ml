@@ -39,8 +39,8 @@ let mk_msg_of_wsdata server_msg_of_yojson =
   fun s ->
     try
       match server_msg_of_yojson (Yojson.Safe.from_string s) with
-        `Error s -> failwith (s ^ "\n" ^ s)
-      | `Ok msg -> Some msg
+        Error s -> failwith (s ^ "\n" ^ s)
+      | Ok msg -> Some msg
     with
       e ->
         log (Printexc.to_string e);
