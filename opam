@@ -8,6 +8,8 @@ dev-repo: "https://github.com/zoggy/ojs-base.git"
 bug-reports: "https://github.com/zoggy/ojs-base/issues"
 tags: ["javascript" "web" "components"]
 
+version: 0.5.0
+
 build: [
   ["./configure" "--prefix" prefix]
   [make "all"]
