@@ -1,3 +1,6 @@
+Next release:
+- upgrade to ocaml 4.03.0
+
 Release 0.4.0:
 - use Xtmpl >= 0.13.0
 

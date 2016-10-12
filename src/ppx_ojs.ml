@@ -74,7 +74,7 @@ let file_path node exp =
     | f -> Filename.dirname f
   in
   match exp.pexp_desc with
-  | Pexp_constant (Const_string (file, _)) ->
+  | Pexp_constant (Pconst_string (file, _)) ->
       begin
         match Filename.is_relative file with
         | true -> Filename.concat base_path file
@@ -428,7 +428,7 @@ let mk_template loc tmpl =
     [ Vb.mk (Pat.var (Location.mkloc "template_" loc))
       (Exp.extension
        (Location.mkloc "xtmpl.string" loc,
-        (PStr  [(Str.eval (Exp.constant (Const_string (X.to_string tmpl, None))))]))
+        (PStr  [(Str.eval (Exp.constant (Pconst_string (X.to_string tmpl, None))))]))
       )
     ]
 
@@ -454,28 +454,28 @@ let mk_type loc inputs =
   in
   let fields = SMap.fold field inputs [] in
   let ty = Type.mk ~kind: (Ptype_record fields) (Location.mkloc "t" loc) in
-  Str.type_ [ty]
+  Str.type_ Nonrecursive [ty]
 
 let mk_typ_form loc tmpl =
-  let str = Exp.constant (Const_string (X.to_string tmpl, None)) in
+  let str = Exp.constant (Pconst_string (X.to_string tmpl, None)) in
   let extension =
     Typ.extension (Location.mkloc "xtmpl.string.type" loc, (PStr  [Str.eval str]))
   in
   let ty = Type.mk ~manifest: extension (Location.mkloc "form" loc) in
-  Str.type_ [ty]
+  Str.type_ Nonrecursive [ty]
 
 let mk_typ_template loc tmpl =
-  let str = Exp.constant (Const_string (X.to_string tmpl, None)) in
+  let str = Exp.constant (Pconst_string (X.to_string tmpl, None)) in
   let extension =
     Typ.extension (Location.mkloc "xtmpl.string.type" loc, (PStr  [Str.eval str]))
   in
   let ty = Type.mk ~manifest: extension (Location.mkloc "template" loc) in
-  Str.type_ [ty]
+  Str.type_ Nonrecursive [ty]
 
 let mk_exn loc =
   Str.exception_
     (Te.decl
-      ~args: [ [%type: template * string list] ]
+      ~args: (Pcstr_tuple [ [%type: template * string list] ])
       (Location.mkloc "Error" loc)
     )
 
@@ -491,7 +491,7 @@ let mk_read_form loc inputs =
             `CData -> [%expr fun v -> Some v]
           | `Other (_,_,of_s) -> [%expr Some (([%e parse_ocaml_expression loc of_s]) v)]
     in
-    let e_name = Exp.constant (Const_string (name, None)) in
+    let e_name = Exp.constant (Pconst_string (name, None)) in
     [%expr
       let [%p (Pat.var (Location.mkloc id loc))] =
         read_param__ [%e mand] [%e e_name] [%e of_string]
@@ -543,7 +543,7 @@ let mk_read_form loc inputs =
   in
   let call_form =
     let f name i acc =
-      let label = "?"^(to_id i) in
+      let label = Optional (to_id i) in
       let exp = [%expr None] in
       (label, exp) :: acc
     in
