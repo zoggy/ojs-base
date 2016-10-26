@@ -38,17 +38,17 @@
 
 
 <div class="ocamldoc-page">
-<code class="code"><span class="keyword">sig</span><br/>
-  <span class="keyword">module</span> <span class="constructor">X</span> = <span class="constructor">Xtmpl_rewrite</span><br/>
-  <span class="keyword">val</span> script_js :<br/>
-    ?env:unit <span class="constructor">Xtmpl_rewrite</span>.env <span class="keywordsign">-&gt;</span><br/>
-    ?msg:string <span class="keywordsign">-&gt;</span> src:string <span class="keywordsign">-&gt;</span> unit <span class="keywordsign">-&gt;</span> <span class="constructor">Xtmpl_rewrite</span>.tree list<br/>
-  <span class="keyword">val</span> html_page :<br/>
-    ?env:unit <span class="constructor">Xtmpl_rewrite</span>.env <span class="keywordsign">-&gt;</span><br/>
-    body:<span class="constructor">Xtmpl_rewrite</span>.tree list <span class="keywordsign">-&gt;</span><br/>
-    ?headers:<span class="constructor">Xtmpl_rewrite</span>.tree list <span class="keywordsign">-&gt;</span><br/>
-    page_title:string <span class="keywordsign">-&gt;</span> unit <span class="keywordsign">-&gt;</span> <span class="constructor">Xtmpl_rewrite</span>.tree list<br/>
-  <span class="keyword">val</span> link_css : string <span class="keywordsign">-&gt;</span> <span class="constructor">Xtmpl_rewrite</span>.tree<br/>
+<code class="code"><span class="keyword">sig</span>
+  <span class="keyword">module</span> <span class="constructor">X</span> = <span class="constructor">Xtmpl_rewrite</span>
+  <span class="keyword">val</span> script_js :
+    ?env:unit <span class="constructor">Xtmpl_rewrite</span>.env <span class="keywordsign">-&gt;</span>
+    ?msg:string <span class="keywordsign">-&gt;</span> src:string <span class="keywordsign">-&gt;</span> unit <span class="keywordsign">-&gt;</span> <span class="constructor">Xtmpl_rewrite</span>.tree list
+  <span class="keyword">val</span> html_page :
+    ?env:unit <span class="constructor">Xtmpl_rewrite</span>.env <span class="keywordsign">-&gt;</span>
+    body:<span class="constructor">Xtmpl_rewrite</span>.tree list <span class="keywordsign">-&gt;</span>
+    ?headers:<span class="constructor">Xtmpl_rewrite</span>.tree list <span class="keywordsign">-&gt;</span>
+    page_title:string <span class="keywordsign">-&gt;</span> unit <span class="keywordsign">-&gt;</span> <span class="constructor">Xtmpl_rewrite</span>.tree list
+  <span class="keyword">val</span> link_css : string <span class="keywordsign">-&gt;</span> <span class="constructor">Xtmpl_rewrite</span>.tree
 <span class="keyword">end</span></code></div>
 
 

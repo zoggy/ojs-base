@@ -38,16 +38,16 @@
 
 
 <div class="ocamldoc-page">
-<code class="code">(<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-(<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-((<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
- (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> msg_id:string <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_js</span>.<span class="constructor">S</span>.tree) <span class="keywordsign">-&gt;</span><br/>
-<span class="keyword">object</span><br/>
-  <span class="keyword">val</span> <span class="keyword">mutable</span> trees : <span class="constructor">Ojsft_js</span>.<span class="constructor">S</span>.tree <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.t<br/>
-  <span class="keyword">method</span> get_msg_id : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> string<br/>
-  <span class="keyword">method</span> get_tree : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_js</span>.<span class="constructor">S</span>.tree<br/>
-  <span class="keyword">method</span> handle_message : <span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> bool <span class="constructor">Js</span>.t<br/>
-  <span class="keyword">method</span> setup_filetree : msg_id:string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_js</span>.<span class="constructor">S</span>.tree<br/>
+<code class="code">(<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+(<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+((<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+ (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> msg_id:string <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_js</span>.<span class="constructor">S</span>.tree) <span class="keywordsign">-&gt;</span>
+<span class="keyword">object</span>
+  <span class="keyword">val</span> <span class="keyword">mutable</span> trees : <span class="constructor">Ojsft_js</span>.<span class="constructor">S</span>.tree <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.t
+  <span class="keyword">method</span> get_msg_id : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> string
+  <span class="keyword">method</span> get_tree : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_js</span>.<span class="constructor">S</span>.tree
+  <span class="keyword">method</span> handle_message : <span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> bool <span class="constructor">Js</span>.t
+  <span class="keyword">method</span> setup_filetree : msg_id:string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_js</span>.<span class="constructor">S</span>.tree
 <span class="keyword">end</span></code></div>
 
 

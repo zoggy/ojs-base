@@ -38,22 +38,22 @@
 
 
 <div class="ocamldoc-page">
-<code class="code">(<span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span><br/>
- (<span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-<span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span><br/>
-msg_id:<span class="constructor">Ojs_js</span>.id <span class="keywordsign">-&gt;</span><br/>
-<span class="constructor">Ojs_js</span>.id <span class="keywordsign">-&gt;</span><br/>
-<span class="keyword">object</span><br/>
-  <span class="keyword">val</span> <span class="keyword">mutable</span> list : (<span class="constructor">Ojs_js</span>.id * <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt) list<br/>
-  <span class="keyword">method</span> display_error : string <span class="keywordsign">-&gt;</span> unit<br/>
-  <span class="keyword">method</span> handle_add : <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="keywordsign">-&gt;</span> unit<br/>
-  <span class="keyword">method</span> handle_delete : <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="keywordsign">-&gt;</span> unit<br/>
-  <span class="keyword">method</span> handle_message : <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> bool <span class="constructor">Js</span>.t<br/>
-  <span class="keyword">method</span> id : <span class="constructor">Ojs_js</span>.id<br/>
-  <span class="keyword">method</span> msg_id : <span class="constructor">Ojs_js</span>.id<br/>
-  <span class="keyword">method</span> set_list : <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt list <span class="keywordsign">-&gt;</span> unit<br/>
-  <span class="keyword">method</span> simple_call : <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-  <span class="keyword">method</span> update_list : unit <span class="constructor">Lwt</span>.t<br/>
+<code class="code">(<span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span>
+ (<span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+<span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span>
+msg_id:<span class="constructor">Ojs_js</span>.id <span class="keywordsign">-&gt;</span>
+<span class="constructor">Ojs_js</span>.id <span class="keywordsign">-&gt;</span>
+<span class="keyword">object</span>
+  <span class="keyword">val</span> <span class="keyword">mutable</span> list : (<span class="constructor">Ojs_js</span>.id * <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt) list
+  <span class="keyword">method</span> display_error : string <span class="keywordsign">-&gt;</span> unit
+  <span class="keyword">method</span> handle_add : <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="keywordsign">-&gt;</span> unit
+  <span class="keyword">method</span> handle_delete : <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="keywordsign">-&gt;</span> unit
+  <span class="keyword">method</span> handle_message : <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> bool <span class="constructor">Js</span>.t
+  <span class="keyword">method</span> id : <span class="constructor">Ojs_js</span>.id
+  <span class="keyword">method</span> msg_id : <span class="constructor">Ojs_js</span>.id
+  <span class="keyword">method</span> set_list : <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt list <span class="keywordsign">-&gt;</span> unit
+  <span class="keyword">method</span> simple_call : <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+  <span class="keyword">method</span> update_list : unit <span class="constructor">Lwt</span>.t
 <span class="keyword">end</span></code></div>
 
 

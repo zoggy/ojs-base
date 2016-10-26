@@ -38,56 +38,58 @@
 
 
 <div class="ocamldoc-page">
-<code class="code"><span class="keyword">functor</span> (<span class="constructor">P</span> : <span class="constructor">Ojs_types</span>.<span class="constructor">App_msg</span>) <span class="keywordsign">-&gt;</span><br/>
-  <span class="keyword">sig</span><br/>
-    <span class="keyword">type</span> app_server_msg = <span class="constructor">P</span>.app_server_msg = ..<br/>
-    <span class="keyword">module</span> <span class="constructor">M_app_server_msg_to_yojson</span> :<br/>
-      <span class="keyword">sig</span><br/>
-        <span class="keyword">type</span> t_to_yojson = {<br/>
-          <span class="keyword">mutable</span> f : app_server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;<br/>
-        }<br/>
-        <span class="keyword">val</span> f : t_to_yojson<br/>
-      <span class="keyword">end</span><br/>
-    <span class="keyword">val</span> app_server_msg_to_yojson : app_server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json<br/>
-    <span class="keyword">module</span> <span class="constructor">M_app_server_msg_of_yojson</span> :<br/>
-      <span class="keyword">sig</span><br/>
-        <span class="keyword">type</span> t_of_yojson = {<br/>
-          <span class="keyword">mutable</span> f :<br/>
-            <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span> [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> app_server_msg ];<br/>
-        }<br/>
-        <span class="keyword">val</span> f : t_of_yojson<br/>
-      <span class="keyword">end</span><br/>
-    <span class="keyword">val</span> app_server_msg_of_yojson :<br/>
-      <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span> [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> app_server_msg ]<br/>
-    <span class="keyword">type</span> app_client_msg = <span class="constructor">P</span>.app_client_msg = ..<br/>
-    <span class="keyword">module</span> <span class="constructor">M_app_client_msg_to_yojson</span> :<br/>
-      <span class="keyword">sig</span><br/>
-        <span class="keyword">type</span> t_to_yojson = {<br/>
-          <span class="keyword">mutable</span> f : app_client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;<br/>
-        }<br/>
-        <span class="keyword">val</span> f : t_to_yojson<br/>
-      <span class="keyword">end</span><br/>
-    <span class="keyword">val</span> app_client_msg_to_yojson : app_client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json<br/>
-    <span class="keyword">module</span> <span class="constructor">M_app_client_msg_of_yojson</span> :<br/>
-      <span class="keyword">sig</span><br/>
-        <span class="keyword">type</span> t_of_yojson = {<br/>
-          <span class="keyword">mutable</span> f :<br/>
-            <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span> [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> app_client_msg ];<br/>
-        }<br/>
-        <span class="keyword">val</span> f : t_of_yojson<br/>
-      <span class="keyword">end</span><br/>
-    <span class="keyword">val</span> app_client_msg_of_yojson :<br/>
-      <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span> [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> app_client_msg ]<br/>
-    <span class="keyword">type</span> app_server_msg +=<br/>
-        <span class="constructor">SCall</span> <span class="keyword">of</span> call_id * app_server_msg<br/>
-      <span class="keywordsign">|</span> <span class="constructor">SReturn</span> <span class="keyword">of</span> call_id * app_server_msg<br/>
-    <span class="keyword">type</span> app_client_msg +=<br/>
-        <span class="constructor">Call</span> <span class="keyword">of</span> call_id * app_client_msg<br/>
-      <span class="keywordsign">|</span> <span class="constructor">Return</span> <span class="keyword">of</span> call_id * app_client_msg<br/>
-    <span class="keyword">val</span> pack_server_call : call_id <span class="keywordsign">-&gt;</span> app_server_msg <span class="keywordsign">-&gt;</span> app_server_msg<br/>
-    <span class="keyword">val</span> pack_server_return : call_id <span class="keywordsign">-&gt;</span> app_server_msg <span class="keywordsign">-&gt;</span> app_server_msg<br/>
-    <span class="keyword">val</span> pack_client_call : call_id <span class="keywordsign">-&gt;</span> app_client_msg <span class="keywordsign">-&gt;</span> app_client_msg<br/>
-    <span class="keyword">val</span> pack_client_return : call_id <span class="keywordsign">-&gt;</span> app_client_msg <span class="keywordsign">-&gt;</span> app_client_msg<br/>
+<code class="code"><span class="keyword">functor</span> (<span class="constructor">P</span> : <span class="constructor">Ojs_types</span>.<span class="constructor">App_msg</span>) <span class="keywordsign">-&gt;</span>
+  <span class="keyword">sig</span>
+    <span class="keyword">type</span> app_server_msg = <span class="constructor">P</span>.app_server_msg = ..
+    <span class="keyword">module</span> <span class="constructor">M_app_server_msg_to_yojson</span> :
+      <span class="keyword">sig</span>
+        <span class="keyword">type</span> nonrec t_to_yojson = {
+          <span class="keyword">mutable</span> f : app_server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;
+        }
+        <span class="keyword">val</span> f : t_to_yojson
+      <span class="keyword">end</span>
+    <span class="keyword">val</span> app_server_msg_to_yojson : app_server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json
+    <span class="keyword">module</span> <span class="constructor">M_app_server_msg_of_yojson</span> :
+      <span class="keyword">sig</span>
+        <span class="keyword">type</span> nonrec t_of_yojson = {
+          <span class="keyword">mutable</span> f :
+            <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span>
+            app_server_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or;
+        }
+        <span class="keyword">val</span> f : t_of_yojson
+      <span class="keyword">end</span>
+    <span class="keyword">val</span> app_server_msg_of_yojson :
+      <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span> app_server_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or
+    <span class="keyword">type</span> app_client_msg = <span class="constructor">P</span>.app_client_msg = ..
+    <span class="keyword">module</span> <span class="constructor">M_app_client_msg_to_yojson</span> :
+      <span class="keyword">sig</span>
+        <span class="keyword">type</span> nonrec t_to_yojson = {
+          <span class="keyword">mutable</span> f : app_client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;
+        }
+        <span class="keyword">val</span> f : t_to_yojson
+      <span class="keyword">end</span>
+    <span class="keyword">val</span> app_client_msg_to_yojson : app_client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json
+    <span class="keyword">module</span> <span class="constructor">M_app_client_msg_of_yojson</span> :
+      <span class="keyword">sig</span>
+        <span class="keyword">type</span> nonrec t_of_yojson = {
+          <span class="keyword">mutable</span> f :
+            <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span>
+            app_client_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or;
+        }
+        <span class="keyword">val</span> f : t_of_yojson
+      <span class="keyword">end</span>
+    <span class="keyword">val</span> app_client_msg_of_yojson :
+      <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span> app_client_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or
+    <span class="keyword">type</span> app_server_msg +=
+        <span class="constructor">SCall</span> <span class="keyword">of</span> call_id * app_server_msg
+      <span class="keywordsign">|</span> <span class="constructor">SReturn</span> <span class="keyword">of</span> call_id * app_server_msg
+    <span class="keyword">type</span> app_client_msg +=
+        <span class="constructor">Call</span> <span class="keyword">of</span> call_id * app_client_msg
+      <span class="keywordsign">|</span> <span class="constructor">Return</span> <span class="keyword">of</span> call_id * app_client_msg
+    <span class="keyword">val</span> pack_server_call : call_id <span class="keywordsign">-&gt;</span> app_server_msg <span class="keywordsign">-&gt;</span> app_server_msg
+    <span class="keyword">val</span> pack_server_return : call_id <span class="keywordsign">-&gt;</span> app_server_msg <span class="keywordsign">-&gt;</span> app_server_msg
+    <span class="keyword">val</span> pack_client_call : call_id <span class="keywordsign">-&gt;</span> app_client_msg <span class="keywordsign">-&gt;</span> app_client_msg
+    <span class="keyword">val</span> pack_client_return : call_id <span class="keywordsign">-&gt;</span> app_client_msg <span class="keywordsign">-&gt;</span> app_client_msg
   <span class="keyword">end</span></code></div>
 
 

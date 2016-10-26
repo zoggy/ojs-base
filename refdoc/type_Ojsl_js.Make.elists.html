@@ -38,20 +38,20 @@
 
 
 <div class="ocamldoc-page">
-<code class="code">(<span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span><br/>
- (<span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-(<span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-((<span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span><br/>
-  (<span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
- (<span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
- msg_id:string <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">Make</span>.elist) <span class="keywordsign">-&gt;</span><br/>
-<span class="keyword">object</span><br/>
-  <span class="keyword">val</span> <span class="keyword">mutable</span> lists : <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">Make</span>.elist <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.t<br/>
-  <span class="keyword">method</span> get_list : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">Make</span>.elist<br/>
-  <span class="keyword">method</span> get_msg_id : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_js</span>.id<br/>
-  <span class="keyword">method</span> handle_message : <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> bool <span class="constructor">Js</span>.t<br/>
-  <span class="keyword">method</span> setup_list :<br/>
-    msg_id:string <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">Make</span>.elist<br/>
+<code class="code">(<span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span>
+ (<span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+(<span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+((<span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span>
+  (<span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+ (<span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+ msg_id:string <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">Make</span>.elist) <span class="keywordsign">-&gt;</span>
+<span class="keyword">object</span>
+  <span class="keyword">val</span> <span class="keyword">mutable</span> lists : <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">Make</span>.elist <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.t
+  <span class="keyword">method</span> get_list : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">Make</span>.elist
+  <span class="keyword">method</span> get_msg_id : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_js</span>.id
+  <span class="keyword">method</span> handle_message : <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> bool <span class="constructor">Js</span>.t
+  <span class="keyword">method</span> setup_list :
+    msg_id:string <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsl_js</span>.<span class="constructor">P</span>.elt <span class="constructor">Ojsl_js</span>.<span class="constructor">Make</span>.elist
 <span class="keyword">end</span></code></div>
 
 

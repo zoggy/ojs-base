@@ -38,178 +38,181 @@
 
 
 <div class="ocamldoc-page">
-<code class="code"><span class="keyword">sig</span><br/>
-  <span class="keyword">module</span> <span class="constructor">J</span> = <span class="constructor">Yojson</span>.<span class="constructor">Safe</span><br/>
-  <span class="keyword">module</span> <span class="constructor">SMap</span> :<br/>
-    <span class="keyword">sig</span><br/>
-      <span class="keyword">type</span> key = string<br/>
-      <span class="keyword">type</span> +<span class="keywordsign">'</span>a t<br/>
-      <span class="keyword">val</span> empty : <span class="keywordsign">'</span>a t<br/>
-      <span class="keyword">val</span> is_empty : <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> bool<br/>
-      <span class="keyword">val</span> mem : key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> bool<br/>
-      <span class="keyword">val</span> add : key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t<br/>
-      <span class="keyword">val</span> singleton : key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t<br/>
-      <span class="keyword">val</span> remove : key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t<br/>
-      <span class="keyword">val</span> merge :<br/>
-        (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a option <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b option <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>c option) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>c t<br/>
-      <span class="keyword">val</span> compare : (<span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> int) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> int<br/>
-      <span class="keyword">val</span> equal : (<span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> bool<br/>
-      <span class="keyword">val</span> iter : (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> unit) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> unit<br/>
-      <span class="keyword">val</span> fold : (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b<br/>
-      <span class="keyword">val</span> for_all : (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> bool<br/>
-      <span class="keyword">val</span> exists : (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> bool<br/>
-      <span class="keyword">val</span> filter : (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t<br/>
-      <span class="keyword">val</span> partition : (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t * <span class="keywordsign">'</span>a t<br/>
-      <span class="keyword">val</span> cardinal : <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> int<br/>
-      <span class="keyword">val</span> bindings : <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> (key * <span class="keywordsign">'</span>a) list<br/>
-      <span class="keyword">val</span> min_binding : <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> key * <span class="keywordsign">'</span>a<br/>
-      <span class="keyword">val</span> max_binding : <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> key * <span class="keywordsign">'</span>a<br/>
-      <span class="keyword">val</span> choose : <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> key * <span class="keywordsign">'</span>a<br/>
-      <span class="keyword">val</span> split : key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t * <span class="keywordsign">'</span>a option * <span class="keywordsign">'</span>a t<br/>
-      <span class="keyword">val</span> find : key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a<br/>
-      <span class="keyword">val</span> map : (<span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b t<br/>
-      <span class="keyword">val</span> mapi : (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b t<br/>
-    <span class="keyword">end</span><br/>
-  <span class="keyword">val</span> mk_msg_of_wsdata :<br/>
-    (<span class="constructor">J</span>.json <span class="keywordsign">-&gt;</span> [&lt; <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> <span class="keywordsign">'</span>a ]) <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a option<br/>
-  <span class="keyword">val</span> mk_send_msg :<br/>
-    (<span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> string) <span class="keywordsign">-&gt;</span><br/>
-    (<span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-  <span class="keyword">val</span> mk_msg_stream :<br/>
-    (string <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a option) <span class="keywordsign">-&gt;</span><br/>
-    <span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="constructor">Lwt_stream</span>.t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="constructor">Lwt_stream</span>.t<br/>
-  <span class="keyword">val</span> handle_messages :<br/>
-    (string <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a option) <span class="keywordsign">-&gt;</span><br/>
-    (<span class="keywordsign">'</span>b <span class="keywordsign">-&gt;</span> string) <span class="keywordsign">-&gt;</span><br/>
-    ((<span class="keywordsign">'</span>b <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-    <span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="constructor">Lwt_stream</span>.t <span class="keywordsign">-&gt;</span><br/>
-    (<span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-  <span class="keyword">module</span> <span class="keyword">type</span> <span class="constructor">P</span> =<br/>
-    <span class="keyword">sig</span><br/>
-      <span class="keyword">type</span> app_server_msg = ..<br/>
-      <span class="keyword">module</span> <span class="constructor">M_app_server_msg_to_yojson</span> :<br/>
-        <span class="keyword">sig</span><br/>
-          <span class="keyword">type</span> t_to_yojson = {<br/>
-            <span class="keyword">mutable</span> f : app_server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;<br/>
-          }<br/>
-          <span class="keyword">val</span> f : t_to_yojson<br/>
-        <span class="keyword">end</span><br/>
-      <span class="keyword">val</span> app_server_msg_to_yojson : app_server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json<br/>
-      <span class="keyword">module</span> <span class="constructor">M_app_server_msg_of_yojson</span> :<br/>
-        <span class="keyword">sig</span><br/>
-          <span class="keyword">type</span> t_of_yojson = {<br/>
-            <span class="keyword">mutable</span> f :<br/>
-              <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span><br/>
-              [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> app_server_msg ];<br/>
-          }<br/>
-          <span class="keyword">val</span> f : t_of_yojson<br/>
-        <span class="keyword">end</span><br/>
-      <span class="keyword">val</span> app_server_msg_of_yojson :<br/>
-        <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span> [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> app_server_msg ]<br/>
-      <span class="keyword">type</span> app_client_msg = ..<br/>
-      <span class="keyword">module</span> <span class="constructor">M_app_client_msg_to_yojson</span> :<br/>
-        <span class="keyword">sig</span><br/>
-          <span class="keyword">type</span> t_to_yojson = {<br/>
-            <span class="keyword">mutable</span> f : app_client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;<br/>
-          }<br/>
-          <span class="keyword">val</span> f : t_to_yojson<br/>
-        <span class="keyword">end</span><br/>
-      <span class="keyword">val</span> app_client_msg_to_yojson : app_client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json<br/>
-      <span class="keyword">module</span> <span class="constructor">M_app_client_msg_of_yojson</span> :<br/>
-        <span class="keyword">sig</span><br/>
-          <span class="keyword">type</span> t_of_yojson = {<br/>
-            <span class="keyword">mutable</span> f :<br/>
-              <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span><br/>
-              [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> app_client_msg ];<br/>
-          }<br/>
-          <span class="keyword">val</span> f : t_of_yojson<br/>
-        <span class="keyword">end</span><br/>
-      <span class="keyword">val</span> app_client_msg_of_yojson :<br/>
-        <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span> [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> app_client_msg ]<br/>
-      <span class="keyword">type</span> app_server_msg +=<br/>
-          <span class="constructor">SCall</span> <span class="keyword">of</span> <span class="constructor">Ojs_rpc</span>.call_id * app_server_msg<br/>
-        <span class="keywordsign">|</span> <span class="constructor">SReturn</span> <span class="keyword">of</span> <span class="constructor">Ojs_rpc</span>.call_id * app_server_msg<br/>
-      <span class="keyword">type</span> app_client_msg +=<br/>
-          <span class="constructor">Call</span> <span class="keyword">of</span> <span class="constructor">Ojs_rpc</span>.call_id * app_client_msg<br/>
-        <span class="keywordsign">|</span> <span class="constructor">Return</span> <span class="keyword">of</span> <span class="constructor">Ojs_rpc</span>.call_id * app_client_msg<br/>
-      <span class="keyword">val</span> pack_server_call :<br/>
-        <span class="constructor">Ojs_rpc</span>.call_id <span class="keywordsign">-&gt;</span> app_server_msg <span class="keywordsign">-&gt;</span> app_server_msg<br/>
-      <span class="keyword">val</span> pack_server_return :<br/>
-        <span class="constructor">Ojs_rpc</span>.call_id <span class="keywordsign">-&gt;</span> app_server_msg <span class="keywordsign">-&gt;</span> app_server_msg<br/>
-      <span class="keyword">val</span> pack_client_call :<br/>
-        <span class="constructor">Ojs_rpc</span>.call_id <span class="keywordsign">-&gt;</span> app_client_msg <span class="keywordsign">-&gt;</span> app_client_msg<br/>
-      <span class="keyword">val</span> pack_client_return :<br/>
-        <span class="constructor">Ojs_rpc</span>.call_id <span class="keywordsign">-&gt;</span> app_client_msg <span class="keywordsign">-&gt;</span> app_client_msg<br/>
-      <span class="keyword">val</span> msg_of_wsdata : string <span class="keywordsign">-&gt;</span> app_client_msg option<br/>
-      <span class="keyword">val</span> wsdata_of_msg : app_server_msg <span class="keywordsign">-&gt;</span> string<br/>
-    <span class="keyword">end</span><br/>
-  <span class="keyword">module</span> <span class="keyword">type</span> <span class="constructor">S</span> =<br/>
-    <span class="keyword">sig</span><br/>
-      <span class="keyword">module</span> <span class="constructor">Rpc</span> : <span class="constructor">Ojs_rpc</span>.<span class="constructor">S</span><br/>
-      <span class="keyword">class</span> connection_group :<br/>
-        <span class="keyword">object</span><br/>
-          <span class="keyword">val</span> <span class="keyword">mutable</span> connections :<br/>
-            ((<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) * <span class="constructor">Rpc</span>.t) list<br/>
-          <span class="keyword">val</span> <span class="keyword">mutable</span> handle_message :<br/>
-            (<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-            <span class="constructor">Rpc</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-          <span class="keyword">method</span> add_connection :<br/>
-            <span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="constructor">Lwt_stream</span>.t <span class="keywordsign">-&gt;</span><br/>
-            (<span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-          <span class="keyword">method</span> broadcall :<br/>
-            <span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span><br/>
-            (<span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-          <span class="keyword">method</span> broadcast : <span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-          <span class="keyword">method</span> handle_message :<br/>
-            (<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-            <span class="constructor">Rpc</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-          <span class="keyword">method</span> remove_connection :<br/>
-            (<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit<br/>
-          <span class="keyword">method</span> set_handle_message :<br/>
-            ((<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-             <span class="constructor">Rpc</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-            unit<br/>
-        <span class="keyword">end</span><br/>
-    <span class="keyword">end</span><br/>
-  <span class="keyword">module</span> <span class="constructor">Make</span> :<br/>
-    <span class="keyword">functor</span> (<span class="constructor">P</span> : <span class="constructor">P</span>) <span class="keywordsign">-&gt;</span><br/>
-      <span class="keyword">sig</span><br/>
-        <span class="keyword">module</span> <span class="constructor">Rpc</span> :<br/>
-          <span class="keyword">sig</span><br/>
-            <span class="keyword">type</span> app_server_msg = <span class="constructor">P</span>.app_server_msg<br/>
-            <span class="keyword">type</span> app_client_msg = <span class="constructor">P</span>.app_client_msg<br/>
-            <span class="keyword">type</span> t<br/>
-            <span class="keyword">val</span> rpc_handler : (app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> t<br/>
-            <span class="keyword">val</span> call :<br/>
-              t <span class="keywordsign">-&gt;</span> app_server_msg <span class="keywordsign">-&gt;</span> (app_client_msg <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="constructor">Lwt</span>.t<br/>
-            <span class="keyword">val</span> return : t <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_rpc</span>.call_id <span class="keywordsign">-&gt;</span> app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-            <span class="keyword">val</span> on_return : t <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_rpc</span>.call_id <span class="keywordsign">-&gt;</span> app_client_msg <span class="keywordsign">-&gt;</span> unit<br/>
-          <span class="keyword">end</span><br/>
-        <span class="keyword">class</span> connection_group :<br/>
-          <span class="keyword">object</span><br/>
-            <span class="keyword">val</span> <span class="keyword">mutable</span> connections :<br/>
-              ((<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) * <span class="constructor">Rpc</span>.t) list<br/>
-            <span class="keyword">val</span> <span class="keyword">mutable</span> handle_message :<br/>
-              (<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-              <span class="constructor">Rpc</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-            <span class="keyword">method</span> add_connection :<br/>
-              <span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="constructor">Lwt_stream</span>.t <span class="keywordsign">-&gt;</span><br/>
-              (<span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-            <span class="keyword">method</span> broadcall :<br/>
-              <span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span><br/>
-              (<span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-            <span class="keyword">method</span> broadcast : <span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-            <span class="keyword">method</span> handle_message :<br/>
-              (<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-              <span class="constructor">Rpc</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-            <span class="keyword">method</span> remove_connection :<br/>
-              (<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit<br/>
-            <span class="keyword">method</span> set_handle_message :<br/>
-              ((<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-               <span class="constructor">Rpc</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-              unit<br/>
-          <span class="keyword">end</span><br/>
-      <span class="keyword">end</span><br/>
+<code class="code"><span class="keyword">sig</span>
+  <span class="keyword">module</span> <span class="constructor">J</span> = <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>
+  <span class="keyword">module</span> <span class="constructor">SMap</span> :
+    <span class="keyword">sig</span>
+      <span class="keyword">type</span> key = string
+      <span class="keyword">type</span> +<span class="keywordsign">'</span>a t
+      <span class="keyword">val</span> empty : <span class="keywordsign">'</span>a t
+      <span class="keyword">val</span> is_empty : <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> bool
+      <span class="keyword">val</span> mem : key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> bool
+      <span class="keyword">val</span> add : key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t
+      <span class="keyword">val</span> singleton : key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t
+      <span class="keyword">val</span> remove : key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t
+      <span class="keyword">val</span> merge :
+        (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a option <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b option <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>c option) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>c t
+      <span class="keyword">val</span> union : (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a option) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t
+      <span class="keyword">val</span> compare : (<span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> int) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> int
+      <span class="keyword">val</span> equal : (<span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> bool
+      <span class="keyword">val</span> iter : (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> unit) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> unit
+      <span class="keyword">val</span> fold : (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b
+      <span class="keyword">val</span> for_all : (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> bool
+      <span class="keyword">val</span> exists : (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> bool
+      <span class="keyword">val</span> filter : (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t
+      <span class="keyword">val</span> partition : (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t * <span class="keywordsign">'</span>a t
+      <span class="keyword">val</span> cardinal : <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> int
+      <span class="keyword">val</span> bindings : <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> (key * <span class="keywordsign">'</span>a) list
+      <span class="keyword">val</span> min_binding : <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> key * <span class="keywordsign">'</span>a
+      <span class="keyword">val</span> max_binding : <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> key * <span class="keywordsign">'</span>a
+      <span class="keyword">val</span> choose : <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> key * <span class="keywordsign">'</span>a
+      <span class="keyword">val</span> split : key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t * <span class="keywordsign">'</span>a option * <span class="keywordsign">'</span>a t
+      <span class="keyword">val</span> find : key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a
+      <span class="keyword">val</span> map : (<span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b t
+      <span class="keyword">val</span> mapi : (key <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b t
+    <span class="keyword">end</span>
+  <span class="keyword">val</span> mk_msg_of_wsdata :
+    (<span class="constructor">J</span>.json <span class="keywordsign">-&gt;</span> (<span class="keywordsign">'</span>a, string) <span class="constructor">Pervasives</span>.result) <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a option
+  <span class="keyword">val</span> mk_send_msg :
+    (<span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> string) <span class="keywordsign">-&gt;</span>
+    (<span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+  <span class="keyword">val</span> mk_msg_stream :
+    (string <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a option) <span class="keywordsign">-&gt;</span>
+    <span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="constructor">Lwt_stream</span>.t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="constructor">Lwt_stream</span>.t
+  <span class="keyword">val</span> handle_messages :
+    (string <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a option) <span class="keywordsign">-&gt;</span>
+    (<span class="keywordsign">'</span>b <span class="keywordsign">-&gt;</span> string) <span class="keywordsign">-&gt;</span>
+    ((<span class="keywordsign">'</span>b <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+    <span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="constructor">Lwt_stream</span>.t <span class="keywordsign">-&gt;</span>
+    (<span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+  <span class="keyword">module</span> <span class="keyword">type</span> <span class="constructor">P</span> =
+    <span class="keyword">sig</span>
+      <span class="keyword">type</span> app_server_msg = ..
+      <span class="keyword">module</span> <span class="constructor">M_app_server_msg_to_yojson</span> :
+        <span class="keyword">sig</span>
+          <span class="keyword">type</span> nonrec t_to_yojson = {
+            <span class="keyword">mutable</span> f : app_server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;
+          }
+          <span class="keyword">val</span> f : t_to_yojson
+        <span class="keyword">end</span>
+      <span class="keyword">val</span> app_server_msg_to_yojson : app_server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json
+      <span class="keyword">module</span> <span class="constructor">M_app_server_msg_of_yojson</span> :
+        <span class="keyword">sig</span>
+          <span class="keyword">type</span> nonrec t_of_yojson = {
+            <span class="keyword">mutable</span> f :
+              <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span>
+              app_server_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or;
+          }
+          <span class="keyword">val</span> f : t_of_yojson
+        <span class="keyword">end</span>
+      <span class="keyword">val</span> app_server_msg_of_yojson :
+        <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span>
+        app_server_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or
+      <span class="keyword">type</span> app_client_msg = ..
+      <span class="keyword">module</span> <span class="constructor">M_app_client_msg_to_yojson</span> :
+        <span class="keyword">sig</span>
+          <span class="keyword">type</span> nonrec t_to_yojson = {
+            <span class="keyword">mutable</span> f : app_client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;
+          }
+          <span class="keyword">val</span> f : t_to_yojson
+        <span class="keyword">end</span>
+      <span class="keyword">val</span> app_client_msg_to_yojson : app_client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json
+      <span class="keyword">module</span> <span class="constructor">M_app_client_msg_of_yojson</span> :
+        <span class="keyword">sig</span>
+          <span class="keyword">type</span> nonrec t_of_yojson = {
+            <span class="keyword">mutable</span> f :
+              <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span>
+              app_client_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or;
+          }
+          <span class="keyword">val</span> f : t_of_yojson
+        <span class="keyword">end</span>
+      <span class="keyword">val</span> app_client_msg_of_yojson :
+        <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span>
+        app_client_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or
+      <span class="keyword">type</span> app_server_msg +=
+          <span class="constructor">SCall</span> <span class="keyword">of</span> <span class="constructor">Ojs_rpc</span>.call_id * app_server_msg
+        <span class="keywordsign">|</span> <span class="constructor">SReturn</span> <span class="keyword">of</span> <span class="constructor">Ojs_rpc</span>.call_id * app_server_msg
+      <span class="keyword">type</span> app_client_msg +=
+          <span class="constructor">Call</span> <span class="keyword">of</span> <span class="constructor">Ojs_rpc</span>.call_id * app_client_msg
+        <span class="keywordsign">|</span> <span class="constructor">Return</span> <span class="keyword">of</span> <span class="constructor">Ojs_rpc</span>.call_id * app_client_msg
+      <span class="keyword">val</span> pack_server_call :
+        <span class="constructor">Ojs_rpc</span>.call_id <span class="keywordsign">-&gt;</span> app_server_msg <span class="keywordsign">-&gt;</span> app_server_msg
+      <span class="keyword">val</span> pack_server_return :
+        <span class="constructor">Ojs_rpc</span>.call_id <span class="keywordsign">-&gt;</span> app_server_msg <span class="keywordsign">-&gt;</span> app_server_msg
+      <span class="keyword">val</span> pack_client_call :
+        <span class="constructor">Ojs_rpc</span>.call_id <span class="keywordsign">-&gt;</span> app_client_msg <span class="keywordsign">-&gt;</span> app_client_msg
+      <span class="keyword">val</span> pack_client_return :
+        <span class="constructor">Ojs_rpc</span>.call_id <span class="keywordsign">-&gt;</span> app_client_msg <span class="keywordsign">-&gt;</span> app_client_msg
+      <span class="keyword">val</span> msg_of_wsdata : string <span class="keywordsign">-&gt;</span> app_client_msg option
+      <span class="keyword">val</span> wsdata_of_msg : app_server_msg <span class="keywordsign">-&gt;</span> string
+    <span class="keyword">end</span>
+  <span class="keyword">module</span> <span class="keyword">type</span> <span class="constructor">S</span> =
+    <span class="keyword">sig</span>
+      <span class="keyword">module</span> <span class="constructor">Rpc</span> : <span class="constructor">Ojs_rpc</span>.<span class="constructor">S</span>
+      <span class="keyword">class</span> connection_group :
+        <span class="keyword">object</span>
+          <span class="keyword">val</span> <span class="keyword">mutable</span> connections :
+            ((<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) * <span class="constructor">Rpc</span>.t) list
+          <span class="keyword">val</span> <span class="keyword">mutable</span> handle_message :
+            (<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+            <span class="constructor">Rpc</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+          <span class="keyword">method</span> add_connection :
+            <span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="constructor">Lwt_stream</span>.t <span class="keywordsign">-&gt;</span>
+            (<span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+          <span class="keyword">method</span> broadcall :
+            <span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span>
+            (<span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+          <span class="keyword">method</span> broadcast : <span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+          <span class="keyword">method</span> handle_message :
+            (<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+            <span class="constructor">Rpc</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+          <span class="keyword">method</span> remove_connection :
+            (<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit
+          <span class="keyword">method</span> set_handle_message :
+            ((<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+             <span class="constructor">Rpc</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+            unit
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+  <span class="keyword">module</span> <span class="constructor">Make</span> :
+    <span class="keyword">functor</span> (<span class="constructor">P</span> : <span class="constructor">P</span>) <span class="keywordsign">-&gt;</span>
+      <span class="keyword">sig</span>
+        <span class="keyword">module</span> <span class="constructor">Rpc</span> :
+          <span class="keyword">sig</span>
+            <span class="keyword">type</span> app_server_msg = <span class="constructor">P</span>.app_server_msg
+            <span class="keyword">type</span> app_client_msg = <span class="constructor">P</span>.app_client_msg
+            <span class="keyword">type</span> t
+            <span class="keyword">val</span> rpc_handler : (app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> t
+            <span class="keyword">val</span> call :
+              t <span class="keywordsign">-&gt;</span> app_server_msg <span class="keywordsign">-&gt;</span> (app_client_msg <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="constructor">Lwt</span>.t
+            <span class="keyword">val</span> return : t <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_rpc</span>.call_id <span class="keywordsign">-&gt;</span> app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+            <span class="keyword">val</span> on_return : t <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_rpc</span>.call_id <span class="keywordsign">-&gt;</span> app_client_msg <span class="keywordsign">-&gt;</span> unit
+          <span class="keyword">end</span>
+        <span class="keyword">class</span> connection_group :
+          <span class="keyword">object</span>
+            <span class="keyword">val</span> <span class="keyword">mutable</span> connections :
+              ((<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) * <span class="constructor">Rpc</span>.t) list
+            <span class="keyword">val</span> <span class="keyword">mutable</span> handle_message :
+              (<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+              <span class="constructor">Rpc</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+            <span class="keyword">method</span> add_connection :
+              <span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="constructor">Lwt_stream</span>.t <span class="keywordsign">-&gt;</span>
+              (<span class="constructor">Websocket_lwt</span>.<span class="constructor">Frame</span>.t <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+            <span class="keyword">method</span> broadcall :
+              <span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span>
+              (<span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+            <span class="keyword">method</span> broadcast : <span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+            <span class="keyword">method</span> handle_message :
+              (<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+              <span class="constructor">Rpc</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+            <span class="keyword">method</span> remove_connection :
+              (<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit
+            <span class="keyword">method</span> set_handle_message :
+              ((<span class="constructor">Rpc</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+               <span class="constructor">Rpc</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Rpc</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+              unit
+          <span class="keyword">end</span>
+      <span class="keyword">end</span>
 <span class="keyword">end</span></code></div>
 
 

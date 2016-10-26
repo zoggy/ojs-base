@@ -38,18 +38,18 @@
 
 
 <div class="ocamldoc-page">
-<code class="code">(<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-(<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-((<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
- (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
- bar_id:string <span class="keywordsign">-&gt;</span> msg_id:string <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor) <span class="keywordsign">-&gt;</span><br/>
-<span class="keyword">object</span><br/>
-  <span class="keyword">val</span> <span class="keyword">mutable</span> editors : <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.t<br/>
-  <span class="keyword">method</span> get_editor : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor<br/>
-  <span class="keyword">method</span> get_msg_id : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> string<br/>
-  <span class="keyword">method</span> handle_message : <span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> bool <span class="constructor">Js</span>.t<br/>
-  <span class="keyword">method</span> setup_editor :<br/>
-    bar_id:string <span class="keywordsign">-&gt;</span> msg_id:string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor<br/>
+<code class="code">(<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+(<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+((<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+ (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+ bar_id:string <span class="keywordsign">-&gt;</span> msg_id:string <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor) <span class="keywordsign">-&gt;</span>
+<span class="keyword">object</span>
+  <span class="keyword">val</span> <span class="keyword">mutable</span> editors : <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.t
+  <span class="keyword">method</span> get_editor : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor
+  <span class="keyword">method</span> get_msg_id : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> string
+  <span class="keyword">method</span> handle_message : <span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> bool <span class="constructor">Js</span>.t
+  <span class="keyword">method</span> setup_editor :
+    bar_id:string <span class="keywordsign">-&gt;</span> msg_id:string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor
 <span class="keyword">end</span></code></div>
 
 

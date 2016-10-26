@@ -38,45 +38,45 @@
 
 
 <div class="ocamldoc-page">
-<code class="code"><span class="keyword">sig</span><br/>
-  <span class="keyword">module</span> <span class="constructor">P</span> : <span class="constructor">Ojsed_types</span>.<span class="constructor">P</span><br/>
-  <span class="keyword">val</span> access_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg<br/>
-  <span class="keyword">class</span> editor :<br/>
-    (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-    (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-    id:string <span class="keywordsign">-&gt;</span><br/>
-    <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span><br/>
-    <span class="keyword">object</span><br/>
-      <span class="keyword">method</span> can_read_file : string <span class="keywordsign">-&gt;</span> bool<br/>
-      <span class="keyword">method</span> can_write_file : string <span class="keywordsign">-&gt;</span> bool<br/>
-      <span class="keyword">method</span> handle_call :<br/>
-        (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-      <span class="keyword">method</span> handle_get_file_contents :<br/>
-        (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_types</span>.path <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-      <span class="keyword">method</span> handle_message :<br/>
-        (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-      <span class="keyword">method</span> handle_save_file :<br/>
-        (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-        <span class="constructor">Ojsed_types</span>.path <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-      <span class="keyword">method</span> id : string<br/>
-      <span class="keyword">method</span> root : <span class="constructor">Ojs_path</span>.t<br/>
-    <span class="keyword">end</span><br/>
-  <span class="keyword">class</span> editors :<br/>
-    (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-    (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-    ((<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-     (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-     id:string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_server</span>.<span class="constructor">S</span>.editor) <span class="keywordsign">-&gt;</span><br/>
-    <span class="keyword">object</span><br/>
-      <span class="keyword">val</span> <span class="keyword">mutable</span> editors : <span class="constructor">Ojsed_server</span>.<span class="constructor">S</span>.editor <span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.t<br/>
-      <span class="keyword">method</span> add_editor :<br/>
-        id:<span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_server</span>.<span class="constructor">S</span>.editor<br/>
-      <span class="keyword">method</span> editor : <span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_server</span>.<span class="constructor">S</span>.editor<br/>
-      <span class="keyword">method</span> handle_call :<br/>
-        (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-      <span class="keyword">method</span> handle_message :<br/>
-        (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-    <span class="keyword">end</span><br/>
+<code class="code"><span class="keyword">sig</span>
+  <span class="keyword">module</span> <span class="constructor">P</span> : <span class="constructor">Ojsed_types</span>.<span class="constructor">P</span>
+  <span class="keyword">val</span> access_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg
+  <span class="keyword">class</span> editor :
+    (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+    (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+    id:string <span class="keywordsign">-&gt;</span>
+    <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span>
+    <span class="keyword">object</span>
+      <span class="keyword">method</span> can_read_file : string <span class="keywordsign">-&gt;</span> bool
+      <span class="keyword">method</span> can_write_file : string <span class="keywordsign">-&gt;</span> bool
+      <span class="keyword">method</span> handle_call :
+        (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+      <span class="keyword">method</span> handle_get_file_contents :
+        (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_types</span>.path <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+      <span class="keyword">method</span> handle_message :
+        (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+      <span class="keyword">method</span> handle_save_file :
+        (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+        <span class="constructor">Ojsed_types</span>.path <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+      <span class="keyword">method</span> id : string
+      <span class="keyword">method</span> root : <span class="constructor">Ojs_path</span>.t
+    <span class="keyword">end</span>
+  <span class="keyword">class</span> editors :
+    (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+    (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+    ((<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+     (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+     id:string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_server</span>.<span class="constructor">S</span>.editor) <span class="keywordsign">-&gt;</span>
+    <span class="keyword">object</span>
+      <span class="keyword">val</span> <span class="keyword">mutable</span> editors : <span class="constructor">Ojsed_server</span>.<span class="constructor">S</span>.editor <span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.t
+      <span class="keyword">method</span> add_editor :
+        id:<span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_server</span>.<span class="constructor">S</span>.editor
+      <span class="keyword">method</span> editor : <span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_server</span>.<span class="constructor">S</span>.editor
+      <span class="keyword">method</span> handle_call :
+        (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+      <span class="keyword">method</span> handle_message :
+        (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+    <span class="keyword">end</span>
 <span class="keyword">end</span></code></div>
 
 

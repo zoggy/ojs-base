@@ -38,22 +38,22 @@
 
 
 <div class="ocamldoc-page">
-<code class="code">(<span class="keywordsign">'</span>a <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> (<span class="keywordsign">'</span>a <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-(<span class="keywordsign">'</span>a <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-id:string <span class="keywordsign">-&gt;</span><br/>
-<span class="keywordsign">'</span>a list <span class="keywordsign">-&gt;</span><br/>
-<span class="keyword">object</span><br/>
-  <span class="keyword">val</span> <span class="keyword">mutable</span> list : <span class="keywordsign">'</span>a list<br/>
-  <span class="keyword">method</span> handle_add : (<span class="keywordsign">'</span>a <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-  <span class="keyword">method</span> handle_call :<br/>
-    (<span class="keywordsign">'</span>a <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-  <span class="keyword">method</span> handle_delete : (<span class="keywordsign">'</span>a <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-  <span class="keyword">method</span> handle_get : (<span class="keywordsign">'</span>a <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-  <span class="keyword">method</span> handle_message :<br/>
-    (<span class="keywordsign">'</span>a <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-  <span class="keyword">method</span> id : string<br/>
-  <span class="keyword">method</span> list : <span class="keywordsign">'</span>a list<br/>
-  <span class="keyword">method</span> set_list : <span class="keywordsign">'</span>a list <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
+<code class="code">(<span class="keywordsign">'</span>a <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> (<span class="keywordsign">'</span>a <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+(<span class="keywordsign">'</span>a <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+id:string <span class="keywordsign">-&gt;</span>
+<span class="keywordsign">'</span>a list <span class="keywordsign">-&gt;</span>
+<span class="keyword">object</span>
+  <span class="keyword">val</span> <span class="keyword">mutable</span> list : <span class="keywordsign">'</span>a list
+  <span class="keyword">method</span> handle_add : (<span class="keywordsign">'</span>a <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+  <span class="keyword">method</span> handle_call :
+    (<span class="keywordsign">'</span>a <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+  <span class="keyword">method</span> handle_delete : (<span class="keywordsign">'</span>a <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+  <span class="keyword">method</span> handle_get : (<span class="keywordsign">'</span>a <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+  <span class="keyword">method</span> handle_message :
+    (<span class="keywordsign">'</span>a <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+  <span class="keyword">method</span> id : string
+  <span class="keyword">method</span> list : <span class="keywordsign">'</span>a list
+  <span class="keyword">method</span> set_list : <span class="keywordsign">'</span>a list <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
 <span class="keyword">end</span></code></div>
 
 

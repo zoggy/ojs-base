@@ -38,55 +38,55 @@
 
 
 <div class="ocamldoc-page">
-<code class="code"><span class="keyword">sig</span><br/>
-  <span class="keyword">module</span> <span class="constructor">P</span> : <span class="constructor">Ojsed_types</span>.<span class="constructor">P</span><br/>
-  <span class="keyword">class</span> editor :<br/>
-    (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-    (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-    bar_id:string <span class="keywordsign">-&gt;</span><br/>
-    msg_id:string <span class="keywordsign">-&gt;</span><br/>
-    string <span class="keywordsign">-&gt;</span><br/>
-    <span class="keyword">object</span><br/>
-      <span class="keyword">val</span> <span class="keyword">mutable</span> current : <span class="constructor">Ojsed_js</span>.session option<br/>
-      <span class="keyword">val</span> <span class="keyword">mutable</span> sessions : <span class="constructor">Ojsed_js</span>.session <span class="constructor">PMap</span>.t<br/>
-      <span class="keyword">method</span> changed_files : <span class="constructor">PMap</span>.key list<br/>
-      <span class="keyword">method</span> changed_sessions : <span class="constructor">Ojsed_js</span>.session list<br/>
-      <span class="keyword">method</span> display_error : string <span class="keywordsign">-&gt;</span> unit<br/>
-      <span class="keyword">method</span> display_filename : <span class="constructor">Ojsed_js</span>.session <span class="keywordsign">-&gt;</span> unit<br/>
-      <span class="keyword">method</span> display_message : string <span class="keywordsign">-&gt;</span> unit<br/>
-      <span class="keyword">method</span> edit_file : ?mime:<span class="constructor">Ojsed_js</span>.mime_type <span class="keywordsign">-&gt;</span> <span class="constructor">PMap</span>.key <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-      <span class="keyword">method</span> get_session : <span class="constructor">PMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.session option<br/>
-      <span class="keyword">method</span> handle_message : <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> bool <span class="constructor">Js</span>.t<br/>
-      <span class="keyword">method</span> id : string<br/>
-      <span class="keyword">method</span> is_editable_from_mime : <span class="constructor">Ojsed_js</span>.mime_type <span class="keywordsign">-&gt;</span> bool<br/>
-      <span class="keyword">method</span> load_from_server : <span class="constructor">Ojsed_js</span>.session <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-      <span class="keyword">method</span> msg_id : string<br/>
-      <span class="keyword">method</span> new_session :<br/>
-        ?mime:<span class="constructor">Ojsed_js</span>.mime_type <span class="keywordsign">-&gt;</span> <span class="constructor">PMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.session<br/>
-      <span class="keyword">method</span> on_changed : <span class="constructor">Ojsed_js</span>.session <span class="keywordsign">-&gt;</span> unit<br/>
-      <span class="keyword">method</span> reload : unit <span class="constructor">Lwt</span>.t<br/>
-      <span class="keyword">method</span> reload_file : <span class="constructor">Ojsed_js</span>.session <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-      <span class="keyword">method</span> save : unit <span class="constructor">Lwt</span>.t<br/>
-      <span class="keyword">method</span> save_changed_files : unit <span class="constructor">Lwt</span>.t<br/>
-      <span class="keyword">method</span> save_file : <span class="constructor">Ojsed_js</span>.session <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-      <span class="keyword">method</span> simple_call :<br/>
-        ?on_ok:(unit <span class="keywordsign">-&gt;</span> unit) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-    <span class="keyword">end</span><br/>
-  <span class="keyword">class</span> editors :<br/>
-    (<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-    (<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-    ((<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-     (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-     bar_id:string <span class="keywordsign">-&gt;</span> msg_id:string <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor) <span class="keywordsign">-&gt;</span><br/>
-    <span class="keyword">object</span><br/>
-      <span class="keyword">val</span> <span class="keyword">mutable</span> editors : <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.t<br/>
-      <span class="keyword">method</span> get_editor : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor<br/>
-      <span class="keyword">method</span> get_msg_id : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> string<br/>
-      <span class="keyword">method</span> handle_message : <span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> bool <span class="constructor">Js</span>.t<br/>
-      <span class="keyword">method</span> setup_editor :<br/>
-        bar_id:string <span class="keywordsign">-&gt;</span><br/>
-        msg_id:string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor<br/>
-    <span class="keyword">end</span><br/>
+<code class="code"><span class="keyword">sig</span>
+  <span class="keyword">module</span> <span class="constructor">P</span> : <span class="constructor">Ojsed_types</span>.<span class="constructor">P</span>
+  <span class="keyword">class</span> editor :
+    (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+    (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+    bar_id:string <span class="keywordsign">-&gt;</span>
+    msg_id:string <span class="keywordsign">-&gt;</span>
+    string <span class="keywordsign">-&gt;</span>
+    <span class="keyword">object</span>
+      <span class="keyword">val</span> <span class="keyword">mutable</span> current : <span class="constructor">Ojsed_js</span>.session option
+      <span class="keyword">val</span> <span class="keyword">mutable</span> sessions : <span class="constructor">Ojsed_js</span>.session <span class="constructor">PMap</span>.t
+      <span class="keyword">method</span> changed_files : <span class="constructor">PMap</span>.key list
+      <span class="keyword">method</span> changed_sessions : <span class="constructor">Ojsed_js</span>.session list
+      <span class="keyword">method</span> display_error : string <span class="keywordsign">-&gt;</span> unit
+      <span class="keyword">method</span> display_filename : <span class="constructor">Ojsed_js</span>.session <span class="keywordsign">-&gt;</span> unit
+      <span class="keyword">method</span> display_message : string <span class="keywordsign">-&gt;</span> unit
+      <span class="keyword">method</span> edit_file : ?mime:<span class="constructor">Ojsed_js</span>.mime_type <span class="keywordsign">-&gt;</span> <span class="constructor">PMap</span>.key <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+      <span class="keyword">method</span> get_session : <span class="constructor">PMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.session option
+      <span class="keyword">method</span> handle_message : <span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> bool <span class="constructor">Js</span>.t
+      <span class="keyword">method</span> id : string
+      <span class="keyword">method</span> is_editable_from_mime : <span class="constructor">Ojsed_js</span>.mime_type <span class="keywordsign">-&gt;</span> bool
+      <span class="keyword">method</span> load_from_server : <span class="constructor">Ojsed_js</span>.session <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+      <span class="keyword">method</span> msg_id : string
+      <span class="keyword">method</span> new_session :
+        ?mime:<span class="constructor">Ojsed_js</span>.mime_type <span class="keywordsign">-&gt;</span> <span class="constructor">PMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.session
+      <span class="keyword">method</span> on_changed : <span class="constructor">Ojsed_js</span>.session <span class="keywordsign">-&gt;</span> unit
+      <span class="keyword">method</span> reload : unit <span class="constructor">Lwt</span>.t
+      <span class="keyword">method</span> reload_file : <span class="constructor">Ojsed_js</span>.session <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+      <span class="keyword">method</span> save : unit <span class="constructor">Lwt</span>.t
+      <span class="keyword">method</span> save_changed_files : unit <span class="constructor">Lwt</span>.t
+      <span class="keyword">method</span> save_file : <span class="constructor">Ojsed_js</span>.session <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+      <span class="keyword">method</span> simple_call :
+        ?on_ok:(unit <span class="keywordsign">-&gt;</span> unit) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+    <span class="keyword">end</span>
+  <span class="keyword">class</span> editors :
+    (<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+    (<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+    ((<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+     (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+     bar_id:string <span class="keywordsign">-&gt;</span> msg_id:string <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor) <span class="keywordsign">-&gt;</span>
+    <span class="keyword">object</span>
+      <span class="keyword">val</span> <span class="keyword">mutable</span> editors : <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.t
+      <span class="keyword">method</span> get_editor : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor
+      <span class="keyword">method</span> get_msg_id : <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> string
+      <span class="keyword">method</span> handle_message : <span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> bool <span class="constructor">Js</span>.t
+      <span class="keyword">method</span> setup_editor :
+        bar_id:string <span class="keywordsign">-&gt;</span>
+        msg_id:string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_js</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsed_js</span>.<span class="constructor">S</span>.editor
+    <span class="keyword">end</span>
 <span class="keyword">end</span></code></div>
 
 

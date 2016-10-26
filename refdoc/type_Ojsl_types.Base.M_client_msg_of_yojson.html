@@ -38,15 +38,15 @@
 
 
 <div class="ocamldoc-page">
-<code class="code"><span class="keyword">sig</span><br/>
-  <span class="keyword">type</span> t_of_yojson = {<br/>
-    <span class="keyword">mutable</span> f :<br/>
-      <span class="keywordsign">'</span>a.<br/>
-        (<span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span> [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> <span class="keywordsign">'</span>a ]) <span class="keywordsign">-&gt;</span><br/>
-        <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span><br/>
-        [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> <span class="keywordsign">'</span>a <span class="constructor">Ojsl_types</span>.<span class="constructor">Base</span>.client_msg ];<br/>
-  }<br/>
-  <span class="keyword">val</span> f : <span class="constructor">Ojsl_types</span>.<span class="constructor">Base</span>.<span class="constructor">M_client_msg_of_yojson</span>.t_of_yojson<br/>
+<code class="code"><span class="keyword">sig</span>
+  <span class="keyword">type</span> nonrec t_of_yojson = {
+    <span class="keyword">mutable</span> f :
+      <span class="keywordsign">'</span>a.
+        (<span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or) <span class="keywordsign">-&gt;</span>
+        <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span>
+        <span class="keywordsign">'</span>a <span class="constructor">Ojsl_types</span>.<span class="constructor">Base</span>.client_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or;
+  }
+  <span class="keyword">val</span> f : <span class="constructor">Ojsl_types</span>.<span class="constructor">Base</span>.<span class="constructor">M_client_msg_of_yojson</span>.t_of_yojson
 <span class="keyword">end</span></code></div>
 
 

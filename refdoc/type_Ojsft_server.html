@@ -38,229 +38,231 @@
 
 
 <div class="ocamldoc-page">
-<code class="code"><span class="keyword">sig</span><br/>
-  <span class="keyword">module</span> <span class="keyword">type</span> <span class="constructor">S</span> =<br/>
-    <span class="keyword">sig</span><br/>
-      <span class="keyword">module</span> <span class="constructor">P</span> : <span class="constructor">Ojsft_types</span>.<span class="constructor">P</span><br/>
-      <span class="keyword">val</span> access_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg<br/>
-      <span class="keyword">val</span> creation_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg<br/>
-      <span class="keyword">val</span> deletion_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg<br/>
-      <span class="keyword">val</span> renaming_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg<br/>
-      <span class="keyword">class</span> filetree :<br/>
-        (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-        (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-        id:string <span class="keywordsign">-&gt;</span><br/>
-        <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span><br/>
-        <span class="keyword">object</span><br/>
-          <span class="keyword">val</span> <span class="keyword">mutable</span> file_filter : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> bool<br/>
-          <span class="keyword">method</span> after_add_file : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> unit<br/>
-          <span class="keyword">method</span> after_get_tree :<br/>
-            <span class="constructor">Ojsft_types</span>.file_tree list <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_types</span>.file_tree list<br/>
-          <span class="keyword">method</span> before_add_file : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> unit<br/>
-          <span class="keyword">method</span> can_add_dir : string <span class="keywordsign">-&gt;</span> bool<br/>
-          <span class="keyword">method</span> can_add_file : string <span class="keywordsign">-&gt;</span> bool<br/>
-          <span class="keyword">method</span> can_delete : string <span class="keywordsign">-&gt;</span> bool<br/>
-          <span class="keyword">method</span> can_rename : string <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> bool<br/>
-          <span class="keyword">method</span> handle_add_dir :<br/>
-            (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-          <span class="keyword">method</span> handle_add_file :<br/>
-            (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-            <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-          <span class="keyword">method</span> handle_call :<br/>
-            (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-          <span class="keyword">method</span> handle_delete :<br/>
-            (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-          <span class="keyword">method</span> handle_message :<br/>
-            (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-          <span class="keyword">method</span> handle_rename :<br/>
-            (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-            <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-          <span class="keyword">method</span> id : string<br/>
-          <span class="keyword">method</span> root : <span class="constructor">Ojs_path</span>.t<br/>
-          <span class="keyword">method</span> set_file_filter : (<span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> unit<br/>
-        <span class="keyword">end</span><br/>
-      <span class="keyword">class</span> filetrees :<br/>
-        (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-        (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-        ((<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-         (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-         id:string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_server</span>.<span class="constructor">S</span>.filetree) <span class="keywordsign">-&gt;</span><br/>
-        <span class="keyword">object</span><br/>
-          <span class="keyword">val</span> <span class="keyword">mutable</span> filetrees : <span class="constructor">Ojsft_server</span>.<span class="constructor">S</span>.filetree <span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.t<br/>
-          <span class="keyword">method</span> add_filetree :<br/>
-            id:<span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_server</span>.<span class="constructor">S</span>.filetree<br/>
-          <span class="keyword">method</span> filetree : <span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_server</span>.<span class="constructor">S</span>.filetree<br/>
-          <span class="keyword">method</span> handle_call :<br/>
-            (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-            <span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-          <span class="keyword">method</span> handle_message :<br/>
-            (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-            <span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-        <span class="keyword">end</span><br/>
-    <span class="keyword">end</span><br/>
-  <span class="keyword">module</span> <span class="constructor">Make</span> :<br/>
-    <span class="keyword">functor</span> (<span class="constructor">P</span> : <span class="constructor">Ojsft_types</span>.<span class="constructor">P</span>) <span class="keywordsign">-&gt;</span><br/>
-      <span class="keyword">sig</span><br/>
-        <span class="keyword">module</span> <span class="constructor">P</span> :<br/>
-          <span class="keyword">sig</span><br/>
-            <span class="keyword">type</span> app_server_msg = <span class="constructor">P</span>.app_server_msg = ..<br/>
-            <span class="keyword">module</span> <span class="constructor">M_app_server_msg_to_yojson</span> :<br/>
-              <span class="keyword">sig</span><br/>
-                <span class="keyword">type</span> t_to_yojson = {<br/>
-                  <span class="keyword">mutable</span> f : app_server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;<br/>
-                }<br/>
-                <span class="keyword">val</span> f : t_to_yojson<br/>
-              <span class="keyword">end</span><br/>
-            <span class="keyword">val</span> app_server_msg_to_yojson : app_server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json<br/>
-            <span class="keyword">module</span> <span class="constructor">M_app_server_msg_of_yojson</span> :<br/>
-              <span class="keyword">sig</span><br/>
-                <span class="keyword">type</span> t_of_yojson = {<br/>
-                  <span class="keyword">mutable</span> f :<br/>
-                    <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span><br/>
-                    [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> app_server_msg ];<br/>
-                }<br/>
-                <span class="keyword">val</span> f : t_of_yojson<br/>
-              <span class="keyword">end</span><br/>
-            <span class="keyword">val</span> app_server_msg_of_yojson :<br/>
-              <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span><br/>
-              [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> app_server_msg ]<br/>
-            <span class="keyword">type</span> app_client_msg = <span class="constructor">P</span>.app_client_msg = ..<br/>
-            <span class="keyword">module</span> <span class="constructor">M_app_client_msg_to_yojson</span> :<br/>
-              <span class="keyword">sig</span><br/>
-                <span class="keyword">type</span> t_to_yojson = {<br/>
-                  <span class="keyword">mutable</span> f : app_client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;<br/>
-                }<br/>
-                <span class="keyword">val</span> f : t_to_yojson<br/>
-              <span class="keyword">end</span><br/>
-            <span class="keyword">val</span> app_client_msg_to_yojson : app_client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json<br/>
-            <span class="keyword">module</span> <span class="constructor">M_app_client_msg_of_yojson</span> :<br/>
-              <span class="keyword">sig</span><br/>
-                <span class="keyword">type</span> t_of_yojson = {<br/>
-                  <span class="keyword">mutable</span> f :<br/>
-                    <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span><br/>
-                    [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> app_client_msg ];<br/>
-                }<br/>
-                <span class="keyword">val</span> f : t_of_yojson<br/>
-              <span class="keyword">end</span><br/>
-            <span class="keyword">val</span> app_client_msg_of_yojson :<br/>
-              <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span><br/>
-              [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> app_client_msg ]<br/>
-            <span class="keyword">type</span> server_msg = <span class="constructor">P</span>.server_msg = ..<br/>
-            <span class="keyword">module</span> <span class="constructor">M_server_msg_to_yojson</span> :<br/>
-              <span class="keyword">sig</span><br/>
-                <span class="keyword">type</span> t_to_yojson = {<br/>
-                  <span class="keyword">mutable</span> f : server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;<br/>
-                }<br/>
-                <span class="keyword">val</span> f : t_to_yojson<br/>
-              <span class="keyword">end</span><br/>
-            <span class="keyword">val</span> server_msg_to_yojson : server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json<br/>
-            <span class="keyword">module</span> <span class="constructor">M_server_msg_of_yojson</span> :<br/>
-              <span class="keyword">sig</span><br/>
-                <span class="keyword">type</span> t_of_yojson = {<br/>
-                  <span class="keyword">mutable</span> f :<br/>
-                    <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span><br/>
-                    [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> server_msg ];<br/>
-                }<br/>
-                <span class="keyword">val</span> f : t_of_yojson<br/>
-              <span class="keyword">end</span><br/>
-            <span class="keyword">val</span> server_msg_of_yojson :<br/>
-              <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span> [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> server_msg ]<br/>
-            <span class="keyword">type</span> server_msg +=<br/>
-                <span class="constructor">SOk</span><br/>
-              <span class="keywordsign">|</span> <span class="constructor">SError</span> <span class="keyword">of</span> string<br/>
-              <span class="keywordsign">|</span> <span class="constructor">STree</span> <span class="keyword">of</span> <span class="constructor">Ojsft_types</span>.file_tree list<br/>
-              <span class="keywordsign">|</span> <span class="constructor">SAdd_file</span> <span class="keyword">of</span> <span class="constructor">Ojsft_types</span>.path * <span class="constructor">Ojsft_types</span>.mime_type<br/>
-              <span class="keywordsign">|</span> <span class="constructor">SAdd_dir</span> <span class="keyword">of</span> <span class="constructor">Ojsft_types</span>.path<br/>
-              <span class="keywordsign">|</span> <span class="constructor">SDelete</span> <span class="keyword">of</span> <span class="constructor">Ojsft_types</span>.path<br/>
-            <span class="keyword">type</span> client_msg = <span class="constructor">P</span>.client_msg = ..<br/>
-            <span class="keyword">module</span> <span class="constructor">M_client_msg_to_yojson</span> :<br/>
-              <span class="keyword">sig</span><br/>
-                <span class="keyword">type</span> t_to_yojson = {<br/>
-                  <span class="keyword">mutable</span> f : client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;<br/>
-                }<br/>
-                <span class="keyword">val</span> f : t_to_yojson<br/>
-              <span class="keyword">end</span><br/>
-            <span class="keyword">val</span> client_msg_to_yojson : client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json<br/>
-            <span class="keyword">module</span> <span class="constructor">M_client_msg_of_yojson</span> :<br/>
-              <span class="keyword">sig</span><br/>
-                <span class="keyword">type</span> t_of_yojson = {<br/>
-                  <span class="keyword">mutable</span> f :<br/>
-                    <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span><br/>
-                    [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> client_msg ];<br/>
-                }<br/>
-                <span class="keyword">val</span> f : t_of_yojson<br/>
-              <span class="keyword">end</span><br/>
-            <span class="keyword">val</span> client_msg_of_yojson :<br/>
-              <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span> [ <span class="keywordsign">`</span><span class="constructor">Error</span> <span class="keyword">of</span> string <span class="keywordsign">|</span> <span class="keywordsign">`</span><span class="constructor">Ok</span> <span class="keyword">of</span> client_msg ]<br/>
-            <span class="keyword">type</span> client_msg +=<br/>
-                <span class="constructor">Get_tree</span><br/>
-              <span class="keywordsign">|</span> <span class="constructor">Add_file</span> <span class="keyword">of</span> <span class="constructor">Ojsft_types</span>.path * string<br/>
-              <span class="keywordsign">|</span> <span class="constructor">Add_dir</span> <span class="keyword">of</span> <span class="constructor">Ojsft_types</span>.path<br/>
-              <span class="keywordsign">|</span> <span class="constructor">Delete</span> <span class="keyword">of</span> <span class="constructor">Ojsft_types</span>.path<br/>
-              <span class="keywordsign">|</span> <span class="constructor">Rename</span> <span class="keyword">of</span> <span class="constructor">Ojsft_types</span>.path * <span class="constructor">Ojsft_types</span>.path<br/>
-            <span class="keyword">val</span> pack_server_msg : string <span class="keywordsign">-&gt;</span> server_msg <span class="keywordsign">-&gt;</span> app_server_msg<br/>
-            <span class="keyword">val</span> unpack_server_msg :<br/>
-              app_server_msg <span class="keywordsign">-&gt;</span> (string * server_msg) option<br/>
-            <span class="keyword">val</span> pack_client_msg : string <span class="keywordsign">-&gt;</span> client_msg <span class="keywordsign">-&gt;</span> app_client_msg<br/>
-            <span class="keyword">val</span> unpack_client_msg :<br/>
-              app_client_msg <span class="keywordsign">-&gt;</span> (string * client_msg) option<br/>
-          <span class="keyword">end</span><br/>
-        <span class="keyword">val</span> access_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg<br/>
-        <span class="keyword">val</span> creation_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg<br/>
-        <span class="keyword">val</span> deletion_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg<br/>
-        <span class="keyword">val</span> renaming_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg<br/>
-        <span class="keyword">class</span> filetree :<br/>
-          (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-          (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-          id:string <span class="keywordsign">-&gt;</span><br/>
-          <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span><br/>
-          <span class="keyword">object</span><br/>
-            <span class="keyword">val</span> <span class="keyword">mutable</span> file_filter : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> bool<br/>
-            <span class="keyword">method</span> after_add_file : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> unit<br/>
-            <span class="keyword">method</span> after_get_tree :<br/>
-              <span class="constructor">Ojsft_types</span>.file_tree list <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_types</span>.file_tree list<br/>
-            <span class="keyword">method</span> before_add_file : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> unit<br/>
-            <span class="keyword">method</span> can_add_dir : string <span class="keywordsign">-&gt;</span> bool<br/>
-            <span class="keyword">method</span> can_add_file : string <span class="keywordsign">-&gt;</span> bool<br/>
-            <span class="keyword">method</span> can_delete : string <span class="keywordsign">-&gt;</span> bool<br/>
-            <span class="keyword">method</span> can_rename : string <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> bool<br/>
-            <span class="keyword">method</span> handle_add_dir :<br/>
-              (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-            <span class="keyword">method</span> handle_add_file :<br/>
-              (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-              <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-            <span class="keyword">method</span> handle_call :<br/>
-              (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-            <span class="keyword">method</span> handle_delete :<br/>
-              (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-            <span class="keyword">method</span> handle_message :<br/>
-              (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-            <span class="keyword">method</span> handle_rename :<br/>
-              (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-              <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-            <span class="keyword">method</span> id : string<br/>
-            <span class="keyword">method</span> root : <span class="constructor">Ojs_path</span>.t<br/>
-            <span class="keyword">method</span> set_file_filter : (<span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> unit<br/>
-          <span class="keyword">end</span><br/>
-        <span class="keyword">class</span> filetrees :<br/>
-          (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-          (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-          ((<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-           (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-           id:string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> filetree) <span class="keywordsign">-&gt;</span><br/>
-          <span class="keyword">object</span><br/>
-            <span class="keyword">val</span> <span class="keyword">mutable</span> filetrees : filetree <span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.t<br/>
-            <span class="keyword">method</span> add_filetree :<br/>
-              id:<span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> filetree<br/>
-            <span class="keyword">method</span> filetree : <span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> filetree<br/>
-            <span class="keyword">method</span> handle_call :<br/>
-              (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-              <span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-            <span class="keyword">method</span> handle_message :<br/>
-              (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span><br/>
-              <span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t<br/>
-          <span class="keyword">end</span><br/>
-      <span class="keyword">end</span><br/>
+<code class="code"><span class="keyword">sig</span>
+  <span class="keyword">module</span> <span class="keyword">type</span> <span class="constructor">S</span> =
+    <span class="keyword">sig</span>
+      <span class="keyword">module</span> <span class="constructor">P</span> : <span class="constructor">Ojsft_types</span>.<span class="constructor">P</span>
+      <span class="keyword">val</span> access_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg
+      <span class="keyword">val</span> creation_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg
+      <span class="keyword">val</span> deletion_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg
+      <span class="keyword">val</span> renaming_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg
+      <span class="keyword">class</span> filetree :
+        (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+        (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+        id:string <span class="keywordsign">-&gt;</span>
+        <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span>
+        <span class="keyword">object</span>
+          <span class="keyword">val</span> <span class="keyword">mutable</span> file_filter : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> bool
+          <span class="keyword">method</span> after_add_file : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> unit
+          <span class="keyword">method</span> after_get_tree :
+            <span class="constructor">Ojsft_types</span>.file_tree list <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_types</span>.file_tree list
+          <span class="keyword">method</span> before_add_file : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> unit
+          <span class="keyword">method</span> can_add_dir : string <span class="keywordsign">-&gt;</span> bool
+          <span class="keyword">method</span> can_add_file : string <span class="keywordsign">-&gt;</span> bool
+          <span class="keyword">method</span> can_delete : string <span class="keywordsign">-&gt;</span> bool
+          <span class="keyword">method</span> can_rename : string <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> bool
+          <span class="keyword">method</span> handle_add_dir :
+            (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+          <span class="keyword">method</span> handle_add_file :
+            (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+            <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+          <span class="keyword">method</span> handle_call :
+            (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+          <span class="keyword">method</span> handle_delete :
+            (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+          <span class="keyword">method</span> handle_message :
+            (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+          <span class="keyword">method</span> handle_rename :
+            (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+            <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+          <span class="keyword">method</span> id : string
+          <span class="keyword">method</span> root : <span class="constructor">Ojs_path</span>.t
+          <span class="keyword">method</span> set_file_filter : (<span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> unit
+        <span class="keyword">end</span>
+      <span class="keyword">class</span> filetrees :
+        (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+        (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+        ((<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+         (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+         id:string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_server</span>.<span class="constructor">S</span>.filetree) <span class="keywordsign">-&gt;</span>
+        <span class="keyword">object</span>
+          <span class="keyword">val</span> <span class="keyword">mutable</span> filetrees : <span class="constructor">Ojsft_server</span>.<span class="constructor">S</span>.filetree <span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.t
+          <span class="keyword">method</span> add_filetree :
+            id:<span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_server</span>.<span class="constructor">S</span>.filetree
+          <span class="keyword">method</span> filetree : <span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_server</span>.<span class="constructor">S</span>.filetree
+          <span class="keyword">method</span> handle_call :
+            (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+            <span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+          <span class="keyword">method</span> handle_message :
+            (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+            <span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+  <span class="keyword">module</span> <span class="constructor">Make</span> :
+    <span class="keyword">functor</span> (<span class="constructor">P</span> : <span class="constructor">Ojsft_types</span>.<span class="constructor">P</span>) <span class="keywordsign">-&gt;</span>
+      <span class="keyword">sig</span>
+        <span class="keyword">module</span> <span class="constructor">P</span> :
+          <span class="keyword">sig</span>
+            <span class="keyword">type</span> app_server_msg = <span class="constructor">P</span>.app_server_msg = ..
+            <span class="keyword">module</span> <span class="constructor">M_app_server_msg_to_yojson</span> :
+              <span class="keyword">sig</span>
+                <span class="keyword">type</span> nonrec t_to_yojson = {
+                  <span class="keyword">mutable</span> f : app_server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;
+                }
+                <span class="keyword">val</span> f : t_to_yojson
+              <span class="keyword">end</span>
+            <span class="keyword">val</span> app_server_msg_to_yojson : app_server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json
+            <span class="keyword">module</span> <span class="constructor">M_app_server_msg_of_yojson</span> :
+              <span class="keyword">sig</span>
+                <span class="keyword">type</span> nonrec t_of_yojson = {
+                  <span class="keyword">mutable</span> f :
+                    <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span>
+                    app_server_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or;
+                }
+                <span class="keyword">val</span> f : t_of_yojson
+              <span class="keyword">end</span>
+            <span class="keyword">val</span> app_server_msg_of_yojson :
+              <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span>
+              app_server_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or
+            <span class="keyword">type</span> app_client_msg = <span class="constructor">P</span>.app_client_msg = ..
+            <span class="keyword">module</span> <span class="constructor">M_app_client_msg_to_yojson</span> :
+              <span class="keyword">sig</span>
+                <span class="keyword">type</span> nonrec t_to_yojson = {
+                  <span class="keyword">mutable</span> f : app_client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;
+                }
+                <span class="keyword">val</span> f : t_to_yojson
+              <span class="keyword">end</span>
+            <span class="keyword">val</span> app_client_msg_to_yojson : app_client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json
+            <span class="keyword">module</span> <span class="constructor">M_app_client_msg_of_yojson</span> :
+              <span class="keyword">sig</span>
+                <span class="keyword">type</span> nonrec t_of_yojson = {
+                  <span class="keyword">mutable</span> f :
+                    <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span>
+                    app_client_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or;
+                }
+                <span class="keyword">val</span> f : t_of_yojson
+              <span class="keyword">end</span>
+            <span class="keyword">val</span> app_client_msg_of_yojson :
+              <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span>
+              app_client_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or
+            <span class="keyword">type</span> server_msg = <span class="constructor">P</span>.server_msg = ..
+            <span class="keyword">module</span> <span class="constructor">M_server_msg_to_yojson</span> :
+              <span class="keyword">sig</span>
+                <span class="keyword">type</span> nonrec t_to_yojson = {
+                  <span class="keyword">mutable</span> f : server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;
+                }
+                <span class="keyword">val</span> f : t_to_yojson
+              <span class="keyword">end</span>
+            <span class="keyword">val</span> server_msg_to_yojson : server_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json
+            <span class="keyword">module</span> <span class="constructor">M_server_msg_of_yojson</span> :
+              <span class="keyword">sig</span>
+                <span class="keyword">type</span> nonrec t_of_yojson = {
+                  <span class="keyword">mutable</span> f :
+                    <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span>
+                    server_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or;
+                }
+                <span class="keyword">val</span> f : t_of_yojson
+              <span class="keyword">end</span>
+            <span class="keyword">val</span> server_msg_of_yojson :
+              <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span>
+              server_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or
+            <span class="keyword">type</span> server_msg +=
+                <span class="constructor">SOk</span>
+              <span class="keywordsign">|</span> <span class="constructor">SError</span> <span class="keyword">of</span> string
+              <span class="keywordsign">|</span> <span class="constructor">STree</span> <span class="keyword">of</span> <span class="constructor">Ojsft_types</span>.file_tree list
+              <span class="keywordsign">|</span> <span class="constructor">SAdd_file</span> <span class="keyword">of</span> <span class="constructor">Ojsft_types</span>.path * <span class="constructor">Ojsft_types</span>.mime_type
+              <span class="keywordsign">|</span> <span class="constructor">SAdd_dir</span> <span class="keyword">of</span> <span class="constructor">Ojsft_types</span>.path
+              <span class="keywordsign">|</span> <span class="constructor">SDelete</span> <span class="keyword">of</span> <span class="constructor">Ojsft_types</span>.path
+            <span class="keyword">type</span> client_msg = <span class="constructor">P</span>.client_msg = ..
+            <span class="keyword">module</span> <span class="constructor">M_client_msg_to_yojson</span> :
+              <span class="keyword">sig</span>
+                <span class="keyword">type</span> nonrec t_to_yojson = {
+                  <span class="keyword">mutable</span> f : client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json;
+                }
+                <span class="keyword">val</span> f : t_to_yojson
+              <span class="keyword">end</span>
+            <span class="keyword">val</span> client_msg_to_yojson : client_msg <span class="keywordsign">-&gt;</span> <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json
+            <span class="keyword">module</span> <span class="constructor">M_client_msg_of_yojson</span> :
+              <span class="keyword">sig</span>
+                <span class="keyword">type</span> nonrec t_of_yojson = {
+                  <span class="keyword">mutable</span> f :
+                    <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span>
+                    client_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or;
+                }
+                <span class="keyword">val</span> f : t_of_yojson
+              <span class="keyword">end</span>
+            <span class="keyword">val</span> client_msg_of_yojson :
+              <span class="constructor">Yojson</span>.<span class="constructor">Safe</span>.json <span class="keywordsign">-&gt;</span>
+              client_msg <span class="constructor">Ppx_deriving_yojson_runtime</span>.error_or
+            <span class="keyword">type</span> client_msg +=
+                <span class="constructor">Get_tree</span>
+              <span class="keywordsign">|</span> <span class="constructor">Add_file</span> <span class="keyword">of</span> <span class="constructor">Ojsft_types</span>.path * string
+              <span class="keywordsign">|</span> <span class="constructor">Add_dir</span> <span class="keyword">of</span> <span class="constructor">Ojsft_types</span>.path
+              <span class="keywordsign">|</span> <span class="constructor">Delete</span> <span class="keyword">of</span> <span class="constructor">Ojsft_types</span>.path
+              <span class="keywordsign">|</span> <span class="constructor">Rename</span> <span class="keyword">of</span> <span class="constructor">Ojsft_types</span>.path * <span class="constructor">Ojsft_types</span>.path
+            <span class="keyword">val</span> pack_server_msg : string <span class="keywordsign">-&gt;</span> server_msg <span class="keywordsign">-&gt;</span> app_server_msg
+            <span class="keyword">val</span> unpack_server_msg :
+              app_server_msg <span class="keywordsign">-&gt;</span> (string * server_msg) option
+            <span class="keyword">val</span> pack_client_msg : string <span class="keywordsign">-&gt;</span> client_msg <span class="keywordsign">-&gt;</span> app_client_msg
+            <span class="keyword">val</span> unpack_client_msg :
+              app_client_msg <span class="keywordsign">-&gt;</span> (string * client_msg) option
+          <span class="keyword">end</span>
+        <span class="keyword">val</span> access_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg
+        <span class="keyword">val</span> creation_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg
+        <span class="keyword">val</span> deletion_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg
+        <span class="keyword">val</span> renaming_forbidden : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.server_msg
+        <span class="keyword">class</span> filetree :
+          (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+          (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+          id:string <span class="keywordsign">-&gt;</span>
+          <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span>
+          <span class="keyword">object</span>
+            <span class="keyword">val</span> <span class="keyword">mutable</span> file_filter : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> bool
+            <span class="keyword">method</span> after_add_file : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> unit
+            <span class="keyword">method</span> after_get_tree :
+              <span class="constructor">Ojsft_types</span>.file_tree list <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_types</span>.file_tree list
+            <span class="keyword">method</span> before_add_file : <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> unit
+            <span class="keyword">method</span> can_add_dir : string <span class="keywordsign">-&gt;</span> bool
+            <span class="keyword">method</span> can_add_file : string <span class="keywordsign">-&gt;</span> bool
+            <span class="keyword">method</span> can_delete : string <span class="keywordsign">-&gt;</span> bool
+            <span class="keyword">method</span> can_rename : string <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> bool
+            <span class="keyword">method</span> handle_add_dir :
+              (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+            <span class="keyword">method</span> handle_add_file :
+              (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+              <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> string <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+            <span class="keyword">method</span> handle_call :
+              (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+            <span class="keyword">method</span> handle_delete :
+              (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+            <span class="keyword">method</span> handle_message :
+              (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> <span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+            <span class="keyword">method</span> handle_rename :
+              (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+              <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> <span class="constructor">Ojsft_types</span>.path <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+            <span class="keyword">method</span> id : string
+            <span class="keyword">method</span> root : <span class="constructor">Ojs_path</span>.t
+            <span class="keyword">method</span> set_file_filter : (<span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> bool) <span class="keywordsign">-&gt;</span> unit
+          <span class="keyword">end</span>
+        <span class="keyword">class</span> filetrees :
+          (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+          (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+          ((<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> (<span class="constructor">P</span>.client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+           (<span class="constructor">P</span>.server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+           id:string <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> filetree) <span class="keywordsign">-&gt;</span>
+          <span class="keyword">object</span>
+            <span class="keyword">val</span> <span class="keyword">mutable</span> filetrees : filetree <span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.t
+            <span class="keyword">method</span> add_filetree :
+              id:<span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> <span class="constructor">Ojs_path</span>.t <span class="keywordsign">-&gt;</span> filetree
+            <span class="keyword">method</span> filetree : <span class="constructor">Ojs_server</span>.<span class="constructor">SMap</span>.key <span class="keywordsign">-&gt;</span> filetree
+            <span class="keyword">method</span> handle_call :
+              (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+              <span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+            <span class="keyword">method</span> handle_message :
+              (<span class="constructor">P</span>.app_server_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t) <span class="keywordsign">-&gt;</span>
+              <span class="constructor">P</span>.app_client_msg <span class="keywordsign">-&gt;</span> unit <span class="constructor">Lwt</span>.t
+          <span class="keyword">end</span>
+      <span class="keyword">end</span>
 <span class="keyword">end</span></code></div>
 
 
