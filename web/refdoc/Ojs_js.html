@@ -18,7 +18,7 @@
 
 
 <pre><span id="VALlog"><span class="keyword">val</span> log</span> : <code class="type">string -&gt; unit</code></pre>
-<pre><span id="VALmk_msg_of_wsdata"><span class="keyword">val</span> mk_msg_of_wsdata</span> : <code class="type">(Yojson.Safe.json -&gt; [&lt; `Error of string | `Ok of 'a ]) -&gt;<br/>       string -&gt; 'a option</code></pre>
+<pre><span id="VALmk_msg_of_wsdata"><span class="keyword">val</span> mk_msg_of_wsdata</span> : <code class="type">(Yojson.Safe.json -&gt; ('a, string) Pervasives.result) -&gt; string -&gt; 'a option</code></pre>
 <pre><span id="VALclass_"><span class="keyword">val</span> class_</span> : <code class="type">string -&gt; string</code></pre>
 <pre><span id="VALsetup_ws"><span class="keyword">val</span> setup_ws</span> : <code class="type">string -&gt;<br/>       (string -&gt; 'a option) -&gt;<br/>       onopen:(WebSockets.webSocket Js.t -&gt; 'b) -&gt;<br/>       onmessage:(WebSockets.webSocket Js.t -&gt; 'a -&gt; 'c) -&gt;<br/>       WebSockets.webSocket Js.t option</code></pre>
 <pre><span id="VALsend_msg"><span class="keyword">val</span> send_msg</span> : <code class="type">WebSockets.webSocket Js.t -&gt; string -&gt; unit</code></pre>

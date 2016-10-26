@@ -30,7 +30,7 @@
 <pre><span class="keyword">module</span> <a href="Ojsft_types.B.M_server_msg_to_yojson.html">M_server_msg_to_yojson</a>: <code class="code">sig</code> <a href="Ojsft_types.B.M_server_msg_to_yojson.html">..</a> <code class="code">end</code></pre>
 <pre><span id="VALserver_msg_to_yojson"><span class="keyword">val</span> server_msg_to_yojson</span> : <code class="type"><a href="Ojsft_types.B.html#TYPEserver_msg">server_msg</a> -&gt; Yojson.Safe.json</code></pre>
 <pre><span class="keyword">module</span> <a href="Ojsft_types.B.M_server_msg_of_yojson.html">M_server_msg_of_yojson</a>: <code class="code">sig</code> <a href="Ojsft_types.B.M_server_msg_of_yojson.html">..</a> <code class="code">end</code></pre>
-<pre><span id="VALserver_msg_of_yojson"><span class="keyword">val</span> server_msg_of_yojson</span> : <code class="type">Yojson.Safe.json -&gt; [ `Error of string | `Ok of <a href="Ojsft_types.B.html#TYPEserver_msg">server_msg</a> ]</code></pre><pre><code><span class="keyword">type</span> <code class="type"></code><a href="Ojsft_types.B.html#TYPEserver_msg">Ojsft_types.B.server_msg</a> += </code></pre><table class="typetable">
+<pre><span id="VALserver_msg_of_yojson"><span class="keyword">val</span> server_msg_of_yojson</span> : <code class="type">Yojson.Safe.json -&gt;<br/>       <a href="Ojsft_types.B.html#TYPEserver_msg">server_msg</a> Ppx_deriving_yojson_runtime.error_or</code></pre><pre><code><span class="keyword">type</span> <code class="type"></code><a href="Ojsft_types.B.html#TYPEserver_msg">Ojsft_types.B.server_msg</a> += </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
@@ -82,7 +82,7 @@
 <pre><span class="keyword">module</span> <a href="Ojsft_types.B.M_client_msg_to_yojson.html">M_client_msg_to_yojson</a>: <code class="code">sig</code> <a href="Ojsft_types.B.M_client_msg_to_yojson.html">..</a> <code class="code">end</code></pre>
 <pre><span id="VALclient_msg_to_yojson"><span class="keyword">val</span> client_msg_to_yojson</span> : <code class="type"><a href="Ojsft_types.B.html#TYPEclient_msg">client_msg</a> -&gt; Yojson.Safe.json</code></pre>
 <pre><span class="keyword">module</span> <a href="Ojsft_types.B.M_client_msg_of_yojson.html">M_client_msg_of_yojson</a>: <code class="code">sig</code> <a href="Ojsft_types.B.M_client_msg_of_yojson.html">..</a> <code class="code">end</code></pre>
-<pre><span id="VALclient_msg_of_yojson"><span class="keyword">val</span> client_msg_of_yojson</span> : <code class="type">Yojson.Safe.json -&gt; [ `Error of string | `Ok of <a href="Ojsft_types.B.html#TYPEclient_msg">client_msg</a> ]</code></pre><pre><code><span class="keyword">type</span> <code class="type"></code><a href="Ojsft_types.B.html#TYPEclient_msg">Ojsft_types.B.client_msg</a> += </code></pre><table class="typetable">
+<pre><span id="VALclient_msg_of_yojson"><span class="keyword">val</span> client_msg_of_yojson</span> : <code class="type">Yojson.Safe.json -&gt;<br/>       <a href="Ojsft_types.B.html#TYPEclient_msg">client_msg</a> Ppx_deriving_yojson_runtime.error_or</code></pre><pre><code><span class="keyword">type</span> <code class="type"></code><a href="Ojsft_types.B.html#TYPEclient_msg">Ojsft_types.B.client_msg</a> += </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>

@@ -902,9 +902,9 @@ let _ = !print "\n### checking required tools and libraries ###\n"
 
 
 let _ = check_ocamlfind_package conf ~min_version: [2;5] "js_of_ocaml";;
-let _ = check_ocamlfind_package conf ~min_version: [0;18;2] "cohttp"
+let _ = check_ocamlfind_package conf ~min_version: [0;19;3] "cohttp"
 let _ = check_ocamlfind_package conf ~min_version: [2;6] "websocket"
-let _ = check_ocamlfind_package conf ~min_version: [2;4;8] "lwt.unix"
+let _ = check_ocamlfind_package conf ~min_version: [2;5] "lwt.unix"
 let _ = check_ocamlfind_package conf ~min_version: [1;1;8] "yojson"
 let _ = check_ocamlfind_package conf ~min_version: [3;0] "ppx_deriving_yojson"
 let _ = check_ocamlfind_package conf ~min_version: [2;0] "base64"

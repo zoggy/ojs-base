@@ -21,12 +21,12 @@ remove: [["ocamlfind" "remove" "ojs"]]
 depends: [
   "ocamlfind"
   "js_of_ocaml" {>= "2.5"}
-  "websocket" {>= "2.1"}
-  "lwt" {>= "2.4.8"}
-  "cohttp" {>= "0.18.2"}
+  "websocket" {>= "2.6"}
+  "lwt" {>= "2.5"}
+  "cohttp" {>= "0.19.3"}
   "yojson" {>= "1.1.8"}
-  "ppx_deriving_yojson" { >= "2.4" }
-  "xtmpl" { >= "0.14.0"}
+  "ppx_deriving_yojson" { >= "3.0" }
+  "xtmpl" { >= "0.15.0"}
   "magic-mime" { >= "1.0"}
   "base64" { >= "2.0"}
 ]
