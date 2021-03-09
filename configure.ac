@@ -54,7 +54,8 @@ fi
 SHARE_DIR=$datadir
 
 
-PACKAGES=str,yojson,websocket.lwt,lwt.unix,lwt_ppx,js_of_ocaml,ppx_deriving_yojson,base64,magic-mime,xtmpl
+PACKAGES=str,yojson,websocket.lwt,lwt.unix,lwt_ppx,ppx_deriving_yojson,base64,magic-mime,xtmpl
+JS_PACKAGES=js_of_ocaml
 
 #############################
 # substitutions to perform
@@ -81,6 +82,7 @@ AC_SUBST(JS_OF_OCAML)
 AC_SUBST(OCAML_CRUNCH)
 
 AC_SUBST(PACKAGES)
+AC_SUBST(JS_PACKAGES)
 
 # Finally create the master.Makefile.in
 ACFILES="master.Makefile src/META"

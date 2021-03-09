@@ -31,7 +31,7 @@ include ../master.Makefile
 P=#p -p
 PBYTE=#p -p a
 
-OF_FLAGS=-package $(PACKAGES),xtmpl.ppx
+OF_FLAGS=-package $(PACKAGES),$(JS_PACKAGES),xtmpl.ppx
 
 COMPFLAGS=-I +ocamldoc -I example -annot -g -thread -rectypes -verbose -annot #-w +K
 OCAMLPP=

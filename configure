@@ -584,6 +584,7 @@ PACKAGE_URL=
 ac_unique_file="master.Makefile.in"
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+JS_PACKAGES
 PACKAGES
 OCAML_CRUNCH
 JS_OF_OCAML
@@ -1720,10 +1721,12 @@ fi
 SHARE_DIR=$datadir
 
 
-PACKAGES=str,yojson,websocket.lwt,lwt.unix,lwt_ppx,js_of_ocaml,ppx_deriving_yojson,base64,magic-mime,xtmpl
+PACKAGES=str,yojson,websocket.lwt,lwt.unix,lwt_ppx,ppx_deriving_yojson,base64,magic-mime,xtmpl
+JS_PACKAGES=js_of_ocaml
 
 #############################
 # substitutions to perform
+
 
 
 
