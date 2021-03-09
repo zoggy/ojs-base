@@ -303,7 +303,14 @@ module Make(P:Ojsft_types.P) =
             log (Printf.sprintf "Reading file: %s" (Printexc.to_string exn))
           in
           (* read in base 64 *)
-          Lwt.on_any (File.readAsDataURL blob) on_success on_error
+          let read blob =
+            let reader = jsnew File.fileReader () in
+            let res = reader##result in
+            Js.Opt.case (File.CoerceTo.string res)
+              (fun () -> Lwt.return (Js.string ""))
+              (fun s -> Lwt.return s)
+          in
+          Lwt.on_any (read blob) on_success on_error
 
         method add_dir path name =
           let path = Ojs_path.append path [name] in

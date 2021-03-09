@@ -50,13 +50,13 @@ let mk_msg_of_wsdata client_msg_of_yojson =
 let mk_send_msg wsdata_of_msg push =
   fun msg ->
     let wsdata = wsdata_of_msg msg in
-    let frame = Ws.Frame.create ~content: wsdata () in
+    let frame = Websocket.Frame.create ~content: wsdata () in
     push frame
 
 let mk_msg_stream msg_of_wsdata =
   let f frame =
-    match Ws.Frame.(frame.content, frame.opcode) with
-    | content, Ws.Frame.Opcode.Text -> msg_of_wsdata content
+    match Websocket.Frame.(frame.content, frame.opcode) with
+    | content, Websocket.Frame.Opcode.Text -> msg_of_wsdata content
     | _ -> None
   in
   Lwt_stream.filter_map f
@@ -90,8 +90,8 @@ module type S = sig
         (Rpc.app_server_msg -> unit Lwt.t) ->
         Rpc.t -> Rpc.app_client_msg -> unit Lwt.t
       method add_connection :
-        Ws.Frame.t Lwt_stream.t ->
-        (Ws.Frame.t -> unit Lwt.t) -> unit Lwt.t
+        Websocket.Frame.t Lwt_stream.t ->
+        (Websocket.Frame.t -> unit Lwt.t) -> unit Lwt.t
       method broadcall :
         Rpc.app_server_msg ->
         (Rpc.app_client_msg -> unit Lwt.t) -> unit Lwt.t
