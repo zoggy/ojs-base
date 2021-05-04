@@ -331,10 +331,10 @@ test_ppx: test_ppx_ojs
 .PHONY: test_ppx_ojs
 
 test_ppx_ojs:
-	$(OCAMLFIND) ocamlopt -o $@ -dsource -rectypes -package xtmpl,cohttp -linkpkg \
-	-ppx ./ppx_ojs ojs-base.cmxa test_ppx_ojs.ml
+	$(OCAMLFIND) ocamlopt -o $@ -dsource -rectypes -package xtmpl,xtmpl.ppx,cohttp -linkpkg \
+	-ppx ./ppx_ojs ojs-base.cmxa ojs-base-server.cmxa test_ppx_ojs.ml
 	@echo "======"
-	$(OCAMLFIND) ocamlopt -i -rectypes -package xtmpl,cohttp -ppx ./ppx_ojs test_ppx_ojs.ml
+	$(OCAMLFIND) ocamlopt -i -rectypes -package xtmpl,xtmpl.ppx,cohttp -ppx ./ppx_ojs test_ppx_ojs.ml
 	@echo "======"
 	./$@
 

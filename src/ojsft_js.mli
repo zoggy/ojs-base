@@ -28,6 +28,8 @@
 
 (** Filetree, client side *)
 
+open Js_of_ocaml
+
 type node_type = [ `Dir | `File ]
 
 type tree_node = {

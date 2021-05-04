@@ -127,8 +127,9 @@ class filetree
           false -> reply_msg (creation_forbidden path)
         | true ->
             let contents =
-              try B64.decode contents
-              with e -> failwith (Printexc.to_string e)
+              match Base64.decode contents with
+              | Ok c -> c
+              | Error (`Msg msg) -> failwith msg
             in
             self#before_add_file norm ;
             Ojs_misc.file_of_string ~file contents ;

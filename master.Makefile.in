@@ -69,7 +69,7 @@ JS_PACKAGES=@JS_PACKAGES@
 .SUFFIXES: .mli .ml .cmi .cmo .cmx
 
 
-JSOC_SYNTAX=-package js_of_ocaml.syntax -syntax camlp4o
+JSOC_SYNTAX=-package js_of_ocaml-ppx
 %_js.cmi:%_js.mli
 	$(OCAMLFIND) ocamlc$(PBYTE) $(OF_FLAGS) $(OCAMLPP) $(COMPFLAGS) -c $(JSOC_SYNTAX) $<
 

@@ -28,6 +28,8 @@
 
 (** JS utilities *)
 
+open Js_of_ocaml
+
 module SMap : Map.S with type key = string
 
 (** Replace a referenced map by the same map with an additional binding. *)
@@ -44,7 +46,7 @@ val log : string -> unit
 (** Helper function to read a messsage from a websocket frame data,
   using the given (json to msg) function. *)
 val mk_msg_of_wsdata :
-  (Yojson.Safe.json -> ('a, string) result) ->
+  (Yojson.Safe.t -> ('a, string) result) ->
   string -> 'a option
 
 (** Used to create ojs specific classes. [class_ str] returns ["ojs-"^str]. *)

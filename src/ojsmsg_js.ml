@@ -28,6 +28,8 @@
 
 (** Displaying messages in web pages. *)
 
+open Js_of_ocaml
+
 let base_class = Ojs_js.class_"msg"
 let class_ s = base_class ^ "-" ^ s
 
@@ -40,7 +42,7 @@ let display_message ?(timeout=3000.0) ?(cl=class_"info") id msg_nodes =
 
   if timeout > 0. then
     ignore(Dom_html.window##setTimeout
-     (Js.wrap_callback (fun () -> Dom.removeChild node div), timeout)
+     (Js.wrap_callback (fun () -> Dom.removeChild node div)) timeout
     )
   else
     (

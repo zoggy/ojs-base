@@ -28,6 +28,8 @@
 
 (** *)
 
+open Js_of_ocaml
+
 module SMap = Map.Make(String)
 let (+=) map (key, v) = map := SMap.add key v !map
 let (-=) map key = map := SMap.remove key !map
@@ -52,7 +54,7 @@ let setup_ws url msg_of_data ~onopen ~onmessage =
     let on_message ws _ event =
       try
       log "message received on ws";
-      match msg_of_data (Js.to_string event##data) with
+      match msg_of_data (Js.to_string event##.data) with
         None -> Js._false
       | Some msg ->
           onmessage ws msg;
@@ -64,10 +66,10 @@ let setup_ws url msg_of_data ~onopen ~onmessage =
     in
     try
       log ("connecting with websocket to "^url);
-      let ws = jsnew WebSockets.webSocket(Js.string url) in
-      ws##onmessage <- Dom.full_handler (on_message ws) ;
-      ws##onclose <- Dom.handler (fun _ -> log "WS now CLOSED"; Js._false);
-      ws##onopen <- Dom.handler (fun _ -> onopen ws; Js._false) ;
+      let ws = new%js WebSockets.webSocket(Js.string url) in
+      ws##.onmessage := Dom.full_handler (on_message ws) ;
+      ws##.onclose := Dom.handler (fun _ -> log "WS now CLOSED"; Js._false);
+      ws##.onopen := Dom.handler (fun _ -> onopen ws; Js._false) ;
       Some ws
     with e ->
         log ("Could not connect to "^url);
@@ -78,9 +80,9 @@ let setup_ws url msg_of_data ~onopen ~onmessage =
 let send_msg (ws : WebSockets.webSocket Js.t) data = ws##send (Js.string data)
 
 let clear_children node =
-  let children = node##childNodes in
-  for i = 0 to children##length - 1 do
-    Js.Opt.iter (node##firstChild) (fun n -> Dom.removeChild node n)
+  let children = node##.childNodes in
+  for i = 0 to children##.length - 1 do
+    Js.Opt.iter node##.firstChild (fun n -> Dom.removeChild node n)
   done
 
 let node_by_id id =
@@ -120,14 +122,14 @@ let split_string ?(keep_empty=false) s chars =
 (*/c==v=[String.split_string]=1.2====*)
 
 let get_classes node =
-  let s =Js.to_string node##className in
+  let s =Js.to_string node##.className in
   split_string s [' ']
 
 let node_unset_class node cl =
-  node##classList##remove(Js.string cl)
+  node##.classList##remove (Js.string cl)
 
 let node_set_class node cl =
-  node##classList##add(Js.string cl)
+  node##.classList##add (Js.string cl)
 
 let unset_class ~id cl =
   try

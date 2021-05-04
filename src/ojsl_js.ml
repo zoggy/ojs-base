@@ -28,6 +28,7 @@
 
 (** *)
 
+open Js_of_ocaml
 open Ojs_js
 
 let (>>=) = Lwt.(>>=)

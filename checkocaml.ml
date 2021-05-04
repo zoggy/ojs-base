@@ -50,7 +50,7 @@ let temp_files_ext = ref "ml"
 let debug = ref false
 
 (** The function used to print progress messages and other information. *)
-let print = ref (fun s -> print_string s; flush Pervasives.stdout)
+let print = ref (fun s -> print_string s; flush Stdlib.stdout)
 
 (** [!string_of_bool b] should return a message according to the given boolean.
    Default are yes/no. *)
@@ -901,13 +901,14 @@ let _ =
 let _ = !print "\n### checking required tools and libraries ###\n"
 
 
-let _ = check_ocamlfind_package conf ~min_version: [2;5] "js_of_ocaml";;
+let _ = check_ocamlfind_package conf ~min_version: [3;9;0] "js_of_ocaml";;
 let _ = check_ocamlfind_package conf ~min_version: [0;19;3] "cohttp"
-let _ = check_ocamlfind_package conf ~min_version: [2;6] "websocket"
+let _ = check_ocamlfind_package conf ~min_version: [2;14] "websocket"
+let _ = check_ocamlfind_package conf ~min_version: [2;14] "websocket-lwt-unix"
 let _ = check_ocamlfind_package conf ~min_version: [2;5] "lwt.unix"
 let _ = check_ocamlfind_package conf ~min_version: [1;1;8] "yojson"
 let _ = check_ocamlfind_package conf ~min_version: [3;0] "ppx_deriving_yojson"
-let _ = check_ocamlfind_package conf ~min_version: [2;0] "base64"
+let _ = check_ocamlfind_package conf ~min_version: [3;5;0] "base64"
 let _ = check_ocamlfind_package conf ~min_version: [0;15] "xtmpl"
 let _ = check_ocamlfind_package conf ~min_version: [1;0] "magic-mime"
 let _ = add_subst "JS_OF_OCAML" (ocaml_prog "js_of_ocaml")

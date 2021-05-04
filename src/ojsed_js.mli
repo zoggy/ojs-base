@@ -28,6 +28,8 @@
 
 (**Editor, client side *)
 
+open Js_of_ocaml
+
 type mime_type = string
 
 type session = {

@@ -37,7 +37,11 @@ open Longident
 module SMap = Map.Make(String)
 module X = Xtmpl_rewrite
 
-let lid loc s = Location.mkloc (Longident.parse s) loc
+let lid ?(loc=Location.none) s =
+  let b = Lexing.from_string s in
+  let p = loc.Location.loc_start in
+  let b = { b with Lexing.lex_start_p = p; lex_curr_p = p } in
+  Location.mkloc (Parse.longident b) loc
 
 (*c==v=[File.string_of_file]=1.1====*)
 let string_of_file name =
@@ -74,7 +78,7 @@ let file_path node exp =
     | f -> Filename.dirname f
   in
   match exp.pexp_desc with
-  | Pexp_constant (Pconst_string (file, _)) ->
+  | Pexp_constant (Pconst_string (file, _, _)) ->
       begin
         match Filename.is_relative file with
         | true -> Filename.concat base_path file
@@ -157,7 +161,7 @@ let to_id i =
         (function
          | 'a'..'z' as c -> c
          | '0'..'9' as c -> c
-         | 'A'..'Z' as c -> Char.lowercase c
+         | 'A'..'Z' as c -> Char.lowercase_ascii c
          | _ -> '_')
          i.i_name
 
@@ -428,7 +432,7 @@ let mk_template loc tmpl =
     [ Vb.mk (Pat.var (Location.mkloc "template_" loc))
       (Exp.extension
        (Location.mkloc "xtmpl.string" loc,
-        (PStr  [(Str.eval (Exp.constant (Pconst_string (X.to_string tmpl, None))))]))
+        (PStr  [(Str.eval (Exp.constant (Pconst_string (X.to_string tmpl, Location.none, None))))]))
       )
     ]
 
@@ -447,7 +451,7 @@ let mk_type loc inputs =
           if i.i_mandatory then
             typ
           else
-            let lid_option = Location.mkloc (Ldot (Lident "*predef*","option")) loc in
+            let lid_option = Location.mkloc (Ldot (Lident "Option","t")) loc in
             Typ.constr lid_option [typ]
     in
     (Type.field (Location.mkloc id loc) typ) :: acc
@@ -457,7 +461,7 @@ let mk_type loc inputs =
   Str.type_ Recursive [ty]
 
 let mk_typ_form loc tmpl =
-  let str = Exp.constant (Pconst_string (X.to_string tmpl, None)) in
+  let str = Exp.constant (Pconst_string (X.to_string tmpl, Location.none, None)) in
   let extension =
     Typ.extension (Location.mkloc "xtmpl.string.type" loc, (PStr  [Str.eval str]))
   in
@@ -465,7 +469,7 @@ let mk_typ_form loc tmpl =
   Str.type_ Recursive [ty]
 
 let mk_typ_template loc tmpl =
-  let str = Exp.constant (Pconst_string (X.to_string tmpl, None)) in
+  let str = Exp.constant (Pconst_string (X.to_string tmpl, Location.none, None)) in
   let extension =
     Typ.extension (Location.mkloc "xtmpl.string.type" loc, (PStr  [Str.eval str]))
   in
@@ -474,10 +478,11 @@ let mk_typ_template loc tmpl =
 
 let mk_exn loc =
   Str.exception_
-    (Te.decl
+    (Te.mk_exception
+      (Te.decl
       ~args: (Pcstr_tuple [ [%type: template * string list] ])
       (Location.mkloc "Error" loc)
-    )
+    ))
 
 let mk_read_form loc inputs =
   let read_input name i exp =
@@ -491,7 +496,7 @@ let mk_read_form loc inputs =
             `CData -> [%expr fun v -> Some v]
           | `Other (_,_,of_s) -> [%expr Some (([%e parse_ocaml_expression loc of_s]) v)]
     in
-    let e_name = Exp.constant (Pconst_string (name, None)) in
+    let e_name = Exp.constant (Pconst_string (name, Location.none, None)) in
     [%expr
       let [%p (Pat.var (Location.mkloc id loc))] =
         read_param__ [%e mand] [%e e_name] [%e of_string]
@@ -526,7 +531,7 @@ let mk_read_form loc inputs =
   in
   let fill_t =
     let field name i acc =
-      let lid_name = lid loc (to_id i) in
+      let lid_name = lid ~loc (to_id i) in
       let e =
         let id = Exp.ident lid_name  in
         match i.i_kind with

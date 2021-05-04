@@ -29,8 +29,8 @@
 # check for one particular file of the sources
 AC_INIT(master.Makefile.in)
 
-VERSION=0.5.0
-PACKAGE=ojs
+VERSION=0.6.0
+PACKAGE=ojs_base
 
 # The root directory where we will compile
 ROOT=`pwd`
@@ -54,7 +54,7 @@ fi
 SHARE_DIR=$datadir
 
 
-PACKAGES=str,yojson,websocket.lwt,lwt.unix,lwt_ppx,ppx_deriving_yojson,base64,magic-mime,xtmpl
+PACKAGES=str,yojson,websocket-lwt-unix,lwt.unix,lwt_ppx,ppx_deriving_yojson,base64,magic-mime,xtmpl
 JS_PACKAGES=js_of_ocaml
 
 #############################

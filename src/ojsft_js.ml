@@ -28,6 +28,7 @@
 
 (** *)
 
+open Js_of_ocaml
 open Ojs_js
 open Ojsft_types
 
@@ -57,15 +58,15 @@ let button_bar base_id =
   let doc = Dom_html.document in
   let id = base_id^"-button-bar" in
   let div = doc##createElement (Js.string "div") in
-  div##setAttribute (Js.string "id", Js.string id);
-  div##className <- Js.string button_bar_class ;
+  div##setAttribute (Js.string "id") (Js.string id);
+  div##.className := Js.string button_bar_class ;
   div
 
 let add_button id ?cls text bar =
   let doc = Dom_html.document in
   let span = doc##createElement (Js.string "span") in
-  span##setAttribute (Js.string "id", Js.string id);
-  span##className <- Js.string button_class ;
+  span##setAttribute (Js.string "id") (Js.string id);
+  span##.className := Js.string button_class ;
   (match cls with
      None -> ()
    | Some c -> Ojs_js.node_set_class span c
@@ -99,17 +100,17 @@ let expand_buttons ?(start=`Collapsed) base_id subs subs_id =
   let id_col = base_id^"collapse" in
 
   let span_exp = doc##createElement (Js.string "span") in
-  span_exp##setAttribute (Js.string "id", Js.string id_exp);
+  span_exp##setAttribute (Js.string "id") (Js.string id_exp);
 
   let span_col = doc##createElement (Js.string "span") in
-  span_col##setAttribute (Js.string "id", Js.string id_col);
+  span_col##setAttribute (Js.string "id") (Js.string id_col);
 
   (match start with
    | `Expand ->
-       span_exp##className <- Js.string collapsed_class ;
+       span_exp##.className := Js.string collapsed_class ;
        Ojs_js.node_unset_class subs collapsed_class
    | `Collapsed ->
-       span_col##className <- Js.string collapsed_class ;
+       span_col##.className := Js.string collapsed_class ;
        Ojs_js.node_set_class subs collapsed_class
   );
 
@@ -285,8 +286,8 @@ module Make(P:Ojsft_types.P) =
               `Dir -> path
             | `File -> Ojs_path.parent path
           in
-          let path = Ojs_path.append dir [Js.to_string file##name] in
-          let (size : int) = file##size in
+          let path = Ojs_path.append dir [Js.to_string file##.name] in
+          let (size : int) = file##.size in
           let (blob : File.blob Js.t) =
             Js.Unsafe.meth_call file "slice" [| Js.Unsafe.inject 0 ; Js.Unsafe.inject size |]
           in
@@ -304,8 +305,8 @@ module Make(P:Ojsft_types.P) =
           in
           (* read in base 64 *)
           let read blob =
-            let reader = jsnew File.fileReader () in
-            let res = reader##result in
+            let reader = new%js File.fileReader in
+            let res = reader##.result in
             Js.Opt.case (File.CoerceTo.string res)
               (fun () -> Lwt.return (Js.string ""))
               (fun s -> Lwt.return s)
@@ -317,7 +318,7 @@ module Make(P:Ojsft_types.P) =
           self#simple_call (P.Add_dir path)
 
         method prompt_add_dir path =
-          let answer = Dom_html.window##prompt(Js.string "Create directory", Js.string "") in
+          let answer = Dom_html.window##prompt(Js.string "Create directory") (Js.string "") in
           Js.Opt.case answer
             (fun () -> Lwt.return_unit)
             (fun name -> self#add_dir path (Js.to_string name))
@@ -335,7 +336,7 @@ module Make(P:Ojsft_types.P) =
           let on_dragover evt =
             stopPropagation evt;
             preventDefault evt;
-            evt##dataTransfer##dropEffect <- Js.string "copy" ;
+            evt##.dataTransfer##.dropEffect := Js.string "copy" ;
             Ojs_js.node_set_class node drag_class ;
             Js.bool true
           in
@@ -347,8 +348,8 @@ module Make(P:Ojsft_types.P) =
             stopPropagation evt;
             preventDefault evt;
             Ojs_js.node_unset_class node drag_class ;
-            let files = evt##dataTransfer##files in
-            let len = files##length in
+            let files = evt##.dataTransfer##.files in
+            let len = files##.length in
             for i = 0 to len - 1 do
               Js.Opt.case (files##item(i))
                 (fun () -> ())
@@ -390,23 +391,23 @@ module Make(P:Ojsft_types.P) =
         method compare_tn tn1 tn2 =
           match tn1.tn_type, tn2.tn_type with
             `Dir, `Dir
-          | `File, `File -> Pervasives.compare tn1.tn_path tn2.tn_path
+          | `File, `File -> Stdlib.compare tn1.tn_path tn2.tn_path
           | `Dir, _ -> -1
           | `File, _ -> 1
 
         method insert_tn parent_id tn node l =
           let parent_node = Ojs_js.node_by_id parent_id in
           let insert pos =
-            let children = parent_node##childNodes in
-            let child = children##item(pos) in
-            ignore(parent_node##insertBefore(node, child))
+            let children = parent_node##.childNodes in
+            let child = children##item pos in
+            ignore(parent_node##insertBefore node child)
           in
           let delete pos =
-            let children = parent_node##childNodes in
-            let nth_child = children##item(pos) in
+            let children = parent_node##.childNodes in
+            let nth_child = children##item pos in
             Js.Opt.case nth_child
               (fun () -> ())
-              (fun child -> ignore(parent_node##removeChild(child)));
+              (fun child -> ignore(parent_node##removeChild child));
           in
           let rec iter pos acc = function
             [] ->
@@ -438,17 +439,17 @@ module Make(P:Ojsft_types.P) =
       let doc = Dom_html.document in
       let div = doc##createElement (Js.string "div") in
       let div_id = Ojs_js.gen_id () in
-      div##setAttribute (Js.string "id", Js.string div_id);
-      div##setAttribute (Js.string "class", Js.string "ojsft-file");
+      div##setAttribute (Js.string "id") (Js.string div_id);
+      div##setAttribute (Js.string "class") (Js.string "ojsft-file");
 
       let head = doc##createElement (Js.string "div") in
       let head_id = div_id^"-head" in
-      head##setAttribute (Js.string "id", Js.string head_id);
-      head##setAttribute (Js.string "class", Js.string "ojsft-file-head");
+      head##setAttribute (Js.string "id") (Js.string head_id);
+      head##setAttribute (Js.string "class") (Js.string "ojsft-file-head");
 
       let span_id = div_id^"text" in
       let span = doc##createElement (Js.string span_id) in
-      span##setAttribute (Js.string "id", Js.string (div_id^"text"));
+      span##setAttribute (Js.string "id") (Js.string (div_id^"text"));
       self#set_onclick span div_id (`File mime) path ;
 
       let tn = {
@@ -498,23 +499,23 @@ module Make(P:Ojsft_types.P) =
       let doc = Dom_html.document in
       let div = doc##createElement (Js.string "div") in
       let div_id = Ojs_js.gen_id () in
-      div##setAttribute (Js.string "id", Js.string div_id);
-      div##setAttribute (Js.string "class", Js.string "ojsft-dir");
+      div##setAttribute (Js.string "id") (Js.string div_id);
+      div##setAttribute (Js.string "class") (Js.string "ojsft-dir");
 
       let head = doc##createElement (Js.string "div") in
       let head_id = div_id^"-head" in
-      head##setAttribute (Js.string "id", Js.string head_id);
-      head##setAttribute (Js.string "class", Js.string "ojsft-file-head");
+      head##setAttribute (Js.string "id") (Js.string head_id);
+      head##setAttribute (Js.string "class") (Js.string "ojsft-file-head");
 
       let span_id = div_id^"text" in
       let span = doc##createElement (Js.string "span") in
-      span##setAttribute (Js.string "id", Js.string span_id);
+      span##setAttribute (Js.string "id") (Js.string span_id);
       self#set_onclick span div_id `Dir path ;
 
       let subs_id = div_id^"subs" in
       let div_subs = doc##createElement (Js.string "div") in
-      div_subs##setAttribute (Js.string "id", Js.string subs_id);
-      div_subs##setAttribute (Js.string "class", Js.string "ojsft-dir-subs");
+      div_subs##setAttribute (Js.string "id") (Js.string subs_id);
+      div_subs##setAttribute (Js.string "class") (Js.string "ojsft-dir-subs");
 
       let text = doc##createTextNode (Js.string basename) in
 
@@ -588,7 +589,7 @@ module Make(P:Ojsft_types.P) =
               (match Ojs_js.node_by_id tn.tn_id with
                | exception _ -> ()
                | node ->
-                 Js.Opt.iter (node##parentNode)
+                 Js.Opt.iter node##.parentNode
                   (fun p -> ignore(p##removeChild((node :> Dom.node Js.t))));
               );
               let filter = List.filter (fun tn2 -> tn2.tn_id <> tn.tn_id) in

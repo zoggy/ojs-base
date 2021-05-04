@@ -30,7 +30,7 @@ let (>>=) = Lwt.bind
 
 module J = Yojson.Safe
 module SMap = Map.Make(String)
-module Ws = Websocket_lwt
+module Ws = Websocket_lwt_unix
 
 let mk_msg_of_wsdata client_msg_of_yojson =
   fun s ->

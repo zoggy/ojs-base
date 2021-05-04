@@ -28,6 +28,7 @@
 
 (** *)
 
+open Js_of_ocaml
 open Ojs_js
 let (>>=) = Lwt.(>>=)
 
@@ -115,21 +116,21 @@ module Make(P:Ojsed_types.P) =
     class editor call (send : P.client_msg -> unit Lwt.t)
       ~bar_id ~msg_id ed_id =
     let editor = Ojs_ace.ace##edit (Js.string ed_id) in
-    let _ = editor##setFontSize(Js.string "14px") in
-    let rend = editor##renderer in
-    let () = rend##setShowGutter(Js.bool true) in
-    let () = rend##hScrollBarAlwaysVisible <- (Js.bool false) in
-    let () = rend##vScrollBarAlwaysVisible <- (Js.bool false) in
-    let _ = editor##setKeyboardHandler(Js.string "ace/keyboard/emacs") in
+    let _ = editor##setFontSize (Js.string "14px") in
+    let rend = editor##.renderer in
+    let () = rend##setShowGutter (Js.bool true) in
+    let () = rend##.hScrollBarAlwaysVisible := (Js.bool false) in
+    let () = rend##.vScrollBarAlwaysVisible := (Js.bool false) in
+    let _ = editor##setKeyboardHandler (Js.string "ace/keyboard/emacs") in
     let bar = Ojs_js.node_by_id bar_id in
     let doc = Dom_html.document in
     let btn_save =  mk_button "Save" in
     let btn_reload = mk_button "Reload" in
     let filename_id = ed_id ^ "__filename" in
-    let fname = doc##createElement(Js.string "span") in
+    let fname = doc##createElement (Js.string "span") in
     let _ =
-      fname##setAttribute (Js.string "id", Js.string filename_id) ;
-      fname##setAttribute (Js.string "class", Js.string "filename") ;
+      fname##setAttribute (Js.string "id") (Js.string filename_id) ;
+      fname##setAttribute (Js.string "class") (Js.string "filename") ;
       Dom.appendChild bar btn_save ;
       Dom.appendChild bar btn_reload ;
       Dom.appendChild bar fname
@@ -189,7 +190,7 @@ module Make(P:Ojsed_types.P) =
               self#on_changed sess
             end
         in
-        let contents = Js.to_string (sess.sess_ace##getValue()) in
+        let contents = Js.to_string sess.sess_ace##getValue in
         self#simple_call ~on_ok (P.Save_file (sess.sess_file, contents))
 
       method save =
@@ -251,7 +252,7 @@ module Make(P:Ojsed_types.P) =
         sess_ace##setUndoManager(Ojs_ace.newUndoManager());
         sess_ace##setUseWrapMode(Js.bool true);
         sess_ace##setUseWorker(Js.bool false);
-        let doc = sess_ace##getDocument() in
+        let doc = sess_ace##getDocument in
         let sess = {
             sess_ace ; sess_mime = mime ;
             sess_changed = false ; sess_file = file ;
@@ -261,12 +262,12 @@ module Make(P:Ojsed_types.P) =
           let mode =
             Ojs_ace.modeList##getModeForPath(Js.string (Ojs_path.to_string file))
           in
-          mode##mode
+          mode##.mode
         in
         (*log("mode to set: "^(Js.to_string mode));*)
         sess_ace##setMode(mode);
-        doc##on(Js.string "change",
-         fun _ ->
+        doc##on (Js.string "change")
+         (fun _ ->
            if not sess.sess_changed then
              begin sess.sess_changed <- true; self#on_changed sess end
         );
