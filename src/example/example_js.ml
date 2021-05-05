@@ -26,6 +26,7 @@
 (*                                                                               *)
 (*********************************************************************************)
 
+open Js_of_ocaml
 
 let msg_of_wsdata = Ojs_js.mk_msg_of_wsdata Example_types.server_msg_of_yojson
 
@@ -49,7 +50,7 @@ module PList = struct
       let new_id = id^"-"^(gensym()) in
       let doc = Dom_html.document in
       let div = doc##createElement (Js.string "div") in
-      div##setAttribute (Js.string "id", Js.string new_id);
+      div##setAttribute (Js.string "id") (Js.string new_id);
       let text = doc##createTextNode (Js.string (string_of_int elt)) in
       Dom.insertBefore node div Js.null;
       Dom.appendChild div text ;
@@ -64,10 +65,6 @@ module ED = Ojsed_js.Make(Example_types.ED)
 let trees = new FT.trees call send (new FT.tree);;
 let editors = new ED.editors call send (new ED.editor);;
 let lists = new Mylist.elists call send (new Mylist.elist)
-(*  (fun msg cb -> call (msg :> Example_types.client_msg)
-    (function `Mylist_msg _ as msg -> cb msg | _ -> Lwt.return_unit))
-    (fun msg -> send (msg :> Example_types.client_msg))
-    (new Mylist.elist);;*)
 
 let on_deselect ti path =
   Ojs_js.log (Printf.sprintf "Node %S deselected" (Ojs_path.to_string path))

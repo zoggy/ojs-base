@@ -320,11 +320,11 @@ example: example/example-server example/example.js
 example/example-server: $(LIB) $(LIB_SERVER) $(LIBED) $(LIBED_SERVER) \
 		$(LIBFT) $(LIBFT_SERVER) $(LIBL) $(LIBL_SERVER) \
 	example/example_types.cmx example/example.cmx
-	$(OCAMLFIND) ocamlopt -o $@ $(OF_FLAGS) -package websocket.lwt -linkpkg $^
+	$(OCAMLFIND) ocamlopt -o $@ $(OF_FLAGS) -thread -package websocket-lwt-unix -linkpkg $^
 example/example.js: $(LIB_BYTE) $(LIBJS) $(LIBED_BYTE) $(LIBEDJS) \
 		$(LIBFT_BYTE) $(LIBFTJS) $(LIBL_BYTE) $(LIBLJS)  \
 	example/example_types.cmo example/example_js.cmo
-	$(OCAMLFIND) ocamlc -o t.x $^ -package yojson,ppx_deriving_yojson,js_of_ocaml -linkpkg
+	$(OCAMLFIND) ocamlc -o t.x $^ -package yojson,ppx_deriving_yojson,js_of_ocaml,lwt -linkpkg
 	$(JS_OF_OCAML) t.x -o $@
 
 test_ppx: test_ppx_ojs

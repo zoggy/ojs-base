@@ -29,9 +29,31 @@
 (** *)
 
 module J = Yojson.Safe
+module Ws = Websocket_lwt_unix
 
 let (>>=) = Lwt.bind
 let rec wait_forever () = Lwt_unix.sleep 1000.0 >>= wait_forever
+
+
+let section = Lwt_log.Section.make "ojs_base_example"
+
+let logger =
+  let output section level strings =
+    let msg str = Printf.sprintf "[%s][%s]%s"
+      (Lwt_log.Section.name section)
+      (Lwt_log_core.string_of_level level)
+      str
+    in
+    let msgs = List.map msg strings in
+    Lwt_list.iter_s
+      (fun s -> Lwt_io.(write_line stderr s))
+      msgs
+  in
+  Lwt_log_core.make ~output ~close:(fun () -> Lwt.return_unit)
+let () = Lwt_log.default := logger
+
+let () = Lwt_log.load_rules "debug"
+(*  "websocket[*]->debug;ojs_base_example[*]->debug"*)
 
 let wsdata_of_msg msg = J.to_string (Example_types.server_msg_to_yojson msg)
 let msg_of_wsdata = Ojs_server.mk_msg_of_wsdata Example_types.client_msg_of_yojson
@@ -43,7 +65,7 @@ let file_filter =
     String.length base > 0 &&
       String.get base 0 <> '.' &&
       (
-       match String.lowercase (Ojs_misc.filename_extension base) with
+       match String.lowercase_ascii (Ojs_misc.filename_extension base) with
          s when Str.string_match re s 0 -> false
        | _ -> true
       )
@@ -97,27 +119,31 @@ let _ = editors#add_editor "ed" root
 let list = lists#add_list "elist" [1 ; 2 ; 3]
 
 let handle_message send_msg rpc msg =
-    match msg with
-    | Example_types.ED.Editor _ -> editors#handle_message send_msg msg
-    | Example_types.FT.Filetree _ -> filetrees#handle_message  send_msg msg
-    | PList.Mylist _ -> lists#handle_message send_msg msg
-    | Server_P.Call (call_id, ((Example_types.FT.Filetree _) as msg))->
-        let return msg = Server.Rpc.return rpc call_id msg in
-        filetrees#handle_call return msg
-    | Server_P.Call (call_id, ((Example_types.ED.Editor _) as msg)) ->
-        let return msg = Server.Rpc.return rpc call_id msg in
-        editors#handle_call return msg
-    | Server_P.Call (call_id, ((PList.Mylist _) as msg)) ->
-        let return msg = Server.Rpc.return rpc call_id msg in
-        lists#handle_call return msg
-
-    | _ -> failwith "Unhandled message"
+  let%lwt () = Lwt_log.info ~section ~logger "handle_message" in
+  let s = Yojson.Safe.to_string (Example_types.client_msg_to_yojson msg) in
+  let%lwt () = Lwt_log.info ~section ~logger ("message: "^s) in
+  match msg with
+  | Example_types.ED.Editor _ -> editors#handle_message send_msg msg
+  | Example_types.FT.Filetree _ -> filetrees#handle_message  send_msg msg
+  | PList.Mylist _ -> lists#handle_message send_msg msg
+  | Server_P.Call (call_id, ((Example_types.FT.Filetree _) as msg))->
+      let return msg = Server.Rpc.return rpc call_id msg in
+      filetrees#handle_call return msg
+  | Server_P.Call (call_id, ((Example_types.ED.Editor _) as msg)) ->
+      let return msg = Server.Rpc.return rpc call_id msg in
+      editors#handle_call return msg
+  | Server_P.Call (call_id, ((PList.Mylist _) as msg)) ->
+      let return msg = Server.Rpc.return rpc call_id msg in
+      lists#handle_call return msg
+  | _ -> failwith "Unhandled message"
 
 let () = connections#set_handle_message handle_message
 
-let handle_con id req recv push =
-  let stream = Websocket_lwt.mk_frame_stream recv in
-  connections#add_connection stream push
+let handle_con client =
+  let%lwt () = Lwt_log.info ~section ~logger "handle_con" in
+  let stream = Websocket_lwt_unix.mk_frame_stream (fun () -> Ws.Connected_client.recv client) in
+  let%lwt () = Lwt_log.info ~section ~logger "adding connection" in
+  connections#add_connection stream (Ws.Connected_client.send client)
 (*
 let handle_con root uri (stream, push) =
   let root = Ojs_path.of_string root in
@@ -147,20 +173,23 @@ let handle_con root uri (stream, push) =
     handle_message stream push
 *)
 
-
-let buffer =  Buffer.create 256
-let () = Lwt_log.render ~buffer ~template: "$(message)" ~section:
-  Websocket_lwt.section ~level:Lwt_log_core.Debug ~message:"coucou"
+(*let buffer =  Buffer.create 256
+let () = Lwt_log.render ~buffer ~template: "$(message)" ~section
+  ~level:Lwt_log_core.Debug ~message:"coucou"
+*)
 
 let run_server host port =
+  let%lwt()= Lwt_log.info ~section
+    (Printf.sprintf "Starting server on %s:%d" host port)
+  in
   let uri = Uri.of_string (Printf.sprintf "http://%s:%d/" host port) in
   Resolver_lwt.resolve_uri ~uri Resolver_lwt_unix.system >>= fun endp ->
     let ctx = Conduit_lwt_unix.default_ctx in
     Conduit_lwt_unix.endp_to_server ~ctx endp >>= fun server ->
   let server =
-    Websocket_lwt.establish_standard_server ~ctx ~mode:server handle_con
+    Websocket_lwt_unix.establish_standard_server ~ctx
+    ~check_request:(fun _ -> true) ~mode:server handle_con
   in
   ignore @@ server ; fst @@ Lwt.wait ()
-
 
 let _ = Lwt_main.run (run_server "0.0.0.0" 8080)
