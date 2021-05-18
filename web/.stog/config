@@ -1,7 +1,0 @@
-{
-  ignored: [".*\\.git", ".*Makefile", ".*tmpl$", ".*less"],
-  documents: [".*\\.xml$", ".*\\.html$"],
-  not_documents: [],
-  follow_symlinks: false,
-  levels: []
-}
